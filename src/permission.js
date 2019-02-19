@@ -12,7 +12,7 @@ router.beforeEach((to, from, next) => {
   console.log('AccountToken', getAccountToken())
   console.log('UserToken', getUserToken())
   if (getUserToken()) {
-    console.log('有usertoken 执行loginaccount')
+    console.log('Usertoken 执行loginAccount')
     store.dispatch('LoginAccount')
       .then(() => {
         if (getAccountToken()) {
@@ -58,11 +58,11 @@ router.beforeEach((to, from, next) => {
         }
       })
       .catch(() => {
-        console.log('loginaccount报错')
+        console.log('UserToken 过期')
         window.location = store.state.user.home_url
       })
   } else {
-    console.log('没有usertoken')
+    console.log('UserToken null')
     window.location = store.state.user.home_url
   }
 
