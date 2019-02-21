@@ -1,10 +1,10 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-      <el-select @change='handleFilter' style="width: 200px" class="filter-item" v-model="listQuery.user_account_department_id" clearable placeholder="部门">
-        <el-option v-for="item in userDepaerOptions" :key="item.key" :label="item.label" :value="item.key">
-        </el-option>
-      </el-select>
+      <!--<el-select @change='handleFilter' style="width: 200px" class="filter-item" v-model="listQuery.user_account_department_id" clearable placeholder="部门">-->
+        <!--<el-option v-for="item in userDepaerOptions" :key="item.key" :label="item.label" :value="item.key">-->
+        <!--</el-option>-->
+      <!--</el-select>-->
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="组名称" v-model="listQuery.group_name">
       </el-input>
       <el-select @change='handleFilter' style="width: 120px" class="filter-item" v-model="listQuery.sort" placeholder="排序">
@@ -37,11 +37,7 @@
           <!--<span v-if="scope.row.pay_to_user_account !== null">{{scope.row.pay_to_user_account.nickname}}</span>-->
         <!--</template>-->
       <!--</el-table-column>-->
-      <el-table-column min-width="100px" align="center" label="所属部门">
-        <template slot-scope="scope">
-          <el-tag v-if="scope.row.user_account_department !== null">{{scope.row.user_account_department.department_name}}</el-tag>
-        </template>
-      </el-table-column>
+
       <el-table-column width="180px" align="center" label="更新时间">
         <template slot-scope="scope">
           <span>{{scope.row.updated_at}}</span>
@@ -175,7 +171,6 @@ export default {
   created() {
     this.getList()
     this.getUserAccountTypeList()
-    this.getUserDepartList()
   },
   methods: {
     getUserAccountTypeList() {

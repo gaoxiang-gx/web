@@ -2,63 +2,63 @@ import request from '@/utils/request'
 
 export function getSpeechList(param) {
   return request({
-    url: '/api/speech/getSpeechList',
+    url: '/api/copywrite/getSpeechList',
     method: 'post',
     data: param
   })
 }
 export function editSpeechTag(param) {
   return request({
-    url: '/api/speech/editSpeechTag',
+    url: '/api/copywrite/editSpeechTag',
     method: 'post',
     data: param
   })
 }
 export function updateSpeech(param) {
   return request({
-    url: '/api/speech/updateSpeech',
+    url: '/api/copywrite/updateSpeech',
     method: 'post',
     data: param
   })
 }
 export function createSpeech(param) {
   return request({
-    url: '/api/speech/createSpeech',
+    url: '/api/copywrite/createSpeech',
     method: 'post',
     data: param
   })
 }
 export function switchPerfectSpeech(param) {
   return request({
-    url: '/api/speech/switchPerfectSpeech',
+    url: '/api/copywrite/switchPerfectSpeech',
     method: 'post',
     data: param
   })
 }
 export function deleteSpeech(param) {
   return request({
-    url: '/api/speech/deleteSpeech',
+    url: '/api/copywrite/deleteSpeech',
     method: 'post',
     data: param
   })
 }
 export function getSpeechCommentBySpeech(param) {
   return request({
-    url: 'api/speech/getSpeechCommentBySpeech',
+    url: 'api/copywrite/getSpeechCommentBySpeech',
     method: 'post',
     data: param
   })
 }
 export function createSpeechComment(param) {
   return request({
-    url: 'api/speech/createSpeechComment',
+    url: 'api/copywrite/createSpeechComment',
     method: 'post',
     data: param
   })
 }
 export function deleteSpeechComment(param) {
   return request({
-    url: 'api/speech/deleteSpeechComment',
+    url: 'api/copywrite/deleteSpeechComment',
     method: 'post',
     data: param
   })
@@ -66,7 +66,7 @@ export function deleteSpeechComment(param) {
 
 export function createSpeechPrise(param) {
   return request({
-    url: 'api/speech/createSpeechPrise',
+    url: 'api/copywrite/createSpeechPrise',
     method: 'post',
     data: param
   })
@@ -74,7 +74,7 @@ export function createSpeechPrise(param) {
 
 export function deleteSpeechPrise(param) {
   return request({
-    url: 'api/speech/deleteSpeechPrise',
+    url: 'api/copywrite/deleteSpeechPrise',
     method: 'post',
     data: param
   })
@@ -82,7 +82,7 @@ export function deleteSpeechPrise(param) {
 
 export function checkSpeech(param) {
   return request({
-    url: '/api/speech/checkSpeech',
+    url: '/api/copywrite/checkSpeech',
     method: 'post',
     data: param
   })

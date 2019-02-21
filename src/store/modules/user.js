@@ -1,11 +1,10 @@
-import { subLoginAccount, logout, getInfo } from '@/api/login'
+import { login, logout, getInfo } from '@/api/login'
 import { getUserToken, getAccountToken, setAccountToken, removeUserToken, removeAccountToken } from '@/utils/auth'
 import { getUserAccountTypeList, loginAccount } from '@/api/login'
 const user_token = getUserToken()
 
 const user = {
   state: {
-    home_url: 'http://localhost:9528/#/dashboard',
     token: getAccountToken(),
     name: '',
     avatar: '',
@@ -48,10 +47,10 @@ const user = {
 
   actions: {
     // 子系统独立登录
-    SubLoginAccount({ commit, state }, userInfo) {
+    Login({ commit, state }, userInfo) {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
-        subLoginAccount(username, userInfo.password).then(response => {
+        login(username, userInfo.password).then(response => {
           const token = response.data
           setAccountToken(token)
           commit('SET_TOKEN', token)
@@ -115,6 +114,7 @@ const user = {
       })
     },
     LoginAccount({ commit, state }) {
+      console.log('user_token', user_token)
       return new Promise((resolve, reject) => {
         loginAccount({ token: user_token }).then(response => {
           commit('SET_TOKEN', response.data)

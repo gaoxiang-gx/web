@@ -1,5 +1,6 @@
 <template>
   <div class="scroll-container" ref="scrollContainer" @wheel.prevent="handleScroll" >
+    <Hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></Hamburger>
     <div class="scroll-wrapper" ref="scrollWrapper" :style="{top: top + 'px'}">
       <slot></slot>
     </div>
@@ -7,7 +8,9 @@
 </template>
 
 <script>
-const delta = 15
+  import { mapGetters } from 'vuex'
+  import Hamburger from '@/components/Hamburger'
+  const delta = 15
 
 export default {
   name: 'scrollBar',
@@ -16,7 +19,20 @@ export default {
       top: 0
     }
   },
+  components: { Hamburger },
+  computed: {
+    ...mapGetters([
+      'permission_routers',
+      'sidebar'
+    ]),
+    isCollapse() {
+      return !this.sidebar.opened
+    }
+  },
   methods: {
+    toggleSideBar() {
+      this.$store.dispatch('ToggleSideBar')
+    },
     handleScroll(e) {
       const eventDelta = e.wheelDelta || -e.deltaY * 3
       const $container = this.$refs.scrollContainer
@@ -53,5 +69,14 @@ export default {
     position: absolute;
      width: 100%!important;
   }
+}
+.hamburger-container {
+  position: absolute;
+  right: -12px;
+  top: 300px;
+}
+.hamburger-container:hover {
+  right: -16px;
+  transition: all .1s;
 }
 </style>

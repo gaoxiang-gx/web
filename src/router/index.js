@@ -38,14 +38,16 @@ export const asyncRouterMap = [
   {
     path: '/domain',
     component: Layout,
+    redirect: 'noredirect',
     name: 'websiteManagement',
-    meta: { title: '网站管理', icon: 'example', role: ['administrator', 'promotion', 'promotionManager', 'templateManager', 'promotionGroup', 'promotionDirector', 'promotiondataclerk'] },
+    meta: { title: '网站管理', icon: 'websiteManagement', role: ['administrator', 'promotion', 'promotionManager', 'templateManager', 'promotionGroup', 'promotionDirector', 'promotiondataclerk'] },
     children: [
       {
         path: '/domain/domain',
         name: 'domainManagement',
+        redirect: 'noredirect',
         component: _import('domain/domain/index'),
-        meta: { title: '域名管理', icon: 'form', role: ['administrator', 'promotion', 'promotionManager', 'promotionGroup', 'promotionDirector', 'promotiondataclerk'] },
+        meta: { title: '域名管理', icon: 'domainManagement', role: ['administrator', 'promotion', 'promotionManager', 'promotionGroup', 'promotionDirector', 'promotiondataclerk'] },
         children: [
           {
             path: 'domain',
@@ -65,7 +67,7 @@ export const asyncRouterMap = [
         path: 'website/promotion_product',
         name: 'promotionWebsiteManagement',
         component: _import('domain/website/promotion_product'),
-        meta: { title: '推广网站管理', icon: 'form', role: ['administrator', 'promotion', 'promotionManager', 'templateManager', 'promotionGroup', 'promotionDirector', 'promotiondataclerk'] }
+        meta: { title: '推广网站管理', icon: 'promotionWebsiteManagement', role: ['administrator', 'promotion', 'promotionManager', 'templateManager', 'promotionGroup', 'promotionDirector', 'promotiondataclerk'] }
       }
     ]
   },
@@ -74,14 +76,14 @@ export const asyncRouterMap = [
     component: Layout,
     name: 'promotionManagement',
     redirect: 'noredirect',
-    meta: { title: '推广管理', icon: 'example', role: ['administrator', 'promotion', 'promotionManager', 'templateManager', 'promotionGroup', 'promotionDirector', 'promotiondataclerk'] },
+    meta: { title: '推广管理', icon: 'promotionManagement', role: ['administrator', 'promotion', 'promotionManager', 'templateManager', 'promotionGroup', 'promotionDirector', 'promotiondataclerk'] },
     children: [
       {
         path: '/promotion/promotion_channel',
         name: 'channelManagement',
         redirect: 'noredirect',
         component: _import('promotion/promotion_channel/index'),
-        meta: { title: '渠道管理', icon: 'form', role: ['administrator', 'promotion', 'promotionManager', 'promotionGroup', 'promotionDirector', 'promotiondataclerk'] },
+        meta: { title: '渠道管理', icon: 'channelManagement', role: ['administrator', 'promotion', 'promotionManager', 'promotionGroup', 'promotionDirector', 'promotiondataclerk'] },
         children: [
           {
             path: 'promotion_channel',
@@ -126,7 +128,7 @@ export const asyncRouterMap = [
         name: 'promotionMemberManagement',
         redirect: 'noredirect',
         component: _import('promotion/promotion_member/index'),
-        meta: { title: '人员管理', icon: 'form', role: ['administrator', 'promotionManager', 'promotionDirector'] },
+        meta: { title: '人员管理', icon: 'MemberManagement', role: ['administrator', 'promotionManager', 'promotionDirector'] },
         children: [
           {
             path: 'promotion_group',
@@ -146,26 +148,26 @@ export const asyncRouterMap = [
         path: 'product_template',
         name: 'templateManagement',
         component: _import('promotion/product_template'),
-        meta: { title: '模板管理', icon: 'form', role: ['administrator', 'promotionManager', 'templateManager', 'promotionGroup', 'promotion', 'promotionDirector'] }
+        meta: { title: '模板管理', icon: 'templateManagement', role: ['administrator', 'promotionManager', 'templateManager', 'promotionGroup', 'promotion', 'promotionDirector'] }
       },
       {
         path: 'promotion_warning/promotion_warning',
         name: 'wxWarnManagement',
         component: _import('promotion/promotion_warning/promotion_warning'),
-        meta: { title: '微信告警管理', icon: 'form', role: ['administrator', 'promotion', 'promotionManager', 'promotionGroup', 'promotionDirector'] }
+        meta: { title: '微信告警管理', icon: 'warn', role: ['administrator', 'promotion', 'promotionManager', 'promotionGroup', 'promotionDirector'] }
       },
       {
         path: 'promotion_copy',
         name: 'promotionCopy',
         component: _import('promotion/promotion_copy'),
-        meta: { title: '推广复制记录', icon: 'form', role: ['administrator', 'promotion', 'promotionManager', 'promotionGroup', 'promotionDirector', 'promotiondataclerk'] }
+        meta: { title: '推广复制记录', icon: 'promotionCopy', role: ['administrator', 'promotion', 'promotionManager', 'promotionGroup', 'promotionDirector', 'promotiondataclerk'] }
       },
       {
         path: '/promotion/promotion_statistics',
         name: 'promotionData',
         redirect: 'noredirect',
         component: _import('promotion/promotion_statistics/index'),
-        meta: { title: '推广数据', icon: 'form', role: ['administrator', 'promotion', 'promotionManager', 'promotionGroup', 'promotionDirector', 'promotiondataclerk'] },
+        meta: { title: '推广数据', icon: 'data', role: ['administrator', 'promotion', 'promotionManager', 'promotionGroup', 'promotionDirector', 'promotiondataclerk'] },
         children: [
           {
             path: 'promotion_orders',
@@ -188,14 +190,14 @@ export const asyncRouterMap = [
     component: Layout,
     name: 'customerManagement',
     redirect: 'noredirect',
-    meta: { title: '客服管理', icon: 'example', role: ['administrator', 'support', 'supportManager', 'supervisor', 'supportDirector'] },
+    meta: { title: '客服管理', icon: 'customerManagement', role: ['administrator', 'support', 'supportManager', 'supervisor', 'supportDirector'] },
     children: [
       {
         path: '/support/support_member',
         name: 'personnelManagement',
         redirect: 'noredirect',
         component: _import('support/support_member/index'),
-        meta: { title: '人员管理', icon: 'form', role: ['administrator', 'supportManager', 'supportDirector'] },
+        meta: { title: '人员管理', icon: 'MemberManagement', role: ['administrator', 'supportManager', 'supportDirector'] },
         children: [
           {
             path: 'support_member_team',
@@ -216,7 +218,7 @@ export const asyncRouterMap = [
         name: 'SalesRank',
         redirect: 'noredirect',
         component: _import('support/support_rating/index'),
-        meta: { title: '销售排名', icon: 'form', role: ['administrator', 'support', 'supportManager', 'supportDirector'] },
+        meta: { title: '销售排名', icon: 'SalesRank', role: ['administrator', 'support', 'supportManager', 'supportDirector'] },
         children: [
           {
             path: 'daily_rating',
@@ -248,26 +250,26 @@ export const asyncRouterMap = [
         path: 'support/support_weixin_setting',
         name: 'addFanSetting',
         component: _import('support/support_weixin/support_weixin_setting'),
-        meta: { title: '加粉设置', icon: 'form', role: ['administrator', 'support', 'supportManager', 'supportDirector'] }
+        meta: { title: '加粉设置', icon: 'addFanSetting', role: ['administrator', 'support', 'supportManager', 'supportDirector'] }
       },
       {
         path: 'support_portrayal',
         name: 'supportPortrayal',
         component: _import('support/support_portrayal'),
-        meta: { title: '粉丝画像', icon: 'form', role: ['administrator', 'support', 'supportManager', 'supportDirector'] }
+        meta: { title: '粉丝画像', icon: 'supportPortrayal', role: ['administrator', 'support', 'supportManager', 'supportDirector'] }
       },
       {
         path: 'support/support_setting',
         name: 'PassengerServiceScheduling',
         component: _import('support/support_setting/support_schedule'),
-        meta: { title: '客服排班', icon: 'form', role: ['administrator', 'support', 'supportManager', 'supervisor', 'supportDirector'] }
+        meta: { title: '客服排班', icon: 'PassengerServiceScheduling', role: ['administrator', 'support', 'supportManager', 'supervisor', 'supportDirector'] }
       },
       {
         path: '/support/support_statistics',
         name: 'SupportStatisticsMain',
         redirect: 'noredirect',
         component: _import('support/support_statistics/index'),
-        meta: { title: '客服数据统计', icon: 'form', role: ['administrator', 'support', 'supportManager', 'supportDirector'] },
+        meta: { title: '客服数据统计', icon: 'data', role: ['administrator', 'support', 'supportManager', 'supportDirector'] },
         children: [
           {
             path: 'supportMemberStatistics',
@@ -320,80 +322,82 @@ export const asyncRouterMap = [
     component: Layout,
     name: 'copywriteManagement',
     redirect: 'noredirect',
-    meta: { title: '文案管理', icon: 'example', role: ['administrator', 'clerk', 'supportDirector', 'supportManager'] },
+    meta: { title: '文案管理', icon: 'knowledge', role: ['administrator', 'clerk', 'supportDirector', 'supportManager'] },
     children: [
       {
         path: 'friendCircle',
         name: 'friendCircle',
         component: _import('copywriters/friendCircle'),
-        meta: { title: '朋友圈', icon: 'form', role: ['administrator', 'clerk', 'supportDirector', 'supportManager'] }
+        meta: { title: '朋友圈', icon: 'friendCircle', role: ['administrator', 'clerk', 'supportDirector', 'supportManager'] }
       },
       {
         path: 'knowledge',
         name: 'knowledge',
         component: _import('support/knowledge'),
-        meta: { title: '知识树', icon: 'form', role: ['administrator', 'supportManager', 'support', 'supportDirector'] }
+        meta: { title: '知识树', icon: 'channelManagement', role: ['administrator', 'supportManager', 'support', 'supportDirector'] }
       },
       {
         path: 'speech',
         name: 'speech',
         component: _import('copywriters/speech'),
-        meta: { title: '话术', icon: 'form', role: ['administrator', 'clerk'] }
+        meta: { title: '话术', icon: 'speech', role: ['administrator', 'clerk'] }
       },
       {
         path: 'customer_feedback',
         name: 'customer_feedback',
         component: _import('copywriters/customer_feedback'),
-        meta: { title: '客户反馈', icon: 'form', role: ['administrator', 'clerk'] }
+        meta: { title: '客户反馈', icon: 'customer_feedback', role: ['administrator', 'clerk'] }
       },
       {
         path: 'article_knowledge',
         name: 'article_knowledge',
         component: _import('copywriters/article_knowledge'),
-        meta: { title: '文章知识', icon: 'form', role: ['administrator', 'clerk'] }
+        meta: { title: '文章知识', icon: 'article_knowledge', role: ['administrator', 'clerk'] }
       },
       {
         path: 'copywriterManagement',
         name: 'copywriterManagement',
         component: _import('copywriters/copywriterManagement'),
-        meta: { title: '文案人员管理', icon: 'form', role: ['administrator', 'clerk'] }
+        meta: { title: '文案人员管理', icon: 'MemberManagement', role: ['administrator', 'clerk'] }
       }]
   },
   {
     path: '/data',
     component: Layout,
     name: 'dataQuery',
-    meta: { title: '数据查询', icon: 'example', role: ['administrator', 'supportManager', 'promotionManager', 'promotion', 'supervisor', 'promotionGroup', 'promotionDirector', 'supportDirector', 'promotiondataclerk'] },
+    redirect: 'noredirect',
+    meta: { title: '数据查询', icon: 'data', role: ['administrator', 'supportManager', 'promotionManager', 'promotion', 'supervisor', 'promotionGroup', 'promotionDirector', 'supportDirector', 'promotiondataclerk'] },
     children: [
       {
         path: 'support_member_unfilled',
         name: 'addFansData',
         component: _import('data/support_member_unfilled'),
-        meta: { title: '客服加粉数据', icon: 'form', role: ['administrator', 'supportManager', 'promotionManager', 'promotion', 'supervisor', 'promotionGroup', 'promotionDirector', 'supportDirector', 'promotiondataclerk'] }
+        meta: { title: '客服加粉数据', icon: 'data', role: ['administrator', 'supportManager', 'promotionManager', 'promotion', 'supervisor', 'promotionGroup', 'promotionDirector', 'supportDirector', 'promotiondataclerk'] }
       },
       {
         path: 'add_fans_data_query',
         name: 'addFansDataQuery',
         component: _import('data/add_fans_data_query'),
-        meta: { title: '加粉数据查询', icon: 'form', role: ['administrator', 'supportManager', 'promotionManager', 'promotion', 'promotionGroup', 'promotionDirector', 'supportDirector', 'promotiondataclerk'] }
+        meta: { title: '加粉数据查询', icon: 'data', role: ['administrator', 'supportManager', 'promotionManager', 'promotion', 'promotionGroup', 'promotionDirector', 'supportDirector', 'promotiondataclerk'] }
       },
       {
         path: 'promotionChannelData',
         name: 'promotionChannelData',
         component: _import('data/promotionChannelData'),
-        meta: { title: '推广渠道数据', icon: 'form', role: ['administrator', 'promotionManager', 'supportManager', 'promotionDirector', 'supportDirector'] }
+        meta: { title: '推广渠道数据', icon: 'data', role: ['administrator', 'promotionManager', 'supportManager', 'promotionDirector', 'supportDirector'] }
       },
       {
         path: 'fans_portrayal_statistics',
         name: 'fansPortrayalStatistics',
         component: _import('data/fans_portrayal_statistics'),
-        meta: { title: '粉丝画像报表', icon: 'form', role: [] }
+        meta: { title: '粉丝画像报表', icon: 'data', role: [] }
       },
       {
         path: '/data/supportCostStatistics',
         name: 'supportFansCostStatistics',
+        redirect: 'noredirect',
         component: _import('data/supportFansCost/index'),
-        meta: { title: '客服成本', icon: 'form', role: ['administrator', 'promotionManager', 'promotionDirector'] },
+        meta: { title: '客服成本', icon: 'data', role: ['administrator', 'promotionManager', 'promotionDirector'] },
         children: [
           {
             path: 'costStatistics',
@@ -421,25 +425,26 @@ export const asyncRouterMap = [
     path: '/orders',
     component: Layout,
     name: 'ordersManagement',
-    meta: { title: '订单管理', icon: 'example', role: ['administrator', 'support', 'supportManager', 'supportDirector', 'warehouse', 'clerk', 'supervisor'] },
+    redirect: 'noredirect',
+    meta: { title: '订单管理', icon: 'ordersManagement', role: ['administrator', 'support', 'supportManager', 'supportDirector', 'warehouse', 'clerk', 'supervisor'] },
     children: [
       {
         path: 'orders',
         name: 'ordersManage',
         component: _import('orders/orders'),
-        meta: { title: '订单管理', icon: 'form', role: ['administrator', 'support', 'supportManager', 'supportDirector', 'warehouse', 'clerk', 'supervisor'] }
+        meta: { title: '订单管理', icon: 'ordersManage', role: ['administrator', 'support', 'supportManager', 'supportDirector', 'warehouse', 'clerk', 'supervisor'] }
       },
       {
         path: 'ordersQuery',
         name: 'ordersQuery',
         component: _import('orders/ordersQuery'),
-        meta: { title: '订单查询', icon: 'form', role: ['administrator', 'support', 'supportManager', 'supportDirector', 'warehouse', 'clerk', 'supervisor'] }
+        meta: { title: '订单查询', icon: 'ordersQuery', role: ['administrator', 'support', 'supportManager', 'supportDirector', 'warehouse', 'clerk', 'supervisor'] }
       },
       {
         path: 'logistics',
         name: 'logisticsDynamics',
         component: _import('orders/logistics'),
-        meta: { title: '物流动态', icon: 'form', role: ['administrator', 'support', 'supportManager', 'supportDirector', 'warehouse', 'clerk'] }
+        meta: { title: '物流动态', icon: 'logisticsDynamics', role: ['administrator', 'support', 'supportManager', 'supportDirector', 'warehouse', 'clerk'] }
       }
     ]
   },
@@ -447,50 +452,51 @@ export const asyncRouterMap = [
     path: '/purchase',
     component: Layout,
     name: 'purchaseSellManagement',
-    meta: { title: '进销存管理', icon: 'example', role: ['administrator', 'warehouse'] },
+    redirect: 'noredirect',
+    meta: { title: '进销存管理', icon: 'purchaseSellManagement', role: ['administrator', 'warehouse'] },
     children: [
       {
         path: 'product_management',
         name: 'productManagement',
         component: _import('purchase/product_management'),
-        meta: { title: '商品管理', icon: 'form', role: ['administrator', 'warehouse'] }
+        meta: { title: '商品管理', icon: 'productManagement', role: ['administrator', 'warehouse'] }
       },
       {
         path: 'product_cost',
         name: 'productCost',
         component: _import('purchase/product_cost'),
-        meta: { title: '商品成本', icon: 'form', role: ['administrator'] }
+        meta: { title: '商品成本', icon: 'productCost', role: ['administrator'] }
       },
       {
         path: 'inventory_warning',
         name: 'inventoryWarning',
         component: _import('purchase/inventory_warning'),
-        meta: { title: '商品库存预警', icon: 'form', role: ['administrator', 'warehouse'] }
+        meta: { title: '商品库存预警', icon: 'warn', role: ['administrator', 'warehouse'] }
       },
       {
         path: 'inventory_statistics',
         name: 'inventoryStatistics',
         component: _import('purchase/inventory_statistics'),
-        meta: { title: '商品出入库明细', icon: 'form', role: ['administrator', 'warehouse'] }
+        meta: { title: '商品出入库明细', icon: 'inventoryStatistics', role: ['administrator', 'warehouse'] }
       },
       {
         path: 'inventory_expend',
         name: 'inventoryExpend',
         component: _import('purchase/inventory_expend'),
-        meta: { title: '商品日消耗查询', icon: 'form', role: ['administrator', 'warehouse'] }
+        meta: { title: '商品日消耗查询', icon: 'data', role: ['administrator', 'warehouse'] }
       },
       {
         path: 'inventory_management',
         name: 'inventoryManagement',
         component: _import('purchase/inventory_management'),
-        meta: { title: '盘库管理', icon: 'form', role: ['administrator', 'warehouse'] }
+        meta: { title: '盘库管理', icon: 'inventoryManagement', role: ['administrator', 'warehouse'] }
       },
       {
         path: '/purchase_management',
         name: 'purchaseManagement',
         redirect: 'noredirect',
         component: _import('purchase/purchase_management/index'),
-        meta: { title: '订货管理', icon: 'form', role: ['administrator', 'warehouse'] },
+        meta: { title: '订货管理', icon: 'purchaseManagement', role: ['administrator', 'warehouse'] },
         children: [
           {
             path: 'purchase_management',
@@ -510,7 +516,7 @@ export const asyncRouterMap = [
         path: 'manual_Management',
         name: 'manual_Management',
         component: _import('purchase/manual_Management'),
-        meta: { title: '人工出入库', icon: 'form', role: ['administrator', 'warehouse'] }
+        meta: { title: '人工出入库', icon: 'manual_Management', role: ['administrator', 'warehouse'] }
       }
     ]
   },
@@ -518,31 +524,32 @@ export const asyncRouterMap = [
     path: '/financial',
     component: Layout,
     name: 'financialManagement',
-    meta: { title: '财务管理', icon: 'example', role: ['administrator', 'supportManager', 'supportDirector'] },
+    redirect: 'noredirect',
+    meta: { title: '财务管理', icon: 'financialManagement', role: ['administrator', 'supportManager', 'supportDirector'] },
     children: [
       {
         path: 'financial_weixin',
         name: 'wxFinancialManagement',
         component: _import('financial/financial_weixin'),
-        meta: { title: '微信流水管理', icon: 'form', role: ['administrator'] }
+        meta: { title: '微信流水管理', icon: 'wxAccountManagement', role: ['administrator'] }
       },
       {
         path: 'financial_cash_on_delivery',
         name: 'cashOnDeliveryFinancialManagement',
         component: _import('financial/financial_cash_on_delivery'),
-        meta: { title: '代收款流水管理', icon: 'form', role: ['administrator'] }
+        meta: { title: '代收款流水管理', icon: 'cashOnDeliveryFinancialManagement', role: ['administrator'] }
       },
       {
         path: 'financial_transfer',
         name: 'financialTransfer',
         component: _import('financial/financial_transfer'),
-        meta: { title: '转款凭证管理', icon: 'form', role: ['administrator'] }
+        meta: { title: '转款凭证管理', icon: 'financialTransfer', role: ['administrator'] }
       },
       {
         path: 'financial_cash',
         name: 'financialCashManagement',
         component: _import('financial/financial_cash'),
-        meta: { title: '提现管理', icon: 'form', role: ['administrator', 'supportManager', 'supportDirector'] }
+        meta: { title: '提现管理', icon: 'financialCashManagement', role: ['administrator', 'supportManager', 'supportDirector'] }
       }
     ]
   },
@@ -550,31 +557,32 @@ export const asyncRouterMap = [
     path: '/user',
     component: Layout,
     name: 'userManagement',
-    meta: { title: '用户管理', icon: 'example', role: ['administrator'] },
+    redirect: 'noredirect',
+    meta: { title: '用户管理', icon: 'MemberManagement', role: ['administrator'] },
     children: [
-      {
-        path: 'user_department',
-        name: 'userDepartment',
-        component: _import('user/user_department'),
-        meta: { title: '部门管理', icon: 'form', role: ['administrator'] }
-      },
+      // {
+      //   path: 'user_department',
+      //   name: 'userDepartment',
+      //   component: _import('user/user_department'),
+      //   meta: { title: '部门管理', icon: 'userDepartment', role: ['administrator'] }
+      // },
       {
         path: 'user_group',
         name: 'userGroupManagement',
         component: _import('user/user_group'),
-        meta: { title: '小组管理', icon: 'form', role: ['administrator'] }
+        meta: { title: '小组管理', icon: 'userGroupManagement', role: ['administrator'] }
       },
       {
         path: 'user',
         name: 'userManage',
         component: _import('user/user'),
-        meta: { title: '用户管理', icon: 'form', role: ['administrator'] }
+        meta: { title: '用户管理', icon: 'MemberManagement', role: ['administrator'] }
       },
       {
         path: 'role',
         name: 'rolesManagement',
         component: _import('user/user_role'),
-        meta: { title: '权限管理', icon: 'form', role: ['administrator'] }
+        meta: { title: '权限管理', icon: 'rolesManagement', role: ['administrator'] }
       }
     ]
   },
@@ -583,20 +591,21 @@ export const asyncRouterMap = [
     component: Layout,
     name: 'systemManagement',
     redirect: 'noredirect',
-    meta: { title: '系统管理', icon: 'example', role: ['administrator', 'supportDirector', 'promotionDirector'] },
+    meta: { title: '系统管理', icon: 'systemManagement', role: ['administrator', 'supportDirector', 'promotionDirector'] },
     children: [
       {
         path: '/system/setting',
         name: 'systemSetting',
+        redirect: 'noredirect',
         component: _import('system/setting/index'),
-        meta: { title: '系统设置', icon: 'form', role: ['administrator'] },
+        meta: { title: '系统设置', icon: 'systemSetting', role: ['administrator'] },
         children: [
-          {
-            path: 'global_setting',
-            name: 'globalSetting',
-            component: _import('system/setting/global_setting'),
-            meta: { title: '全局变量设置', role: ['administrator'] }
-          },
+          // {
+          //   path: 'global_setting',
+          //   name: 'globalSetting',
+          //   component: _import('system/setting/global_setting'),
+          //   meta: { title: '全局变量设置', role: ['administrator'] }
+          // },
           {
             path: 'deliver_address_setting',
             name: 'deliverAddressSetting',
@@ -651,7 +660,8 @@ export const asyncRouterMap = [
         path: '/system/tag',
         component: _import('system/setting/index'),
         name: 'tagManagement',
-        meta: { title: '标签管理', icon: 'form', role: ['administrator'] },
+        redirect: 'noredirect',
+        meta: { title: '标签管理', icon: 'tagManagement', role: ['administrator'] },
         children: [
           // {
           //   path: 'tract_tag',
@@ -683,31 +693,31 @@ export const asyncRouterMap = [
         path: 'system/weixin',
         name: 'wxAccountManagement',
         component: _import('system/weixin/product_weixin'),
-        meta: { title: '微信号管理', icon: 'form', role: ['administrator', 'supportDirector', 'promotionDirector'] }
+        meta: { title: '微信号管理', icon: 'wxAccountManagement', role: ['administrator', 'supportDirector', 'promotionDirector'] }
       },
       {
         path: 'system/protraitSetting',
         name: 'protraitSetting',
         component: _import('system/protrait/protraitSetting'),
-        meta: { title: '粉丝画像管理', icon: 'form', role: ['administrator'] }
+        meta: { title: '粉丝画像管理', icon: 'supportPortrayal', role: ['administrator'] }
       },
-      {
-        path: 'system/log_operation',
-        name: 'logOperation',
-        component: _import('system/logs/log_operation'),
-        meta: { title: '日志查询', icon: 'form', role: ['administrator'] }
-      },
+      // {
+      //   path: 'system/log_operation',
+      //   name: 'logOperation',
+      //   component: _import('system/logs/log_operation'),
+      //   meta: { title: '日志查询', icon: 'form', role: ['administrator'] }
+      // },
       {
         path: 'system/product_goods_management',
         name: 'productGoodsManagement',
         component: _import('system/product/product_goods_management'),
-        meta: { title: '产品管理', icon: 'form', role: ['administrator'] }
+        meta: { title: '产品管理', icon: 'productGoodsManagement', role: ['administrator'] }
       },
       {
         path: 'system/address_management',
         name: 'addressManagement',
         component: _import('system/address/address_management'),
-        meta: { title: '敏感地址管理', icon: 'form', role: ['administrator'] }
+        meta: { title: '敏感地址管理', icon: 'addressManagement', role: ['administrator'] }
       }
     ]
   },
@@ -715,13 +725,14 @@ export const asyncRouterMap = [
     path: '/user_center',
     component: Layout,
     name: 'userCenter',
-    meta: { title: '用户中心', icon: 'example' },
+    redirect: 'noredirect',
+    meta: { title: '用户中心', icon: 'userCenter' },
     children: [
       {
         path: 'user_center/user_info',
         name: 'infoSetting',
         component: _import('user_center/user_info/user_info'),
-        meta: { title: '个人信息设置', icon: 'form' }
+        meta: { title: '个人信息设置', icon: 'infoSetting' }
       },
       {
         path: 'user_center/action_history',
@@ -739,7 +750,7 @@ export const asyncRouterMap = [
         path: 'user_center/integral_query',
         name: 'integralQuery',
         component: _import('user_center/integral_query/integral_query'),
-        meta: { title: '积分查询', icon: 'form' }
+        meta: { title: '积分查询', icon: 'integralQuery' }
       }
     ]
   }

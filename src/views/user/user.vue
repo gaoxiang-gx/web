@@ -1,6 +1,12 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
+      <el-cascader
+        class="filter-item"
+        :options="options"
+        v-model="selectedOptions"
+        @change="handleChange">
+      </el-cascader>
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="手机号" v-model="listQuery.phone">
       </el-input>
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="用户名" v-model="listQuery.nickname">
@@ -20,7 +26,12 @@
           <span>{{scope.row.user.id}}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="110px" align="center" label="手机号">
+      <el-table-column min-width="100px" align="center" label="状态" width="70px">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.status | statusFilter">{{scope.row.status | statusTranslator}}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column min-width="110px" align="center" label="手机号" width="120px">
         <template slot-scope="scope">
           <span class="link-type" @click="handleInnerUpdate1(scope.row)">{{scope.row.user.phone}}</span>
         </template>
@@ -37,7 +48,7 @@
       </el-table-column>
       <el-table-column min-width="130px" align="center" label="角色">
         <template slot-scope="scope">
-          <span>{{scope.row.user_account_role.role_name}}</span>
+          <span v-if="scope.row.user_account_role">{{scope.row.user_account_role.role_name}}</span>
         </template>
       </el-table-column>
       <el-table-column min-width="110px" align="center" label="所属部门">
@@ -51,13 +62,6 @@
         </template>
       </el-table-column>
 
-
-
-      <el-table-column min-width="100px" align="center" label="状态">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{scope.row.status | statusTranslator}}</el-tag>
-        </template>
-      </el-table-column>
       <el-table-column min-width="100px" align="center" label="更新时间">
         <template slot-scope="scope">
           <span>{{scope.row.updated_at}}</span>
@@ -89,13 +93,6 @@
         </el-form-item>
         <el-form-item label="用户名" prop="nickname">
           <el-input v-model="temp.nickname" :disabled="inputDisable"></el-input>
-        </el-form-item>
-        <el-form-item label="用户类" prop="user_account_type.id">
-          <el-radio-group v-model="temp.user_account_type.id" size="small" :disabled="inputDisable" @change="handleGetRoles(undefined)">
-            <el-radio-button v-for="item in typeOptions" :key="item.key" :label="item.key" :value="item.key">
-              {{item.label}}
-            </el-radio-button>
-          </el-radio-group>
         </el-form-item>
         <el-form-item label="用户角色" prop="user_account_role.id">
           <el-select v-model="temp.user_account_role.id" placeholder="请选择用户权限">
@@ -219,6 +216,7 @@
 <script>
   import { getUserList, createUserAccount, updateUserAccount, updateUserPassword } from '@/api/user'
   import { getUserAccountRoleList } from '@/api/user_role'
+  import { getUserAccountGroupTree } from '@/api/user_group'
   import { getUserAccountDepartmentList } from '@/api/user_department'
   import { getUserAccountTypeList, getUserAccountGroupList } from '@/api/user_group'
   import waves from '@/directive/waves'
@@ -238,6 +236,7 @@
         list: [],
         data: [],
         menudata: [],
+        options: [],
         total: null,
         listLoading: true,
         listQuery: {
@@ -263,6 +262,7 @@
           user_account_id: undefined,
           permission_list: []
         },
+        selectedOptions: [],
         active: '',
         roleArry: [],
         accountArry: [],
@@ -347,7 +347,6 @@
         colSpanRegular: [],
         countNumber: [],
         countIndex: [],
-        typeOptions: [],
         typeDisable: false,
         groupOptions: [],
         departOptions: [],
@@ -387,11 +386,18 @@
     },
     created() {
       this.getList()
-      this.getUserAccountTypeList()
       this.getUserAccountRoleList()
-      this.getDepartList(' ')
+      this.getUserAccountGroupTree()
     },
     methods: {
+      getUserAccountGroupTree() {
+        getUserAccountGroupTree().then(res => {
+          this.options = res.data
+        })
+      },
+      handleChange() {
+
+      },
       traverseTree(node) {
         if (!node) {
           return
@@ -472,14 +478,6 @@
             }
           })
         }
-      },
-      getUserAccountTypeList() {
-        getUserAccountTypeList(this.listQuery).then(response => {
-          this.typeOptions = response.data.data.map(v => ({
-            key: v.id,
-            label: v.type_name
-          }))
-        })
       },
       restAuthList() {
         this.checkedList = []

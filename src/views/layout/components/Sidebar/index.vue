@@ -1,6 +1,5 @@
 <template>
   <scroll-bar>
-    <Hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></Hamburger>
     <el-menu mode="vertical" :default-active="$route.path" :collapse="isCollapse" background-color="#304156" text-color="#fff" active-text-color="#409EFF">
       <sidebar-item :routes="permission_routers"></sidebar-item>
     </el-menu>
@@ -9,12 +8,11 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import Hamburger from '@/components/Hamburger'
   import SidebarItem from './SidebarItem'
   import ScrollBar from '@/components/ScrollBar'
 
   export default {
-    components: { SidebarItem, ScrollBar, Hamburger },
+    components: { SidebarItem, ScrollBar },
     computed: {
       ...mapGetters([
         'permission_routers',
@@ -33,10 +31,11 @@
 </script>
 <style>
   .sidebar-container .scroll-wrapper {
+    z-index: 997;
     padding-top: 50px;
   }
   #app .sidebar-container {
-    background-color: #333744;
+    background-color: #304156;
     z-index: 998;
   }
 
@@ -51,14 +50,5 @@
   .scroll-wrapper .el-submenu__title:hover {
     background-color: #00c1de;
   }
-  .hamburger-container {
-    position: absolute;
-    right: -16px;
-    top: 300px;
-    transition: all .3s;
-  }
 
-  .hamburger-container:hover {
-    right: -24px;
-  }
 </style>

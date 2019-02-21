@@ -5,11 +5,15 @@
              background-color="#252a2f"
              mode="horizontal">
       <!--<hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>-->
-      <!--<breadcrumb></breadcrumb>-->
+      <breadcrumb></breadcrumb>
       <el-dropdown class="realtime-container" v-if="$store.state.user.roles === 'support'">
-        <span class="el-dropdown-link">
-          今日业绩 <i style="color:red;font-size: 32px;" ref="RealTimeformance">0</i>
-          排名 <i style="color:red;font-size: 32px;" >{{ranking_number}}</i>
+        <span class="el-dropdown-link" style="color: white">
+          今日业绩
+          <i style="color:red;font-size: 32px;" ref="RealTimeformance">0</i>
+        </span>
+        <span class="el-dropdown-link" style="color: white;margin-left: 5px">
+          排名
+          <i style="color:red;font-size: 32px;" >{{ranking_number}}</i>
         </span>
         <el-dropdown-menu slot="dropdown">
           <router-link class="inlineBlock" to="/support/support_rating/achievement_rating">
@@ -151,7 +155,6 @@ export default {
       this.$store.dispatch('ToggleSideBar')
     },
     logout() {
-      console.log('1')
       this.$store.dispatch('FedLogOut').then(() => {
         location.reload() // 为了重新实例化vue-router对象 避免bug
       })
@@ -194,12 +197,13 @@ export default {
     height: 50px;
     display: inline-block;
     position: absolute;
-    right: 130px;
+    right: 140px;
   }
   .avatar-container {
     display: inline-block;
     position: absolute;
     height: 50px;
+    top: 0;
     right: 0px;
     /deep/ .el-submenu__title {
       padding: 0 10px;
@@ -232,6 +236,7 @@ export default {
     height: 50px;
     position: absolute;
     right: 60px;
+    top: 0;
     /deep/ .el-submenu__icon-arrow {
       display: none;
     }

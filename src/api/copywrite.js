@@ -325,7 +325,7 @@ export function getTreeCopywriteFeedbackList(param) {
 
 export function getTreeSpeechList(param) {
   return request({
-    url: '/api/speech/getTreeSpeechList',
+    url: '/api/copywrite/getTreeSpeechList',
     method: 'post',
     data: param
   })

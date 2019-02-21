@@ -59,7 +59,7 @@ export default {
 <style lang="scss" scoped>
   .sidebar-warrper {
     border-top: 1px solid #3b4044;
-    z-index: 999;
+    z-index: 9999;
     position: fixed;
     height: auto;
     top: 50px;
@@ -132,8 +132,9 @@ export default {
   }
   >div {
     width: 230px;
-    line-height: 36px;
-    font-size: 14px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 18px;
     color: #fff;
     position: relative;
   }
@@ -141,6 +142,7 @@ export default {
     width: 180px;
     display: block;
     text-align: left;
+    font-size: 14px;
     margin-left: 36px;
   }
 }

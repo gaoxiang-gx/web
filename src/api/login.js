@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function subLoginAccount(phone, password) {
+export function login(phone, password) {
   return request({
-    url: '/api/user/subLoginAccount',
+    url: '/api/user/login',
     method: 'post',
     data: {
       phone,

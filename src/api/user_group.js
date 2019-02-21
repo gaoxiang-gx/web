@@ -8,6 +8,14 @@ export function getUserAccountGroupList(param) {
   })
 }
 
+export function getUserAccountGroupTree(param) {
+  return request({
+    url: '/api/user/getUserAccountGroupTree',
+    method: 'post',
+    data: param
+  })
+}
+
 export function getUserAccountTypeList(param) {
   return request({
     url: '/api/user/getUserAccountTypeList',

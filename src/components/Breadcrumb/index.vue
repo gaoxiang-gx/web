@@ -39,12 +39,16 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
   .app-breadcrumb.el-breadcrumb {
+    color: white;
     display: inline-block;
     font-size: 14px;
     line-height: 50px;
     margin-left: 10px;
+    a {
+      color: white;
+    }
     .no-redirect {
-      color: #97a8be;
+      color: #b4b4b4;
       cursor: text;
     }
   }
