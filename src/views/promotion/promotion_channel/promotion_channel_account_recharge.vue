@@ -227,7 +227,7 @@
         scrollTop: 0,
         publicImageUrl: undefined,
         promotionChannelAccountOption: [],
-        baseUrl: process.env.BASE_API + '/api/tools/uploadImage',
+        baseUrl: process.env.BASE_API + '/api/document/uploadImage',
         promotionChannelAccountLoading: false,
         fileList: [],
         pickerOptions1: {

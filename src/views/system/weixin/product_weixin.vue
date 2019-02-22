@@ -355,7 +355,7 @@ export default {
       total: null,
       listLoading: true,
       edit_fans_total: undefined,
-      uploadUrl: process.env.BASE_API + '/api/tools/uploadImage',
+      uploadUrl: process.env.BASE_API + '/api/document/uploadImage',
       publicImageUrl: '',
       imageDialogVisible: false,
       listQuery: {

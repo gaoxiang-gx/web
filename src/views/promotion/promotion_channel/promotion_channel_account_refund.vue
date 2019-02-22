@@ -356,7 +356,7 @@
         },
         innerList2: null,
         innerTotal2: null,
-        baseUrl: process.env.BASE_API + '/api/tools/uploadImage',
+        baseUrl: process.env.BASE_API + '/api/document/uploadImage',
         innerTableKey2: 2,
         tempProof: {
           promotion_channel_account_refund_id: undefined,

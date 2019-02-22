@@ -303,7 +303,7 @@
         previewDialogVisible: false,
         previewTitle: '',
         previewContent: '',
-        baseUrl: process.env.BASE_API + '/api/tools/uploadImage',
+        baseUrl: process.env.BASE_API + '/api/document/uploadImage',
         previewImageList: []
       }
     },

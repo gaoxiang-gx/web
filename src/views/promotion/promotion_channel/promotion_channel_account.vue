@@ -632,7 +632,7 @@
       return {
         roleArry: ['administrator', 'promotionManager', 'promotionGroup', 'promotionDirector'],
         scrollTop: 0,
-        baseUrl: process.env.BASE_API + '/api/tools/uploadImage',
+        baseUrl: process.env.BASE_API + '/api/document/uploadImage',
         promotionMemberOptions: [],
         promotionMemberOptions2: [],
         promotionMemberLoading: false,

@@ -407,7 +407,7 @@ export default {
       domainOptions: [],
       publicImageUrl: '',
       imageDialogVisible: false,
-      baseUrl: process.env.BASE_API + '/api/tools/uploadImage',
+      baseUrl: process.env.BASE_API + '/api/document/uploadImage',
       payTypeLoading: false,
       payTypeOptions: [],
       productWeixinLoading: false,

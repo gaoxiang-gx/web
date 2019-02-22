@@ -19,8 +19,8 @@ function getUserInfo(to, from, next) {
       roles = resolve.data.user_account_role.role_code
     })
     .then(() => {
-      store.dispatch('GetMenu').then(resolve => {
-        store.dispatch('GenerateRoutes', {roles, resolve}).then(() => { // 生成可访问的路由表
+      store.dispatch('GetMenu').then(menuCode => {
+        store.dispatch('GenerateRoutes', {roles, menuCode}).then(() => { // 生成可访问的路由表
           router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
           next({...to, replace: true}) // hack方法 确保addRoutes已完成
         })
@@ -42,24 +42,26 @@ router.beforeEach((to, from, next) => {
    */
   if (to.path === '/login') {
     next()
-  } else {
-    if (!getAccountToken()) {
-      if (getUserToken()) {
-        store.dispatch('LoginAccount').then(() => {
-          if (store.getters.roles.length === 0) {
-            getUserInfo(to, from, next)
-          }
-          next()
-        })
-      } else {
-        window.location = home_url
-      }
-    } else {
+    return false
+  }
+  if (getAccountToken()) {
+    if (store.getters.roles.length === 0) {
+      getUserInfo(to, from, next)
+    }
+    next()
+    return false
+  }
+  if (!getAccountToken() && getUserToken()) {
+    store.dispatch('LoginAccount').then(() => {
       if (store.getters.roles.length === 0) {
         getUserInfo(to, from, next)
       }
       next()
-    }
+      return false
+    })
+  }
+  if (!getAccountToken() && !getUserToken()) {
+    window.location = home_url
   }
 })
 

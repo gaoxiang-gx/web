@@ -584,8 +584,8 @@
             }
           }]
         },
-        baseUrl: process.env.BASE_API + '/api/tools/uploadImage',
-        baseUrl2: process.env.BASE_API + '/api/tools/uploadVideo',
+        baseUrl: process.env.BASE_API + '/api/document/uploadImage',
+        baseUrl2: process.env.BASE_API + '/api/document/uploadVideo',
         publicImageUrl: undefined,
         wangeditor1: wangEditor('#editorElem1', this.handleWangeditor),
         wangeditorContent: undefined,
@@ -814,7 +814,7 @@
       },
       getProductList() {
         getProductList({ is_promote: 1 }).then(res => {
-          this.productarray = res.data.data
+          this.productarray = res.data
         })
       },
       handleallproduct() {

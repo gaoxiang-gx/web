@@ -136,7 +136,7 @@
         departmentOptions: [],
         departmentLoading: false,
         listLoading: false,
-        baseUrl: process.env.BASE_API + '/api/tools/uploadVideo',
+        baseUrl: process.env.BASE_API + '/api/document/uploadVideo',
         publicVideoUrl: '',
         defaultProps: {
           children: 'child',

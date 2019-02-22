@@ -72,11 +72,7 @@ export default {
 }
 .hamburger-container {
   position: absolute;
-  right: -12px;
-  top: 300px;
-}
-.hamburger-container:hover {
   right: -16px;
-  transition: all .1s;
+  top: 300px;
 }
 </style>

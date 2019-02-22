@@ -219,7 +219,7 @@ export default {
       publicImageUrl: '',
       imageDialogVisible: false,
       isUsedOptions: [{ label: '未认领', key: 0 }, { label: '已认领', key: 1 }],
-      baseUrl: process.env.BASE_API + '/api/tools/uploadImage',
+      baseUrl: process.env.BASE_API + '/api/document/uploadImage',
       payTypeLoading: false,
       payTypeOptions: [],
       pickerOptions2: {

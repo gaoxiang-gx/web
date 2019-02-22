@@ -97,7 +97,7 @@ export default {
       params: { },
       headers: { },
       imgDataUrl: '',
-      uploadBaseUrl: process.env.BASE_API + '/api/tools/uploadAvatarImage'
+      uploadBaseUrl: process.env.BASE_API + '/api/document/uploadAvatarImage'
     }
   },
   filters: {
