@@ -245,7 +245,6 @@
       },
       handlecheck(obj) {
         const checked = this.$refs.tree.getCheckedKeys()
-        console.log(checked)
         if (checked.length === 1) {
           this.$refs.tree.setCheckedKeys([obj.id])
           this.listQuery.tag_id = obj.id

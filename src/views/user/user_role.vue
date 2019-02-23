@@ -60,17 +60,10 @@
       </el-pagination>
     </div>
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
       <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="80px" style='width: 90%; margin-left:5%;'>
         <el-form-item label="角色名" prop="role_name">
           <el-input v-model="temp.role_name"></el-input>
-        </el-form-item>
-        <el-form-item label="用户类别" prop="user_account_type_id">
-          <el-radio-group v-model="temp.user_account_type_id" size="small">
-            <el-radio-button v-for="item in typeOptions" :key="item.id" :label="item.id" :value="item.id">
-              {{item.type_name}}
-            </el-radio-button>
-          </el-radio-group>
         </el-form-item>
         <el-form-item label="code" prop="role_code">
           <el-input v-model="temp.role_code"></el-input>
@@ -106,7 +99,6 @@
 <script>
   import { getUserAccountRoleList, createUserAccountRole, updateUserAccountRole, deleteUserAccountRole } from '@/api/user_role'
   import { editUserAccountRolePermission, getPermissionByMenu, getAccountRolePermission } from '@/api/auth'
-  import { getUserAccountTypeList } from '@/api/user_group'
   import waves from '@/directive/waves'// 水波纹指令
 
   export default {
@@ -147,11 +139,9 @@
         showAuditor: false,
         temp: {
           id: undefined,
-          user_account_type_id: undefined,
           role_name: undefined,
           role_code: undefined
         },
-        typeOptions: [],
         tempData: {
           user_account_role_id: undefined,
           relation_list: []
@@ -166,7 +156,6 @@
         active: '',
         rules: {
           role_name: [{ required: true, message: '填写角色名', trigger: 'change' }],
-          user_account_type_id: [{ required: true, message: '选择角色类型', trigger: 'change' }],
           role_code: [{ required: true, message: '填写角色代码', trigger: 'change' }]
         }
       }
@@ -191,7 +180,6 @@
     },
     created() {
       this.getList()
-      this.getUserAccountTypeList()
     },
     methods: {
       changeStatus(e, row) {
@@ -208,11 +196,6 @@
           })
         }).catch(() => {
           row.status = e === 1 ? 0 : 1
-        })
-      },
-      getUserAccountTypeList() {
-        getUserAccountTypeList(this.listQuery).then(response => {
-          this.typeOptions = response.data.data
         })
       },
       traverseTree(node) {
