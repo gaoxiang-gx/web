@@ -5,8 +5,6 @@ import 'nprogress/nprogress.css'// Progress 进度条样式
 import { Message } from 'element-ui'
 import { getUserToken, getAccountToken } from '@/utils/auth' // 验权
 
-
-const home_url = 'http://localhost:9528/#/dashboard' // 返回首页
 const whiteList = ['/login', '/404'] // 不重定向白名单
 /**
  * 获取用户信息、菜单路由
@@ -61,7 +59,7 @@ router.beforeEach((to, from, next) => {
     })
   }
   if (!getAccountToken() && !getUserToken()) {
-    window.location = home_url
+    window.location = process.env.HOME_URL
   }
 })
 

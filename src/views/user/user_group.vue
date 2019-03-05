@@ -177,7 +177,7 @@ export default {
       }
     },
     getUserAccountGroupTree() {
-      getUserAccountGroupTree({ type_code: 'warehouse'}).then(res=> {
+      getUserAccountGroupTree({ type_code: process.env.API_TYPE_CODE}).then(res=> {
         this.userAccountGroupTree = res.data
       })
     },

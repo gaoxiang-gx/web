@@ -114,7 +114,6 @@ const user = {
       })
     },
     LoginAccount({ commit, state }) {
-      console.log('user_token', user_token)
       return new Promise((resolve, reject) => {
         loginAccount({ token: user_token }).then(response => {
           commit('SET_TOKEN', response.data)

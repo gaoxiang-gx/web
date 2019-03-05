@@ -68,6 +68,11 @@
         <el-form-item label="code" prop="role_code">
           <el-input v-model="temp.role_code"></el-input>
         </el-form-item>
+        <el-form-item label="屏蔽">
+          <el-select v-model="temp.default_params">
+            <el-option v-for="item in dafaulrOptions" :id="item.value" :value="item.value" :label="item.label"></el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -122,6 +127,20 @@
           role_code: undefined,
           sort: '-id'
         },
+        dafaulrOptions: [
+          {
+            value:'own',
+            label:'只看自己'
+          },
+          {
+            value:'grounp',
+            label:'只看本组'
+          },
+          {
+            value:'grounp_deliver',
+            label:'看本组和子组'
+          }
+        ],
         defaultProps: {
           children: 'children',
           label: (data, node) => {
@@ -140,7 +159,8 @@
         temp: {
           id: undefined,
           role_name: undefined,
-          role_code: undefined
+          role_code: undefined,
+          default_params: undefined
         },
         tempData: {
           user_account_role_id: undefined,
@@ -247,7 +267,8 @@
         this.temp = {
           id: undefined,
           role_name: undefined,
-          role_code: undefined
+          role_code: undefined,
+          default_params: undefined
         }
       },
       handleCreate() {

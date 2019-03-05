@@ -37,6 +37,11 @@
           <el-tag v-if="scope.row.sub_auth" type="primary">{{scope.row.sub_auth}}</el-tag>
         </template>
       </el-table-column>
+      <el-table-column min-width="50" align="center" label="权限等级">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.auth_grade | statusGradeColor">{{scope.row.auth_grade | statusGradeText}}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column width="180px" align="center" label="更新时间">
         <template slot-scope="scope">
           <span>{{scope.row.updated_at}}</span>
@@ -79,6 +84,11 @@
               <template slot="append">使用 , 间隔</template>
             </el-input>
           </el-form-item>
+          <el-form-item label="权限等级">
+            <el-select v-model="temp.auth_grade">
+              <el-option v-for="item in dafaulrOptions" :id="item.value" :value="item.value" :label="item.label"></el-option>
+            </el-select>
+          </el-form-item>
         </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -114,6 +124,24 @@
           update: '编辑',
           create: '创建'
         },
+        dafaulrOptions: [
+          {
+            value: 0,
+            label:'全部数据'
+          },
+          {
+            value:1,
+            label:'本人数据'
+          },
+          {
+            value:2,
+            label:'本组数据'
+          },
+          {
+            value:3,
+            label:'本组及其子组数据'
+          }
+        ],
         defaultProps: {
           children: 'children',
           label: 'menu_name'
@@ -129,6 +157,7 @@
           user_account_auth_id: undefined,
           auth_name: undefined,
           auth_code: undefined,
+          auth_grade: undefined,
           sub_auth: undefined,
           filter_params: undefined,
           default_params: undefined
@@ -142,6 +171,26 @@
           auth_code: [{ required: true, trigger: 'blur', validator: validateAuth }]
         },
         updataData: undefined
+      }
+    },
+    filters: {
+      statusGradeColor(status) {
+        const statusMap = {
+          0: 'success',
+          1: 'danger',
+          2: 'warning',
+          3: 'info',
+        }
+        return statusMap[status]
+      },
+      statusGradeText(status) {
+        const statusMap = {
+          0: '全部数据',
+          1: '本人数据',
+          2: '本组数据',
+          3: '本组及子组数据',
+        }
+        return statusMap[status]
       }
     },
     created() {
@@ -203,12 +252,7 @@
         })
       },
       handleUpdate(row) {
-        this.temp.user_account_auth_id = row.id
-        this.temp.auth_name = row.auth_name
-        this.temp.auth_code = row.auth_code
-        this.temp.sub_auth = row.sub_auth
-        this.temp.default_params = row.default_params
-        this.temp.filter_params = row.filter_params
+        this.temp = Object.assign({ user_account_auth_id: row.id},row)
         this.dialogStatus = 'update'
         this.dialogFormVisible = true
       },

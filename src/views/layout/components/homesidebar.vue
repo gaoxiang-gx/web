@@ -12,7 +12,7 @@
       <div class="sidebar-item" v-for="item in $store.state.user.getaways" :key="item.type_code">
         <a :href="item.api_url">
           <div class="svg-icon-warpper">
-            <svg-icon :icon-class="item.type_code + '_home_sidebar'" class="svg_icon"/>
+            <svg-icon icon-class="example-sidebar" class="svg_icon"/>
           </div>
           <span>{{item.type_name}}</span>
         </a>
