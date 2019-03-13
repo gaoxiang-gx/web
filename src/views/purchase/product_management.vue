@@ -34,9 +34,11 @@
       </el-table-column>
       <el-table-column min-width="200px" align="center" label="所属产品">
         <template slot-scope="scope">
-          <span v-for="item in scope.row.product" :key="item.id">
-            {{item.product_name}}
-            <el-tag :type="item.is_promote | statusFilter">{{item.is_promote | statusTranslator}}</el-tag><br/>
+          <span class="link-type" v-for="item in scope.row.goods_pivot">
+            <span v-if="item.product">
+              {{item.product.product_name}}
+            </span>
+            <el-tag style="height:20px;line-height:20px;" :type="item.product.is_promote | statusFilter">{{item.product.is_promote | statusTranslator}}</el-tag>
           </span>
         </template>
       </el-table-column>
@@ -369,8 +371,8 @@
         const tempData = Object.assign({}, row) // copy obj
         this.getProductList(' ')
         tempData.product_ids = []
-        for (const v in row.product) {
-          tempData.product_ids.push(row.product[v].id)
+        for (const v in row.goods_pivot) {
+          tempData.product_ids.push(row.goods_pivot[v].product_id)
         }
         this.temp = tempData
         this.dialogStatus = 'update'
@@ -393,14 +395,7 @@
             tempData.product_goods_id = this.temp.id
             tempData.product_ids = this.temp.product_ids
             updateProductGoods(tempData).then(response => {
-              this.temp.product = response.data.product
-              for (const v of this.list) {
-                if (v.id === this.temp.id) {
-                  const index = this.list.indexOf(v)
-                  this.list.splice(index, 1, this.temp)
-                  break
-                }
-              }
+              this.getList()
               this.dialogFormVisible = false
               this.$notify({
                 title: '成功',

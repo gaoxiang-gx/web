@@ -25,8 +25,8 @@
       </el-table-column>
       <el-table-column min-width="250px" align="center" label="所属产品">
         <template slot-scope="scope">
-          <span class="link-type" v-for="item in scope.row.product">{{item.product_name}}
-            <el-tag style="height:20px;line-height:20px;" :type="item.is_promote | statusFilter">{{item.is_promote | statusTranslator}}</el-tag>
+          <span class="link-type" v-for="item in scope.row.goods_pivot">{{item.product.product_name}}
+            <el-tag style="height:20px;line-height:20px;" :type="item.product.is_promote | statusFilter">{{item.product.is_promote | statusTranslator}}</el-tag>
           </span>
         </template>
       </el-table-column>

@@ -35,7 +35,7 @@
 
 <script>
 import { getInfo } from '@/api/login'
-import { updateUserPassword, updateUserAccount } from '@/api/user'
+import { updateOwnUserPassword, updateUserAccount } from '@/api/user'
 import waves from '@/directive/waves'
 import myUpload from 'vue-image-crop-upload'
 import PanThumb from '@/components/PanThumb'
@@ -127,7 +127,7 @@ export default {
       tempData.user_id = this.temp.user.id
       tempData.phone = this.temp.user.phone
       tempData.password = this.temp.password
-      updateUserPassword(tempData).then(() => {
+      updateOwnUserPassword(tempData).then(() => {
         this.temp.password = ''
         this.$notify({
           title: '成功',

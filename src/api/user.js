@@ -48,6 +48,14 @@ export function updateUserPassword(param) {
   })
 }
 
+export function updateOwnUserPassword(param) {
+  return request({
+    url: '/api/user/updateOwnUserPassword',
+    method: 'post',
+    data: param
+  })
+}
+
 export function getUnreadNoticeData(param) {
   return request({
     url: '/api/notice/getUnreadNoticeData',
