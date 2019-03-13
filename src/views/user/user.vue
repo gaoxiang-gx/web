@@ -1,22 +1,16 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-      <el-cascader
-        class="filter-item"
-        :options="options"
-        v-model="selectedOptions"
-        @change="handleChange">
-      </el-cascader>
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="手机号" v-model="listQuery.phone">
+      <el-input @keyup.enter.native="handleFilter" clearable style="width: 200px;" class="filter-item" placeholder="手机号" v-model="listQuery.phone">
       </el-input>
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="用户名" v-model="listQuery.nickname">
+      <el-input @keyup.enter.native="handleFilter" clearable style="width: 200px;" class="filter-item" placeholder="用户名" v-model="listQuery.nickname">
       </el-input>
       <el-select @change='handleFilter' style="width: 120px" class="filter-item" v-model="listQuery.sort" placeholder="排序">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
         </el-option>
       </el-select>
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加</el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加用户</el-button>
     </div>
 
     <el-table :span-method="objectSpanMethod" :stripe="true" :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row
@@ -41,42 +35,27 @@
           <span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.nickname}}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="80px" align="center" label="类型">
-        <template slot-scope="scope">
-          <span>{{scope.row.user_account_type.type_name}}</span>
-        </template>
-      </el-table-column>
       <el-table-column min-width="130px" align="center" label="角色">
         <template slot-scope="scope">
           <span v-if="scope.row.user_account_role">{{scope.row.user_account_role.role_name}}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="110px" align="center" label="所属部门">
-        <template slot-scope="scope">
-          <span type="info" v-if="scope.row.user_account_department !== null && scope.row.user_account_department !== undefined">{{scope.row.user_account_department.department_name}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="110px" align="center" label="所属分组">
+      <el-table-column min-width="110px" align="center" label="所属小组">
         <template slot-scope="scope">
           <span>{{scope.row.user_account_group.group_name}}</span>
         </template>
       </el-table-column>
-
-      <el-table-column min-width="100px" align="center" label="更新时间">
+      <el-table-column min-width="170px" align="center" label="更新时间">
         <template slot-scope="scope">
           <span>{{scope.row.updated_at}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" min-width="320" class-name="small-padding">
+      <el-table-column align="center" label="操作" width="320" class-name="small-padding">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="getUserAuthList(scope.row)">权限管理</el-button>
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
-          <el-button v-if="scope.row.status!=0" size="small" type="warning" @click="handleModifyStatus(scope.row,0)">冻结
-          </el-button>
-          <el-button v-if="scope.row.status!=1" size="small" type="success" @click="handleModifyStatus(scope.row,1)">激活
-          </el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除
-          </el-button>
+          <el-button v-if="scope.row.status!=0" size="mini" type="warning" @click="handleModifyStatus(scope.row,0)">冻结</el-button>
+          <el-button v-if="scope.row.status!=1" size="mini" type="success" @click="handleModifyStatus(scope.row,1)">激活</el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -88,14 +67,14 @@
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="80px" style='width: 90%; margin-left:5%;'>
-        <el-form-item label="手机号码" prop="user.phone">
-          <el-input v-model="temp.user.phone" :disabled="inputDisable"></el-input>
+        <el-form-item label="手机号码" prop="phone">
+          <el-input v-model="temp.phone" :disabled="inputDisable"></el-input>
         </el-form-item>
         <el-form-item label="用户名" prop="nickname">
           <el-input v-model="temp.nickname" :disabled="inputDisable"></el-input>
         </el-form-item>
-        <el-form-item label="用户角色" prop="user_account_role.id">
-          <el-select v-model="temp.user_account_role.id" placeholder="请选择用户权限">
+        <el-form-item label="用户角色" prop="user_account_role_id">
+          <el-select v-model="temp.user_account_role_id" placeholder="请选择用户权限">
             <el-option
               v-for="item in roleOptions"
               :key="item.key"
@@ -104,37 +83,16 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="用户部门">
-          <el-select
-            v-model="temp.user_account_department_id"
-            placeholder="请选择部门"
-            @change="handleGetGroup"
-            remote
-            filterable
-            :remote-method="getDepartList"
-            :loading="getDepartLoading"
-          >
-            <el-option
-              v-for="item in departOptions"
-              :key="item.id"
-              :label="item.department_name"
-              class="bg"
-              :value="item.id">
-            </el-option>
-          </el-select>
+        <el-form-item label="所属小组">
+          <el-tree :data="userAccountGroupTree"
+                   ref="tree"
+                   style="border: 1px solid #e4e4e4"
+                   show-checkbox
+                   check-strictly
+                   node-key="id"
+                   :props="defaultProps2"
+                   @check="handlecheck"></el-tree>
         </el-form-item>
-        <el-form-item label="用户组">
-          <el-select v-model="temp.user_account_group_id" placeholder="请选择用户组" clearable>
-            <el-option
-              v-for="item in groupOptions"
-              :key="item.id"
-              :label="item.group_name"
-              class="bg"
-              :value="item.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
-
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -142,43 +100,7 @@
         <el-button v-else type="primary" @click="updateData">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog :title="innerTableTitle1" :visible.sync="innerTableVisible1" width="90%" >
-      <div class="filter-container" align="right">
-        <el-button align="right" class="filter-item" style="margin-left: 10px;" @click="handleInnerCreate1" type="primary" icon="el-icon-edit">添加</el-button>
-      </div>
 
-      <el-table :stripe="true" :key='innerTableKey1' :data="innerList1" v-loading="innerListLoading1" element-loading-text="给我一点时间" border fit highlight-current-row
-                style="width: 100%">
-        <el-table-column align="center" label="序号" width="65" >
-          <template slot-scope="scope">
-            <span>{{scope.row.id}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column min-width="100px" align="center" label="名称">
-          <template slot-scope="scope">
-            <span class="link-type" @click="handleInnerUpdate1(scope.row)">{{scope.row.name}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column width="180px" align="center" label="时间">
-          <template slot-scope="scope">
-            <span>{{scope.row.updated_at}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="操作" width="320" class-name="small-padding">
-          <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="handleInnerUpdate1(scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="handleInnerDelete1(scope.row)">删除
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <div v-show="!innerListLoading1" class="pagination-container">
-        <el-pagination background @size-change="handleInnerSizeChange1" @current-change="handleInnerCurrentChange1" :current-page.sync="innerListQuery1.page"
-                       :page-sizes="[5,10,50, 100]" :page-size="innerListQuery1.page_size" layout="total, sizes, prev, pager, next, jumper" :total="innerTotal1">
-        </el-pagination>
-      </div>
-    </el-dialog>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="innerDialogFormVisible1">
       <el-form :rules="innerRules1" ref="innerDataForm1" :model="innerTemp1" label-position="left" label-width="80px" style='width: 400px; margin-left:50px;'>
         <el-form-item label="手机号" prop="phone">
@@ -242,11 +164,12 @@
         listQuery: {
           page: 1,
           page_size: 20,
-          copyright: undefined,
-          domain_name: undefined,
+          phone: undefined,
+          nickname: undefined,
           ip: undefined,
           sort: '-id'
         },
+        userAccountGroupOptions:[],
         defaultProps: {
           children: 'children',
           label: (data, node) => {
@@ -264,6 +187,7 @@
         },
         selectedOptions: [],
         active: '',
+        userAccountGroupTree: [],
         roleArry: [],
         accountArry: [],
         disabledCheck: [],
@@ -272,6 +196,15 @@
         checkList: [],
         checkedId: [],
         authList: [],
+        defaultProps2: {
+          children: 'child',
+          label: 'group_name'
+        },
+        defaultProps3: {
+          children: 'child',
+          label: 'group_name',
+          value: 'id'
+        },
         accountAuthList: [],
         tempAuthData: {
           user_account_id: undefined
@@ -286,23 +219,9 @@
         temp: {
           id: undefined,
           nickname: '',
-          user: {
-            id: '',
-            phone: ''
-          },
+          phone: undefined,
           user_account_group_id: undefined,
-          user_account_type: {
-            id: undefined,
-            type_name: ''
-          },
-          user_account_group: {
-            id: undefined,
-            group_name: ''
-          },
-          user_account_role: {
-            id: undefined,
-            role_name: ''
-          }
+          user_account_role_id: undefined
         },
         dialogFormVisible: false,
         dialogStatus: '',
@@ -311,16 +230,10 @@
           create: '创建'
         },
         rules: {
-          user: {
-            phone: [{ required: true, message: '请正确填写账号', trigger: 'change' }]
-          },
+          phone: [{ required: true, message: '请正确填写账号', trigger: 'change' }],
           nickname: [{ required: true, message: '请正确填写用户名', trigger: 'change' }],
-          user_account_type: {
-            id: [{ required: true, message: '请选择', trigger: 'change' }]
-          },
-          user_account_role: {
-            id: [{ required: true, message: '选择权限', trigger: 'change' }]
-          }
+          warehouse_user_account_group_id: [{ required: true, message: '请选择', trigger: 'change' }],
+          user_account_role_id: [{ required: true, message: '请选择', trigger: 'change' }],
         },
         innerList1: null,
         innerTotal1: null,
@@ -339,10 +252,10 @@
         },
         PermissionByMenuList: [],
         innerListLoading1: false,
-        innerTableVisible1: false,
         innerDialogFormVisible1: false,
         innerRules1: {
-          name: [{ required: true, message: '请正确填写名称', trigger: 'change' }]
+          name: [{ required: true, message: '请正确填写名称', trigger: 'change' }],
+          phone: [{ required: true, message: '填写手机号', trigger: 'change' }]
         },
         colSpanRegular: [],
         countNumber: [],
@@ -391,12 +304,24 @@
     },
     methods: {
       getUserAccountGroupTree() {
-        getUserAccountGroupTree().then(res => {
-          this.options = res.data
+        getUserAccountGroupTree({ type_code: process.env.API_TYPE_CODE}).then(res=> {
+          this.userAccountGroupTree = res.data
         })
       },
-      handleChange() {
-
+      handlecheck(obj) {
+        const checked = this.$refs.tree.getCheckedKeys()
+        if (checked.length === 1) {
+          this.$refs.tree.setCheckedKeys([obj.id])
+          this.temp.user_account_group_id = obj.id
+        } else if (checked.length === 0) {
+          this.$refs.tree.setCheckedKeys([])
+          this.temp.user_account_group_id = undefined
+        } else {
+          this.$refs.tree.setCheckedKeys([obj.id])
+          this.temp.user_account_group_id = obj.id
+        }
+      },
+      handleChange(value) {
       },
       traverseTree(node) {
         if (!node) {
@@ -442,12 +367,6 @@
             }
           }
         })
-      },
-      handleGetGroup() {
-        this.temp.user_account_group_id = undefined
-        if (this.temp.user_account_type.id && this.temp.user_account_department_id) {
-          this.getGroupList()
-        }
       },
       handleGetRoles(state) {
         this.temp.user_account_role.id = state
@@ -498,24 +417,24 @@
           for (const v of res.data.user_permission) {
             temprole.push(v.id)
           }
-        })
-        const ttemp = {
-          user_account_id: row.id
-        }
-        getAccountPermission(ttemp).then(res => {
-          for (const v of res.data.user_permission) {
-            this.accountArry.push(v.id)
-          }
-          for (let i = 0; i < this.accountArry.length; i++) {
-            for (let j = 0; j < temprole.length; j++) {
-              if (this.accountArry[i] === temprole[j]) {
-                temprole.splice(j, 1)
-              }
-            }
-          }
           this.roleArry = temprole
-          this.$refs.tree.setCheckedKeys(this.accountArry)
+          this.$refs.tree.setCheckedKeys(this.roleArry)
         })
+        // const ttemp = {
+        //   user_account_id: row.id
+        // }
+        // getAccountPermission(ttemp).then(res => {
+        //   for (const v of res.data.user_permission) {
+        //     this.accountArry.push(v.id)
+        //   }
+        //   for (let i = 0; i < this.accountArry.length; i++) {
+        //     for (let j = 0; j < temprole.length; j++) {
+        //       if (this.accountArry[i] === temprole[j]) {
+        //         temprole.splice(j, 1)
+        //       }
+        //     }
+        //   }
+        // })
       },
       // getUserAccountList() {
       //   getUserAccountMenuAuthRelationList(this.tempAuthData).then(res => {
@@ -637,6 +556,10 @@
         this.listQuery.page = 1
         this.getList()
       },
+      handleFilterGrounp(val) {
+        this.listQuery.user_account_group_id = val[val.length - 1]
+        this.handleFilter()
+      },
       handleSizeChange(val) {
         this.listQuery.page_size = val
         this.getList()
@@ -649,47 +572,32 @@
         this.temp = {
           id: undefined,
           nickname: '',
-          user: {
-            id: '',
-            phone: ''
-          },
-          user_account_department_id: undefined,
-          user_account_type_id: undefined,
-          user_account_type: {
-            id: undefined,
-            type_name: ''
-          },
+          phone: undefined,
           user_account_group_id: undefined,
-          user_account_group: {
-            id: undefined,
-            group_name: ''
-          },
-          user_account_role_id: undefined,
-          user_account_role: {
-            id: undefined,
-            role_name: ''
-          }
+          user_account_role_id: undefined
         }
       },
       handleCreate() {
         this.resetTemp()
+        this.getUserAccountGroupTree()
         this.inputDisable = false
         this.dialogStatus = 'create'
         this.dialogFormVisible = true
         this.$nextTick(() => {
+          this.$refs.tree.setCheckedKeys([])
           this.$refs['dataForm'].clearValidate()
         })
       },
       createData() {
+        if (!this.temp.user_account_group_id) {
+          this.$message.error('选择小组')
+          return false
+        }
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            this.temp.phone = this.temp.user.phone
-            this.temp.user_account_type_id = this.temp.user_account_type.id
-            this.temp.user_account_role_id = this.temp.user_account_role.id
             createUserAccount(this.temp).then(response => {
               this.getList()
               this.dialogFormVisible = false
-              this.total++
               this.$notify({
                 title: '成功',
                 message: '创建成功',
@@ -702,36 +610,32 @@
       },
       handleUpdate(row) {
         console.log(row)
-        this.temp = Object.assign({}, row)
-        this.handleGetRoles(this.temp.user_account_role.id)
-        this.getGroupList()
+        this.temp.id = row.id
+        this.temp.phone = row.user.phone
+        this.temp.nickname = row.nickname
+        this.temp.user_account_role_id = row.user_account_role_id
+        this.temp.user_account_group_id = row.user_account_group_id
         this.inputDisable = true
         this.dialogStatus = 'update'
         this.dialogFormVisible = true
         this.$nextTick(() => {
+          this.$refs.tree.setCheckedKeys([row.user_account_group_id])
           this.$refs['dataForm'].clearValidate()
         })
       },
       updateData() {
+        if (!this.temp.user_account_group_id) {
+          this.$message.error('选择小组')
+          return false
+        }
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             const tempData = {}
             tempData.user_account_id = this.temp.id
             tempData.user_account_group_id = this.temp.user_account_group_id
-            tempData.user_account_department_id = this.temp.user_account_department_id
-            tempData.user_account_role_id = this.temp.user_account_role.id
+            tempData.user_account_role_id = this.temp.user_account_role_id
             updateUserAccount(tempData).then(response => {
-              if (response.data) {
-                this.temp.user_account_group = response.data.user_account_group
-                this.temp.user_account_role = response.data.user_account_role
-              }
-              for (const v of this.list) {
-                if (v.id === this.temp.id) {
-                  const index = this.list.indexOf(v)
-                  this.list.splice(index, 1, this.temp)
-                  break
-                }
-              }
+              this.getList()
               this.dialogFormVisible = false
               this.$notify({
                 title: '成功',
@@ -762,12 +666,6 @@
           })
         })
       },
-      handleOpenInner1(row) {
-        this.innerTableVisible1 = true
-        this.innerTableTitle1 = row.domain_name + ' -- 附加代码'
-        this.temp = Object.assign({}, row) // copy obj
-        this.getInnerList1()
-      },
       handleInnerFilter1() {
         this.innerListQuery1.page = 1
         this.getInnerList1()
@@ -783,7 +681,7 @@
       resetInnerTemp1() {
         this.innerTemp1 = {
           id: undefined,
-          domain_id: this.temp.id,
+          phone: undefined,
           name: '',
           code: ''
         }

@@ -37,10 +37,12 @@
           <el-tag type="info">{{scope.row.user_menu.menu_name}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column min-width="100px" align="center" label="接口名称">
+      <el-table-column min-width="100px" align="center" label="接口名称 / 权限等级">
         <template slot-scope="scope">
           <div v-for="item in scope.row.user_account_auth">
-            <el-tag type="primary" v-if="scope.row.user_account_auth.length !== 0">{{item.auth_name}}</el-tag><br>
+            <el-tag type="primary" v-if="scope.row.user_account_auth.length !== 0">{{item.auth_name}}</el-tag>
+            <el-tag :type="item.auth_grade | statusGradeColor">{{item.auth_grade | statusGradeText}}</el-tag>
+            <br>
           </div>
         </template>
       </el-table-column>
@@ -78,8 +80,9 @@
               :key="item.id"
               :label="item.auth_name"
               :value="item.id">
-              <span style="float: left">{{ item.auth_name }}</span>
-              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.auth_code }}</span>
+              <el-tag class="select_tag" :type="item.auth_grade | statusGradeColor">{{item.auth_grade | statusGradeText}}</el-tag>
+              <span >{{ item.auth_name }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px;margin-right: 20px">{{ item.auth_code }}</span>
             </el-option>
           </el-select>
         </el-form-item>
@@ -185,6 +188,26 @@
           permission_name: [{ required: true, trigger: 'change', message: '必填' }]
         },
         updataData: undefined
+      }
+    },
+    filters: {
+      statusGradeColor(status) {
+        const statusMap = {
+          0: 'success',
+          1: 'danger',
+          2: 'warning',
+          3: 'info',
+        }
+        return statusMap[status]
+      },
+      statusGradeText(status) {
+        const statusMap = {
+          0: '全部数据',
+          1: '本人数据',
+          2: '本组数据',
+          3: '本组及子组数据',
+        }
+        return statusMap[status]
       }
     },
     created() {
@@ -350,6 +373,10 @@
     }
   }
 </script>
-<style>
-
+<style scoped lang="scss">
+  .select_tag {
+    margin-right: 20px;
+    line-height: 20px;
+    height: 20px;
+  }
 </style>

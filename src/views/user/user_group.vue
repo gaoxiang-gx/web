@@ -12,32 +12,26 @@
         </el-option>
       </el-select>
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加</el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加小组</el-button>
     </div>
 
     <el-table :stripe="true" :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row
       style="width: 100%">
-      <el-table-column align="center" label="序号" width="65">
+      <el-table-column align="center" label="ID" width="65">
         <template slot-scope="scope">
           <span>{{scope.row.id}}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="100px" align="center" label="用户组名">
+      <el-table-column min-width="100px" align="center" label="用户组名称">
         <template slot-scope="scope">
           <span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.group_name}}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="100px" align="center" label="组类型">
+      <el-table-column min-width="100px" align="center" label="用户组类型">
         <template slot-scope="scope">
           <el-tag type="info">{{scope.row.user_account_type.type_name}}</el-tag>
         </template>
       </el-table-column>
-      <!--<el-table-column min-width="100px" align="center" label="分成人">-->
-        <!--<template slot-scope="scope">-->
-          <!--<span v-if="scope.row.pay_to_user_account !== null">{{scope.row.pay_to_user_account.nickname}}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-
       <el-table-column width="180px" align="center" label="更新时间">
         <template slot-scope="scope">
           <span>{{scope.row.updated_at}}</span>
@@ -58,37 +52,36 @@
       </el-pagination>
     </div>
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="60%">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
       <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="80px" style='width: 90%;margin-left: 5%'>
-        <el-form-item label="组名称" prop="group_name">
-          <el-input style="width: 50%" v-model="temp.group_name"></el-input>
+        <el-form-item label="小组名称" prop="group_name">
+          <el-input style="width: 200px" v-model="temp.group_name"></el-input>
         </el-form-item>
-        <el-form-item label="组类别" prop="user_account_type_id">
-          <el-radio-group v-model="temp.user_account_type_id" :disabled="typeDisable">
-            <el-radio-button v-for="item in typeOptions" :key="item.key" :label="item.key" :value="item.key">
-              {{item.label}}
-            </el-radio-button>
-          </el-radio-group>
+        <el-form-item label="小组关系" v-if="dialogStatus == 'create'">
+          <span style="color: red;line-height: 20px">
+            选择父级小组,不选择将视为根级小组
+          </span>
+          <el-tree :data="userAccountGroupTree"
+                   ref="tree"
+                   style="border: 1px solid #e4e4e4"
+                   show-checkbox
+                   check-strictly
+                   node-key="id"
+                   :props="defaultProps"
+                   @check="handlecheck"></el-tree>
         </el-form-item>
-        <el-form-item label="所属部门" prop="user_account_department_id">
-          <el-radio-group v-model="temp.user_account_department_id" :disabled="typeDisable">
-            <el-radio-button v-for="item in departOptions" :key="item.key" :label="item.key" :value="item.key">
-              {{item.label}}
-            </el-radio-button>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="分成归属" prop="pay_for_user_account_id">
-          <el-select filterable
-                     clearable
-                     remote
-                     placeholder="搜索"
-                     :remote-method="getUserAccountList"
-                     :loading="payLoading"
-                     v-model="temp.pay_for_user_account_id">
-            <el-option v-for="item in payOptions" :label="item.nickname" :key="item.id" :value="item.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
+        <!--<el-form-item label="分成归属" prop="pay_for_user_account_id">-->
+          <!--<el-select filterable-->
+                     <!--clearable-->
+                     <!--remote-->
+                     <!--placeholder="搜索"-->
+                     <!--:remote-method="getUserAccountList"-->
+                     <!--:loading="payLoading"-->
+                     <!--v-model="temp.pay_for_user_account_id">-->
+            <!--<el-option v-for="item in payOptions" :label="item.nickname" :key="item.id" :value="item.id">-->
+            <!--</el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -100,7 +93,7 @@
 </template>
 
 <script>
-import { getUserAccountGroupList, getUserAccountTypeList, createUserAccountGroup, updateUserAccountGroup, deleteUserAccountGroup } from '@/api/user_group'
+import { getUserAccountGroupList, getUserAccountGroupTree, createUserAccountGroup, updateUserAccountGroup, deleteUserAccountGroup } from '@/api/user_group'
 import { getUserAccountDepartmentList } from '@/api/user_department'
 import { getSupportMemberList } from '@/api/support_member'
 import waves from '@/directive/waves' // 水波纹指令
@@ -130,13 +123,12 @@ export default {
       showAuditor: false,
       temp: {
         id: undefined,
-        user_account_type_id: '',
-        user_account_department_id: undefined,
-        pay_for_user_account_id: undefined,
         group_name: '',
-        user_account_type: {
-          id: undefined
-        }
+        pid: undefined
+      },
+      defaultProps: {
+        children: 'child',
+        label: 'group_name'
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -145,12 +137,9 @@ export default {
         create: '创建'
       },
       rules: {
-        channel_name: [{ required: true, message: '请正确填写渠道名称', trigger: 'change' }],
-        user_account_type_id: [{ required: true, message: '选择类型', trigger: 'change' }],
-        user_account_department_id: [{ required: true, message: '选择部门', trigger: 'change' }]
+        group_name: [{ required: true, message: '填写小组名称', trigger: 'change' }]
       },
-      typeOptions: [],
-      departOptions: [],
+      userAccountGroupTree: [],
       payOptions: [],
       userDepaerOptions: [],
       payLoading: false,
@@ -170,24 +159,26 @@ export default {
   },
   created() {
     this.getList()
-    this.getUserAccountTypeList()
+    this.getUserAccountGroupTree()
   },
   methods: {
-    getUserAccountTypeList() {
-      getUserAccountTypeList({ page_size: 0 }).then(response => {
-        this.typeOptions = response.data.map(v => ({
-          key: v.id,
-          label: v.type_name
-        }))
-      })
+    handlecheck(obj) {
+      console.log(obj)
+      const checked = this.$refs.tree.getCheckedKeys()
+      if (checked.length === 1) {
+        this.$refs.tree.setCheckedKeys([obj.id])
+        this.temp.pid = obj.id
+      } else if (checked.length === 0) {
+        this.$refs.tree.setCheckedKeys([])
+        this.temp.pid = undefined
+      } else {
+        this.$refs.tree.setCheckedKeys([obj.id])
+        this.temp.pid = obj.id
+      }
     },
-    getUserDepartList() {
-      getUserAccountDepartmentList({ page_size: 0 }).then(response => {
-        this.departOptions = response.data.map(v => ({
-          key: v.id,
-          label: v.department_name
-        }))
-        this.userDepaerOptions = this.departOptions
+    getUserAccountGroupTree() {
+      getUserAccountGroupTree({ type_code: process.env.API_TYPE_CODE}).then(res=> {
+        this.userAccountGroupTree = res.data
       })
     },
     getUserAccountList(query) {
@@ -232,21 +223,18 @@ export default {
     resetTemp() {
       this.temp = {
         id: undefined,
-        user_account_type_id: '',
-        user_account_department_id: undefined,
-        pay_for_user_account_id: undefined,
         group_name: '',
-        user_account_type: {
-          id: undefined
-        }
+        pid: undefined,
       }
     },
     handleCreate() {
+      this.getUserAccountGroupTree()
       this.resetTemp()
       this.typeDisable = false
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.$nextTick(() => {
+        this.$refs.tree.setCheckedKeys([])
         this.$refs['dataForm'].clearValidate()
       })
     },
@@ -254,9 +242,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           createUserAccountGroup(this.temp).then(response => {
-            // this.temp = response.data
             this.getList()
-            // this.list.unshift(this.temp)
             this.dialogFormVisible = false
             this.total++
             this.$notify({
@@ -290,7 +276,6 @@ export default {
           tempData.user_account_group_id = this.temp.id
           tempData.user_account_department_id = this.temp.user_account_department_id
           tempData.user_account_type_id = this.temp.user_account_type.id
-          tempData.pay_for_user_account_id = this.temp.pay_for_user_account_id
           updateUserAccountGroup(tempData).then(() => {
             this.getList()
             this.dialogFormVisible = false
@@ -336,10 +321,9 @@ export default {
     this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
   },
   activated() {
-    window.scrollTo(0, this.scrollTop)
     this.getList()
-    this.getUserAccountTypeList()
-    this.getUserDepartList()
+    this.getUserAccountGroupTree()
+    window.scrollTo(0, this.scrollTop)
   }
 }
 </script>
