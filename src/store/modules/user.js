@@ -105,7 +105,7 @@ const user = {
     // 获取子系统权限
     GetUserAccountTypeList({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getUserAccountTypeList({ token: state.token }).then(response => {
+        getUserAccountTypeList().then(response => {
           commit('SET_GATEWAYS', response.data)
           resolve()
         }).catch(error => {

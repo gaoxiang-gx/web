@@ -26,11 +26,16 @@
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="物流单号"
                 v-model="listQuery.orders_logistics_number">
       </el-input>
-      <el-select clearable @change='handleFilter' style="width: 120px" class="filter-item"
-                 v-model="listQuery.support_user_account_group_id" placeholder="客服部门">
-        <el-option v-for="item in userGroupOptions" :key="item.id" :label="item.group_name" :value="item.id">
-        </el-option>
-      </el-select>
+      <el-cascader
+        class="filter-item"
+        clearable
+        :options="userGroupTree"
+        change-on-select
+        placeholder="客服部"
+        :props="defaultPropsGroup"
+        v-model="userGroupOptions"
+        @change="handleFilterGrounp">
+      </el-cascader>
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="客服"
                 v-model="listQuery.support_member_nickname">
       </el-input>
@@ -66,11 +71,11 @@
                 v-model="listQuery.remark">
       </el-input>
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <el-button class="filter-item" type="primary" v-waves icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <!--<el-button class="filter-item" type="primary" v-waves icon="el-icon-edit" @click="handleCreate">添加</el-button>-->
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-download" style="float: right" @click="downExcel">导出</el-button>
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-refresh" style="float:right;" @click="refreshOrdersList">刷新</el-button>
       <div>
-        <p style="float:right;padding-right:20px;font-size:22px;" v-if="$store.state.user.roles === 'administrator' || $store.state.user.roles === 'warehouse'">
+        <p style="float:right;padding-right:20px;font-size:22px;">
           <span>今日订单：<span style="color:red;">{{today_orders}}</span></span>
           <span>待发货：<span style="color:red;">{{need_delivery}}</span></span>
         </p>
@@ -222,15 +227,15 @@
       </el-table-column>
       <el-table-column align="center" label="操作" min-width="320" class-name="small-padding">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.status===1" type="primary" size="small" @click="handleUpdate(scope.row)">编辑</el-button>
-          <el-button v-if="scope.row.status===1" :loading="btnLoading" size="small" type="success" @click="handleCheckOrders(scope.row)">确认订单</el-button>
-          <el-button v-if="scope.row.status===2" size="small" type="info" @click="handleModifyStatus(scope.row,1)">未确认</el-button>
+          <!--<el-button v-if="scope.row.status===1" type="primary" size="small" @click="handleUpdate(scope.row)">编辑</el-button>-->
+          <!--<el-button v-if="scope.row.status===1" :loading="btnLoading" size="small" type="success" @click="handleCheckOrders(scope.row)">确认订单</el-button>-->
+          <!--<el-button v-if="scope.row.status===2" size="small" type="info" @click="handleModifyStatus(scope.row,1)">未确认</el-button>-->
           <el-button v-if="scope.row.status===2 || scope.row.status === 4" size="small" type="success" @click="handleDeliverOrders(scope.row,0)">确认发货</el-button>
           <el-button v-if="scope.row.status===2" size="small" type="warning" @click="handleDeliverOrders(scope.row,1)">已断货</el-button>
-          <el-button v-if="scope.row.status===3" size="small" type="success" @click="handleHandleOrders(scope.row,1)">确认签收</el-button>
-          <el-button v-if="scope.row.status===3" size="small" type="warning" @click="handleHandleOrders(scope.row,0)">已拒收</el-button>
-          <el-button v-if="scope.row.status===5" size="small" type="success" @click="handleResultOrders(scope.row)">已完成</el-button>
-          <el-button v-if="($store.state.user.roles === 'warehouse' || $store.state.user.roles === 'administrator') && scope.row.status!==9" size="small" type="danger" @click="handleDestoryOrders(scope.row)">删除</el-button>
+          <!--<el-button v-if="scope.row.status===3" size="small" type="success" @click="handleHandleOrders(scope.row,1)">确认签收</el-button>-->
+          <!--<el-button v-if="scope.row.status===3" size="small" type="warning" @click="handleHandleOrders(scope.row,0)">已拒收</el-button>-->
+          <!--<el-button v-if="scope.row.status===5" size="small" type="success" @click="handleResultOrders(scope.row)">已完成</el-button>-->
+          <!--<el-button v-if="scope.row.status!==9" size="small" type="danger" @click="handleDestoryOrders(scope.row)">删除</el-button>-->
           <!--<el-button v-if="scope.row.status===1" size="small" type="danger" @click="handleDeleteOrder(scope.row,9)">删除</el-button>-->
         </template>
       </el-table-column>
@@ -806,6 +811,7 @@
     getProductDeliverList,
     getProductDeliverExtraList
   } from '@/api/product'
+  import { getSupportGroupList } from '@/api/support_member'
   import { getProductGoodsList } from '@/api/product_goods'
   // import { getSystemGlobalSettingInfo } from '@/api/system_global_setting'
   import {
@@ -913,6 +919,13 @@
           page: 1,
           page_size: 5,
           product_weixin_id: undefined
+        },
+        userGroupOptions:[],
+        userGroupTree: [],
+        defaultPropsGroup: {
+          children: 'child',
+          label: 'group_name',
+          value: 'id'
         },
         props: {
           value: 'area_number',
@@ -1380,16 +1393,37 @@
     },
     created() {
       this.getList()
+      this.getUserGroupTree()
       this.getProductWeixinList(' ')
       this.queryOrderPayTypeList(' ')
       this.getOrdersCountInfo()
       // this.getSystemDeliveryAddress()
       // this.getSystemDeliveryProductName()
       // this.getSystemSfMonthlyAccount()
-      this.getGroupList()
       this.getregionData()
     },
     methods: {
+      getUserGroupTree() {
+        getSupportGroupList().then(response => {
+          this.userGroupTree = this.formatUserGroupTree(response.data)
+        })
+      },
+      formatUserGroupTree(tree) {
+        const Group = tree.map(item => {
+          if (item.child.length > 0) {
+            item.child = this.formatUserGroupTree(item.child)
+            return item
+          } else {
+            delete item.child
+            return item
+          }
+        })
+        return Group
+      },
+      handleFilterGrounp(val) {
+        this.listQuery.support_user_account_group_id = val[val.length - 1]
+        this.handleFilter()
+      },
       getregionData() {
         getOrdersAreaList().then(response => {
           this.regionData = response.data
@@ -1419,13 +1453,6 @@
             this.productDeliverLoading = false
           })
         }
-      },
-      getGroupList() {
-        getUserAccountGroupList({ user_account_type_id: 2 }).then(response => {
-          if (response.data.data) {
-            this.userGroupOptions = response.data.data
-          }
-        })
       },
       // getSystemDeliveryAddress() {
       //   getSystemGlobalSettingInfo({ key_name: 'delivery_address' }).then(response => {
