@@ -42,7 +42,7 @@
       </el-table-column>
       <el-table-column min-width="110px" align="center" label="所属小组">
         <template slot-scope="scope">
-          <span>{{scope.row.user_account_group.group_name}}</span>
+          <span v-if="scope.row.user_account_group">{{scope.row.user_account_group.group_name}}</span>
         </template>
       </el-table-column>
       <el-table-column min-width="170px" align="center" label="更新时间">

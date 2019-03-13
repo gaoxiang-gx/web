@@ -74,7 +74,7 @@ export function updateOrdersLogistics(param) {
 
 export function getOrdersLogisticsTypeList(param) {
   return request({
-    url: '/api/orders/getOrdersLogisticsTypeList',
+    url: '/api/logistics/getOrdersLogisticsTypeList',
     method: 'post',
     data: param
   })
@@ -175,28 +175,28 @@ export function getOrdersAreaList(param) {
 }
 export function getOrdersSensitiveList(param) {
   return request({
-    url: '/api/orders/getOrdersSensitiveList',
+    url: '/api/logistics/getOrdersSensitiveList',
     method: 'post',
     data: param
   })
 }
 export function createOrdersSensitive(param) {
   return request({
-    url: '/api/orders/createOrdersSensitive',
+    url: '/api/logistics/createOrdersSensitive',
     method: 'post',
     data: param
   })
 }
 export function updateOrdersSensitive(param) {
   return request({
-    url: '/api/orders/updateOrdersSensitive',
+    url: '/api/logistics/updateOrdersSensitive',
     method: 'post',
     data: param
   })
 }
 export function deleteOrdersSensitive(param) {
   return request({
-    url: '/api/orders/deleteOrdersSensitive',
+    url: '/api/logistics/deleteOrdersSensitive',
     method: 'post',
     data: param
   })

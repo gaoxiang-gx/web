@@ -213,7 +213,7 @@ export function deleteProductStorageManual(param) {
 
 export function updateProductDeliver(param) {
   return request({
-    url: '/api/warehouse/updateProductDeliver ',
+    url: '/api/logistics/updateProductDeliver ',
     method: 'post',
     data: param
   })
@@ -221,7 +221,7 @@ export function updateProductDeliver(param) {
 
 export function createProductDeliver(param) {
   return request({
-    url: '/api/warehouse/createProductDeliver ',
+    url: '/api/logistics/createProductDeliver ',
     method: 'post',
     data: param
   })
@@ -229,7 +229,7 @@ export function createProductDeliver(param) {
 
 export function getProductDeliverList(param) {
   return request({
-    url: '/api/warehouse/getProductDeliverList ',
+    url: '/api/logistics/getProductDeliverList ',
     method: 'post',
     data: param
   })
@@ -237,7 +237,7 @@ export function getProductDeliverList(param) {
 
 export function createProductDeliverExtra(param) {
   return request({
-    url: '/api/warehouse/createProductDeliverExtra ',
+    url: '/api/logistics/createProductDeliverExtra ',
     method: 'post',
     data: param
   })
@@ -245,7 +245,7 @@ export function createProductDeliverExtra(param) {
 
 export function getProductDeliverExtraList(param) {
   return request({
-    url: '/api/warehouse/getProductDeliverExtraList ',
+    url: '/api/logistics/getProductDeliverExtraList ',
     method: 'post',
     data: param
   })
@@ -253,7 +253,7 @@ export function getProductDeliverExtraList(param) {
 
 export function updateProductDeliverExtra(param) {
   return request({
-    url: '/api/warehouse/updateProductDeliverExtra ',
+    url: '/api/logistics/updateProductDeliverExtra ',
     method: 'post',
     data: param
   })
