@@ -168,7 +168,7 @@ export function downloadNeedCheckOrder(param) {
 
 export function getOrdersAreaList(param) {
   return request({
-    url: '/api/orders/getOrdersAreaList',
+    url: '/api/logistics/getOrdersAreaList',
     method: 'post',
     data: param
   })
