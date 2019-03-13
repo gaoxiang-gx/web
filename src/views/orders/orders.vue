@@ -105,17 +105,17 @@
                   </span>
                 </p>
               </div>
-              <!--<el-button size="mini" type="primary" icon="el-icon-edit" @click="handleOpenAnotherInner4(scope.row)">-->
-                <!--编辑收货信息-->
-              <!--</el-button>-->
+              <el-button size="mini" type="primary" icon="el-icon-edit" @click="handleOpenAnotherInner4(scope.row)">
+                编辑收货信息
+              </el-button>
             </el-form-item>
             <el-form-item label="留言备注">
               <p class="my-form-p" v-for="item in scope.row.orders_remarks" :class="item.status===0?if_deleted:''">
                 <span class="label-span">{{item.user_account_type_id|userTypeStatusTranslator}}：</span>
                 <span>{{item.remark}}</span>
               </p>
-              <!--<el-button size="mini" type="primary" icon="el-icon-edit" @click="handleOpenInner2(scope.row)">编辑留言信息-->
-              <!--</el-button>-->
+              <el-button size="mini" type="primary" icon="el-icon-edit" @click="handleOpenInner2(scope.row)">编辑留言信息
+              </el-button>
             </el-form-item>
             <el-form-item label="物流信息">
               <div v-if="scope.row.orders_logistics">
@@ -138,8 +138,7 @@
             </el-form-item>
           </el-form>
           <div class="logBtn">
-            <el-button v-if="$store.state.user.roles === 'administrator' || $store.state.user.roles === 'warehouse'"
-                       size="mini" type="success" icon="el-icon-search" @click="handleOpenInner3(scope.row)">订单日志查询
+            <el-button size="mini" type="success" icon="el-icon-search" @click="handleOpenInner3(scope.row)">订单日志查询
             </el-button>
           </div>
         </template>
@@ -148,9 +147,7 @@
         <template slot-scope="scope">
           <span >{{scope.row.orders_unique_id}}</span>
           <el-tag type="primary" v-if="scope.row.product_weixin_fans && scope.row.product_weixin_fans.pivot.join_time.slice(0,10) == scope.row.created_at.slice(0,10)">当</el-tag>
-          <span @click="checkPre(scope.row)">
-                      <el-tag type="warning" v-show="scope.row.if_repurchase > 1" style="cursor: pointer" >复</el-tag>
-          </span>
+          <el-tag @click="checkPre(scope.row)" type="warning" v-show="scope.row.if_repurchase > 1" style="cursor: pointer" >复</el-tag>
         </template>
       </el-table-column>
       <el-table-column min-width="100px" align="center" label="订单状态">
@@ -892,13 +889,12 @@
         importanceOptions: [1, 2, 3],
         sortOptions: [{ label: '按ID升序列', key: '+id' }, { label: '按ID降序', key: '-id' }],
         statusOptions: [
-          { key: 1, label: '未确认' },
           { key: 2, label: '待发货' },
           { key: 3, label: '发货中' },
           { key: 4, label: '断货中' },
-          { key: 5, label: '已签收' },
           { key: 6, label: '已拒收' },
-          { key: 7, label: '已完成' }
+          { key: 8, label: '已退回' },
+          { key: 9, label: '已废弃' }
         ],
         showAuditor: false,
         productWeixinLoading2: false,
@@ -3425,6 +3421,7 @@
         this.imageDialogVisible = true
       },
       checkPre(row) {
+        console.log('1')
         this.tableDialogVisible = true
         this.listQuery1.product_weixin_fans_id = row.product_weixin_fans_id
         this.getList2()
