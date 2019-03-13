@@ -26,38 +26,9 @@
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="物流单号"
                 v-model="listQuery.orders_logistics_number">
       </el-input>
-      <el-cascader
-        class="filter-item"
-        clearable
-        :options="userGroupTree"
-        change-on-select
-        placeholder="客服部"
-        :props="defaultPropsGroup"
-        v-model="userGroupOptions"
-        @change="handleFilterGrounp">
-      </el-cascader>
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="客服"
-                v-model="listQuery.support_member_nickname">
-      </el-input>
-      <el-select v-model="listQuery.product_weixin_id"
-                 filterable
-                 clearable
-                 remote
-                 class="filter-item"
-                 :remote-method="getProductWeixinList"
-                 :loading="productWeixinLoading2"
-                 placeholder="搜索微信号"
-                 @change="handleFilter">
-        <el-option
-          v-for="item in productWeixinOptions2"
-          :key="item.id"
-          :label="item.info"
-          :value="item.id">
-        </el-option>
-      </el-select>
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="产品名称"
-                v-model="listQuery.product_name">
-      </el-input>
+      <!--<el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="产品名称"-->
+                <!--v-model="listQuery.product_name">-->
+      <!--</el-input>-->
       <!--<el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="推广渠道" v-model="listQuery.channel_name">-->
       <!--</el-input>-->
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="收件人电话"
@@ -92,15 +63,16 @@
               <p class="my-form-p" v-for="item in scope.row.orders_items">
                 {{item.product_goods.goods_name}} x {{item.number}} {{item.product_goods.unit | statusUnit}}
               </p>
-              <el-button size="mini" type="primary" icon="el-icon-edit" @click="handleOpenInner1(scope.row)">编辑商品信息
-              </el-button>
+              <!--<el-button size="mini" type="primary" icon="el-icon-edit" @click="handleOpenInner1(scope.row)">编辑商品信息</el-button>-->
             </el-form-item>
             <el-form-item label="发货信息">
               <p class="my-form-p">
-                <span class="label-span">发货人：</span><span>{{scope.row.product_weixin.weixin_nickname}}</span>
+                <span class="label-span">发货人：</span>
+                <span v-if="scope.row.product_weixin">{{scope.row.product_weixin.weixin_nickname}}</span>
               </p>
               <p class="my-form-p">
-                <span class="label-span">联系电话：</span><span>{{scope.row.product_weixin.phone}}</span>
+                <span class="label-span">联系电话：</span>
+                <span v-if="scope.row.product_weixin">{{scope.row.product_weixin.phone}}</span>
               </p>
             </el-form-item>
             <el-form-item label="收款信息">
@@ -111,9 +83,9 @@
                 </el-tag>
                 ￥{{item.paid_money}}
               </p>
-              <el-button size="mini" type="primary" icon="el-icon-edit" @click="handleOpenAnotherInner5(scope.row)">
-                编辑收款信息
-              </el-button>
+              <!--<el-button size="mini" type="primary" icon="el-icon-edit" @click="handleOpenAnotherInner5(scope.row)">-->
+                <!--编辑收款信息-->
+              <!--</el-button>-->
             </el-form-item>
             <el-form-item label="收货信息">
               <div v-if="scope.row.product_weixin_fans_address">
@@ -122,9 +94,8 @@
                 </p>
                 <p class="my-form-p">
                   <span class="label-span">联系电话：</span>
-                  <span
-                    v-if="($store.state.user.roles === 'warehouse') || ($store.state.user.roles === 'administrator') || ($store.state.user.roles === 'supportDirector') || (user_account_id === scope.row.support_user_account_id)">{{scope.row.product_weixin_fans_address.phone}}</span>
-                  <span v-else>{{scope.row.product_weixin_fans_address.phone|orderPhoneVisibleTranslator}}</span>
+                  <span v-if="scope.row.product_weixin_fans_address">{{scope.row.product_weixin_fans_address.phone}}</span>
+                  <span v-else-if="scope.row.product_weixin_fans_address">{{scope.row.product_weixin_fans_address.phone}}</span>
                 </p>
                 <p class="my-form-p">
                   <span class="label-span">收货地址：</span>
@@ -134,17 +105,17 @@
                   </span>
                 </p>
               </div>
-              <el-button size="mini" type="primary" icon="el-icon-edit" @click="handleOpenAnotherInner4(scope.row)">
-                编辑收货信息
-              </el-button>
+              <!--<el-button size="mini" type="primary" icon="el-icon-edit" @click="handleOpenAnotherInner4(scope.row)">-->
+                <!--编辑收货信息-->
+              <!--</el-button>-->
             </el-form-item>
             <el-form-item label="留言备注">
               <p class="my-form-p" v-for="item in scope.row.orders_remarks" :class="item.status===0?if_deleted:''">
                 <span class="label-span">{{item.user_account_type_id|userTypeStatusTranslator}}：</span>
                 <span>{{item.remark}}</span>
               </p>
-              <el-button size="mini" type="primary" icon="el-icon-edit" @click="handleOpenInner2(scope.row)">编辑留言信息
-              </el-button>
+              <!--<el-button size="mini" type="primary" icon="el-icon-edit" @click="handleOpenInner2(scope.row)">编辑留言信息-->
+              <!--</el-button>-->
             </el-form-item>
             <el-form-item label="物流信息">
               <div v-if="scope.row.orders_logistics">
@@ -182,24 +153,9 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column min-width="100px" align="center" label="客服">
+      <el-table-column min-width="100px" align="center" label="订单状态">
         <template slot-scope="scope">
-          <span class="link-type">{{scope.row.support_member.nickname}}</span><br/><span>({{scope.row.support_member.user_account_group.group_name}})</span>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="100px" align="center" label="渠道">
-        <template slot-scope="scope">
-          <span v-if="scope.row.promotion_channel !== null">{{scope.row.promotion_channel.channel_name}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="130px" align="center" label="微信">
-        <template slot-scope="scope">
-          <span >{{scope.row.product_weixin.weixin_account}}</span><br/><span>({{scope.row.product_weixin.info}})</span>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="100px" align="center" label="加粉时间">
-        <template slot-scope="scope">
-          <span>{{scope.row.product_weixin_fans.pivot.join_time.substr(0, 10)}}</span>
+          <el-tag :type="scope.row.status | orderStatusFilter">{{scope.row.status|orderStatusTranslator}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column min-width="100px" align="center" label="订单金额">
@@ -209,17 +165,11 @@
       </el-table-column>
       <el-table-column min-width="130px" align="center" label="收货人">
         <template slot-scope="scope">
-          <span>{{scope.row.product_weixin_fans_address.receive_name}}</span><br>
-          <span
-            v-if="($store.state.user.roles === 'warehouse') || ($store.state.user.roles === 'administrator') || ($store.state.user.roles === 'supportManager') || ($store.state.user.roles === 'supportDirector') || (user_account_id === temp.support_user_account_id)">{{scope.row.product_weixin_fans_address.phone}}</span>
-          <span v-else>{{scope.row.product_weixin_fans_address.phone|orderPhoneVisibleTranslator}}</span>
+          <span v-if="scope.row.product_weixin_fans_address">{{scope.row.product_weixin_fans_address.receive_name}}</span><br>
+          <span v-if="scope.row.product_weixin_fans_address">{{scope.row.product_weixin_fans_address.phone}}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="100px" align="center" label="订单状态">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | orderStatusFilter">{{scope.row.status|orderStatusTranslator}}</el-tag>
-        </template>
-      </el-table-column>
+
       <el-table-column min-width="160px" align="center" label="创建时间">
         <template slot-scope="scope">
           <span>{{scope.row.created_at}}</span>
@@ -232,9 +182,9 @@
           <!--<el-button v-if="scope.row.status===2" size="small" type="info" @click="handleModifyStatus(scope.row,1)">未确认</el-button>-->
           <el-button v-if="scope.row.status===2 || scope.row.status === 4" size="small" type="success" @click="handleDeliverOrders(scope.row,0)">确认发货</el-button>
           <el-button v-if="scope.row.status===2" size="small" type="warning" @click="handleDeliverOrders(scope.row,1)">已断货</el-button>
-          <!--<el-button v-if="scope.row.status===3" size="small" type="success" @click="handleHandleOrders(scope.row,1)">确认签收</el-button>-->
-          <!--<el-button v-if="scope.row.status===3" size="small" type="warning" @click="handleHandleOrders(scope.row,0)">已拒收</el-button>-->
-          <!--<el-button v-if="scope.row.status===5" size="small" type="success" @click="handleResultOrders(scope.row)">已完成</el-button>-->
+          <el-button v-if="scope.row.status===3" size="small" type="success" @click="handleHandleOrders(scope.row,1)">确认签收</el-button>
+          <el-button v-if="scope.row.status===3" size="small" type="warning" @click="handleHandleOrders(scope.row,0)">已拒收</el-button>
+          <el-button v-if="scope.row.status===5" size="small" type="success" @click="handleResultOrders(scope.row)">已完成</el-button>
           <!--<el-button v-if="scope.row.status!==9" size="small" type="danger" @click="handleDestoryOrders(scope.row)">删除</el-button>-->
           <!--<el-button v-if="scope.row.status===1" size="small" type="danger" @click="handleDeleteOrder(scope.row,9)">删除</el-button>-->
         </template>
@@ -952,7 +902,6 @@
         ],
         showAuditor: false,
         productWeixinLoading2: false,
-        productWeixinOptions2: [],
         pickerOptions1: {},
         temp: {
           id: undefined,
@@ -1393,9 +1342,6 @@
     },
     created() {
       this.getList()
-      this.getUserGroupTree()
-      this.getProductWeixinList(' ')
-      this.queryOrderPayTypeList(' ')
       this.getOrdersCountInfo()
       // this.getSystemDeliveryAddress()
       // this.getSystemDeliveryProductName()
@@ -1403,27 +1349,6 @@
       this.getregionData()
     },
     methods: {
-      getUserGroupTree() {
-        getSupportGroupList().then(response => {
-          this.userGroupTree = this.formatUserGroupTree(response.data)
-        })
-      },
-      formatUserGroupTree(tree) {
-        const Group = tree.map(item => {
-          if (item.child.length > 0) {
-            item.child = this.formatUserGroupTree(item.child)
-            return item
-          } else {
-            delete item.child
-            return item
-          }
-        })
-        return Group
-      },
-      handleFilterGrounp(val) {
-        this.listQuery.support_user_account_group_id = val[val.length - 1]
-        this.handleFilter()
-      },
       getregionData() {
         getOrdersAreaList().then(response => {
           this.regionData = response.data
@@ -2317,15 +2242,7 @@
           this.payTypeOptions = []
         }
       },
-      getProductWeixinList(query) {
-        if (query !== '') {
-          this.productWeixinLoading2 = true
-          getProductWeixinList({ info: query }).then(response => {
-            this.productWeixinOptions2 = response.data.data
-            this.productWeixinLoading2 = false
-          })
-        }
-      },
+
       handleAddressRowClick(row, column, cell, event) {
         console.log(cell)
         // console.log(cell.path)
@@ -2782,17 +2699,17 @@
           })
         })
       },
-      handleOpenInner1(row) {
-        this.stepStatus = 'update'
-        this.innerTableVisible1 = true
-        this.dialogStatus = 'update'
-        this.innerTableTitle1 = row.orders_unique_id + ' -- 商品列表'
-        this.temp = Object.assign({}, row) // copy obj
-        this.$nextTick(() => {
-          this.$refs['dataForm'].clearValidate()
-        })
-        // this.getInnerList1()
-      },
+      // handleOpenInner1(row) {
+      //   this.stepStatus = 'update'
+      //   this.innerTableVisible1 = true
+      //   this.dialogStatus = 'update'
+      //   this.innerTableTitle1 = row.orders_unique_id + ' -- 商品列表'
+      //   this.temp = Object.assign({}, row) // copy obj
+      //   this.$nextTick(() => {
+      //     this.$refs['dataForm'].clearValidate()
+      //   })
+      //   // this.getInnerList1()
+      // },
       handleOpenInnerFromCreate1(row) {
         this.stepStatus = 'create'
         this.innerTableVisible1 = true
