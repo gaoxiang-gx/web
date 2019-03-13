@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getProductGoodsList(param) {
   return request({
-    url: '/api/product/getProductGoodsList',
+    url: '/api/goods/getProductGoodsList',
     method: 'post',
     data: param
   })
@@ -10,7 +10,7 @@ export function getProductGoodsList(param) {
 
 export function createProductGoods(param) {
   return request({
-    url: '/api/product/createProductGoods',
+    url: '/api/goods/createProductGoods',
     method: 'post',
     data: param
   })
@@ -18,7 +18,7 @@ export function createProductGoods(param) {
 
 export function updateProductGoods(param) {
   return request({
-    url: '/api/product/updateProductGoods',
+    url: '/api/goods/updateProductGoods',
     method: 'post',
     data: param
   })
@@ -26,21 +26,21 @@ export function updateProductGoods(param) {
 
 export function deleteProductGoods(param) {
   return request({
-    url: '/api/product/deleteProductGoods',
+    url: '/api/goods/deleteProductGoods',
     method: 'post',
     data: param
   })
 }
 export function createProductGoodCost(param) {
   return request({
-    url: '/api/product/createProductGoodCost',
+    url: '/api/goods/createProductGoodCost',
     method: 'post',
     data: param
   })
 }
 export function getProductGoodCostList(param) {
   return request({
-    url: '/api/product/getProductGoodCostList',
+    url: '/api/goods/getProductGoodCostList',
     method: 'post',
     data: param
   })

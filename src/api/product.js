@@ -98,7 +98,7 @@ export function previewProductTemplate(param) {
 
 export function getProductStorageDetailList(param) {
   return request({
-    url: '/api/product/getProductStorageDetailList ',
+    url: '/api/warehouse/getProductStorageDetailList ',
     method: 'post',
     data: param
   })
@@ -106,7 +106,7 @@ export function getProductStorageDetailList(param) {
 
 export function getProductStorageAdjustList(param) {
   return request({
-    url: '/api/product/getProductStorageAdjustList ',
+    url: '/api/warehouse/getProductStorageAdjustList ',
     method: 'post',
     data: param
   })
@@ -114,98 +114,98 @@ export function getProductStorageAdjustList(param) {
 
 export function createProductStorageAdjust(param) {
   return request({
-    url: '/api/product/createProductStorageAdjust ',
+    url: '/api/warehouse/createProductStorageAdjust ',
     method: 'post',
     data: param
   })
 }
 export function getProductStorageByDay(param) {
   return request({
-    url: '/api/product/getProductStorageByDay ',
+    url: '/api/warehouse/getProductStorageByDay ',
     method: 'post',
     data: param
   })
 }
 export function getProductStorageOrderList(param) {
   return request({
-    url: '/api/product/getProductStorageOrderList ',
+    url: '/api/warehouse/getProductStorageOrderList ',
     method: 'post',
     data: param
   })
 }
 export function createProductStorageOrder(param) {
   return request({
-    url: '/api/product/createProductStorageOrder ',
+    url: '/api/warehouse/createProductStorageOrder ',
     method: 'post',
     data: param
   })
 }
 export function deleteProductStorageOrder(param) {
   return request({
-    url: '/api/product/deleteProductStorageOrder ',
+    url: '/api/warehouse/deleteProductStorageOrder ',
     method: 'post',
     data: param
   })
 }
 export function getProdcutStorageImportList(param) {
   return request({
-    url: '/api/product/getProdcutStorageImportList ',
+    url: '/api/warehouse/getProdcutStorageImportList ',
     method: 'post',
     data: param
   })
 }
 export function updateProductStorageOrder(param) {
   return request({
-    url: '/api/product/updateProductStorageOrder ',
+    url: '/api/warehouse/updateProductStorageOrder ',
     method: 'post',
     data: param
   })
 }
 export function createProductStorageImport(param) {
   return request({
-    url: '/api/product/createProductStorageImport ',
+    url: '/api/warehouse/createProductStorageImport ',
     method: 'post',
     data: param
   })
 }
 export function deleteProductStorageImport(param) {
   return request({
-    url: '/api/product/deleteProductStorageImport ',
+    url: '/api/warehouse/deleteProductStorageImport ',
     method: 'post',
     data: param
   })
 }
 export function updateProductStorageImport(param) {
   return request({
-    url: '/api/product/updateProductStorageImport ',
+    url: '/api/warehouse/updateProductStorageImport ',
     method: 'post',
     data: param
   })
 }
 export function updateProductStorageManual(param) {
   return request({
-    url: '/api/product/updateProductStorageManual ',
+    url: '/api/warehouse/updateProductStorageManual ',
     method: 'post',
     data: param
   })
 }
 export function createProductStorageManual(param) {
   return request({
-    url: '/api/product/createProductStorageManual ',
+    url: '/api/warehouse/createProductStorageManual ',
     method: 'post',
     data: param
   })
 }
 export function getProductStorageManualList(param) {
   return request({
-    url: '/api/product/getProductStorageManualList ',
+    url: '/api/warehouse/getProductStorageManualList ',
     method: 'post',
     data: param
   })
 }
 export function deleteProductStorageManual(param) {
   return request({
-    url: '/api/product/deleteProductStorageManual ',
+    url: '/api/warehouse/deleteProductStorageManual ',
     method: 'post',
     data: param
   })
@@ -213,7 +213,7 @@ export function deleteProductStorageManual(param) {
 
 export function updateProductDeliver(param) {
   return request({
-    url: '/api/product/updateProductDeliver ',
+    url: '/api/warehouse/updateProductDeliver ',
     method: 'post',
     data: param
   })
@@ -221,7 +221,7 @@ export function updateProductDeliver(param) {
 
 export function createProductDeliver(param) {
   return request({
-    url: '/api/product/createProductDeliver ',
+    url: '/api/warehouse/createProductDeliver ',
     method: 'post',
     data: param
   })
@@ -229,7 +229,7 @@ export function createProductDeliver(param) {
 
 export function getProductDeliverList(param) {
   return request({
-    url: '/api/product/getProductDeliverList ',
+    url: '/api/warehouse/getProductDeliverList ',
     method: 'post',
     data: param
   })
@@ -237,7 +237,7 @@ export function getProductDeliverList(param) {
 
 export function createProductDeliverExtra(param) {
   return request({
-    url: '/api/product/createProductDeliverExtra ',
+    url: '/api/warehouse/createProductDeliverExtra ',
     method: 'post',
     data: param
   })
@@ -245,7 +245,7 @@ export function createProductDeliverExtra(param) {
 
 export function getProductDeliverExtraList(param) {
   return request({
-    url: '/api/product/getProductDeliverExtraList ',
+    url: '/api/warehouse/getProductDeliverExtraList ',
     method: 'post',
     data: param
   })
@@ -253,7 +253,7 @@ export function getProductDeliverExtraList(param) {
 
 export function updateProductDeliverExtra(param) {
   return request({
-    url: '/api/product/updateProductDeliverExtra ',
+    url: '/api/warehouse/updateProductDeliverExtra ',
     method: 'post',
     data: param
   })
