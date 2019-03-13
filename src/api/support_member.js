@@ -7,6 +7,13 @@ export function getSupportMemberList(param) {
     data: param
   })
 }
+export function getSupportGroupList(param) {
+  return request({
+    url: '/api/sales/getSupportGroupList',
+    method: 'post',
+    data: param
+  })
+}
 export function updateSupportProduct(param) {
   return request({
     url: '/api/support/updateSupportProduct',
