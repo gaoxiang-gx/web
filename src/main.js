@@ -18,9 +18,6 @@ import '@/permission' // permission control
 import echarts from 'echarts'
 Vue.prototype.$echarts = echarts
 
-import VueDND from 'awe-dnd'
-Vue.use(VueDND)
-
 Vue.use(ElementUI, { locale })
 Vue.config.productionTip = false
 

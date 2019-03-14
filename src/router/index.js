@@ -30,7 +30,7 @@ export const constantRouterMap = [
     }]
   },
   {
-    path: '/404', hidden: true, component: _import('404'), name: '404',
+    path: '*', hidden: true, component: _import('404'), name: '404',
     meta: { title: '404', icon: 'form' }
   }
 ]
