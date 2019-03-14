@@ -33,8 +33,6 @@ function getUserInfo(to, from, next) {
 
 router.beforeEach((to, from, next) => {
   NProgress.start()
-  console.log('UserToken', getUserToken())
-  console.log('AccountToken', getAccountToken())
   /**
    * 系统独立登陆
    */

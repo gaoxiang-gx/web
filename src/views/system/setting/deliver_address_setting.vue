@@ -1,34 +1,7 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-      <!--<el-date-picker class="filter-item"-->
-      <!--v-model="listQuery.date_range"-->
-      <!--type="daterange"-->
-      <!--format="yyyy-MM-dd"-->
-      <!--value-format="yyyy-MM-dd"-->
-      <!--align="right"-->
-      <!--unlink-panels-->
-      <!--range-separator="~"-->
-      <!--start-placeholder="开始日期"-->
-      <!--end-placeholder="结束日期"-->
-      <!--:picker-options="pickerOptions"-->
-      <!--@change='handleFilter'>-->
-      <!--</el-date-picker>-->
-      <!--<el-select  class="filter-item"-->
-      <!--style="width:200px;"-->
-      <!--@change='handleFilter'-->
-      <!--v-model="listQuery.product_id"-->
-      <!--placeholder="状态">-->
-      <!--<el-option  v-for="item in stateOptions"-->
-      <!--:key="item.id"-->
-      <!--:label="item.label"-->
-      <!--:value="item.id">-->
-      <!--</el-option>-->
-      <!--</el-select>-->
-      <!--<el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="客户名称" v-model="listQuery.name"></el-input>-->
-      <!--<el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">搜索</el-button>-->
       <el-button class="filter-item" @click="handleCreate" type="primary" icon="el-icon-edit">创建发货库</el-button>
-
       <el-table :key='tableKey'
                 :data="list"
                 v-loading="listLoading"
@@ -51,7 +24,6 @@
         <el-table-column align="center" label="操作" min-width="150">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleUpdate(scope.row)" type="primary">编辑</el-button>
-            <!--<el-button @click="handleDelete" type="danger">删除</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -70,22 +42,22 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="库名称" prop="name">
-                <el-input size="mini" v-model="temp.name"></el-input>
+                <el-input v-model="temp.name"></el-input>
               </el-form-item>
               <el-form-item label="寄件地（省）" prop="delivery_province">
-                <el-input size="mini" v-model="temp.delivery_province"></el-input>
+                <el-input v-model="temp.delivery_province"></el-input>
               </el-form-item>
               <el-form-item label="寄件地（市）" prop="delivery_city">
-                <el-input size="mini" v-model="temp.delivery_city"></el-input>
+                <el-input v-model="temp.delivery_city"></el-input>
               </el-form-item>
               <el-form-item label="寄件地（区）" prop="delivery_district">
-                <el-input size="mini" v-model="temp.delivery_district"></el-input>
+                <el-input v-model="temp.delivery_district"></el-input>
               </el-form-item>
               <el-form-item label="寄件邮编" prop="delivery_post_code">
-                <el-input size="mini" v-model="temp.delivery_post_code"></el-input>
+                <el-input v-model="temp.delivery_post_code"></el-input>
               </el-form-item>
               <el-form-item label="发货地址（详细）" prop="delivery_address">
-                <el-input size="mini" v-model="temp.delivery_address"></el-input>
+                <el-input v-model="temp.delivery_address"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -93,7 +65,6 @@
                 <el-select v-model="temp.product_ids"
                            filterable
                            style="width: 100%"
-                           size="mini"
                            clearable
                            multiple
                            remote
@@ -111,7 +82,6 @@
                 <el-select v-model="temp.order_logistics_type_ids"
                            filterable
                            style="width: 100%"
-                           size="mini"
                            clearable
                            multiple
                            remote
@@ -130,7 +100,6 @@
                 <el-select v-model="temp.product_deliver_extra_sf"
                            filterable
                            style="width: 100%"
-                           size="mini"
                            clearable
                            remote
                            placeholder="请选择额外信息"
@@ -148,7 +117,6 @@
                 <el-select v-model="temp.product_deliver_extra_yt"
                            filterable
                            style="width: 100%"
-                           size="mini"
                            clearable
                            remote
                            placeholder="请选择额外信息"
@@ -322,6 +290,7 @@
         })
       },
       handleUpdate(row) {
+        console.log(row)
         this.temp_id = row.id
         this.dialogStatus = 'update'
         this.dialogFormVisible = true
@@ -333,8 +302,12 @@
         this.temp.delivery_address = row.delivery_address
         row.product.forEach(d => this.temp.product_ids.push(d.id))
         row.order_logistics_type.forEach(d => this.temp.order_logistics_type_ids.push(d.id))
-        this.temp.product_deliver_extra_sf = row.product_deliver_extra.find(d => d.order_logistics_type_id === 1).id
-        this.temp.product_deliver_extra_yt = row.product_deliver_extra.find(d => d.order_logistics_type_id === 6).id
+        if (row.product_deliver_extra.find(d => d.order_logistics_type_id === 1)) {
+          this.temp.product_deliver_extra_sf = row.product_deliver_extra.find(d => d.order_logistics_type_id === 1).id
+        }
+        if (row.product_deliver_extra.find(d => d.order_logistics_type_id === 6)) {
+          this.temp.product_deliver_extra_yt = row.product_deliver_extra.find(d => d.order_logistics_type_id === 6).id
+        }
         this.$nextTick(() => {
           this.$refs['dataForm'].clearValidate()
         })

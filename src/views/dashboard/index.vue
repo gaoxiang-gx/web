@@ -1,20 +1,18 @@
 <template>
   <div class="dashboard-editor-container">
     <el-row ref="rowBox" class="panel-group" :gutter="20">
-      <el-col :xs="12" :sm="12" :lg="screen" class="card-panel-col" v-if="this.$store.state.user.roles === 'administrator' || this.$store.state.user.roles === 'warehouse'">
+      <el-col :xs="12" :sm="12" :lg="screen" class="card-panel-col">
         <div class='card-panel'>
           <div class="card-panel-icon-wrapper icon-people">
-            <!--<i class="icon iconfont icon-daifahuo1"></i>-->
             <svg-icon icon-class="pending_delivery" class="svg_icon"/>
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">待发货</div>
             <div class="card-panel-text">{{need_delivery_orders_count}}</div>
-            <!--<count-to class="card-panel-num" :startVal="0" :endVal="102400" :duration="2600"></count-to>-->
           </div>
         </div>
       </el-col>
-      <el-col :xs="12" :sm="12" :lg="screen" class="card-panel-col" v-if="this.$store.state.user.roles === 'administrator' || this.$store.state.user.roles === 'warehouse'">
+      <el-col :xs="12" :sm="12" :lg="screen" class="card-panel-col" >
         <div class="card-panel">
           <div class="card-panel-icon-wrapper icon-message">
             <svg-icon icon-class="already_shipped" class="svg_icon"/>
@@ -22,95 +20,16 @@
           <div class="card-panel-description">
             <div class="card-panel-text" v-if="">当日已发货</div>
             <div class="card-panel-text">{{today_delivered_orders_count}}</div>
-            <!--<count-to class="card-panel-num" :startVal="0" :endVal="81212" :duration="3000"></count-to>-->
-          </div>
-        </div>
-      </el-col>
-      <el-col :xs="12" :sm="12" :lg="screen" class="card-panel-col" v-if="this.$store.state.user.roles === 'administrator' || this.$store.state.user.roles === 'promotionGroup' || this.$store.state.user.roles === 'promotionManager' || this.$store.state.user.roles === 'promotion' || this.$store.state.user.roles === 'promotionDirector'">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-money">
-            <svg-icon icon-class="add_fans" class="svg_icon"/>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text" v-if="">昨日加粉</div>
-            <div class="card-panel-text">{{yestday_add_count_total}} <span style="font-weight: bold;">/</span> {{yestday_consult_count_total}}</div>
-            <!--<count-to class="card-panel-num" :startVal="0" :endVal="81212" :duration="3000"></count-to>-->
-          </div>
-        </div>
-      </el-col>
-      <el-col :xs="12" :sm="12" :lg="screen" class="card-panel-col" v-if="this.$store.state.user.roles === 'administrator' || this.$store.state.user.roles === 'promotionGroup' || this.$store.state.user.roles === 'promotionManager' || this.$store.state.user.roles === 'promotion' || this.$store.state.user.roles === 'promotionDirector'" >
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-shoppingCard">
-            <svg-icon icon-class="now_fans" class="svg_icon"/>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text" v-if="">今日加粉</div>
-            <div class="card-panel-text">{{today_add_count_total}} <span style="font-weight: bolder">/</span>  {{today_consult_count_total}}</div>
-            <!--<count-to class="card-panel-num" :startVal="0" :endVal="81212" :duration="3000"></count-to>-->
           </div>
         </div>
       </el-col>
     </el-row>
-    <el-row v-show="false">
-      <el-col :xs="12" :sm="12" :lg="12" class="card-panel-col" >
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-money">
-            <i class="icon iconfont icon-daifahuo1"></i>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">待发货</div>
-            <div class="card-panel-text">11</div>
-            <!--<count-to class="card-panel-num" :startVal="0" :endVal="9280" :duration="3200"></count-to>-->
-          </div>
-        </div>
-      </el-col>
-      <el-col :xs="12" :sm="12" :lg="12" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-shoppingCard">
-            <svg-icon icon-class="unfinished" class="svg_icon"/>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text" v-if="">未完成</div>
-            <div class="card-panel-text">10</div>
-            <!--<count-to class="card-panel-num" :startVal="0" :endVal="81212" :duration="3000"></count-to>-->
-          </div>
-        </div>
-      </el-col>
-    </el-row>
-    <el-row v-show="false">
-      <el-col :xs="12" :sm="12" :lg="12" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-message">
-            <svg-icon icon-class="addFans" class="svg_icon"/>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text" v-if="">昨日加分数据</div>
-            <div class="card-panel-text">10</div>
-            <!--<count-to class="card-panel-num" :startVal="0" :endVal="81212" :duration="3000"></count-to>-->
-          </div>
-        </div>
-      </el-col>
-      <el-col :xs="12" :sm="12" :lg="12" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-score">
-            <svg-icon icon-class="integral" class="svg_icon"/>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text" v-if="">目前积分</div>
-            <div class="card-panel-text">10</div>
-            <!--<count-to class="card-panel-num" :startVal="0" :endVal="81212" :duration="3000"></count-to>-->
-          </div>
-        </div>
-      </el-col>
-    </el-row>
-
-
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;" v-show="false">
       <el-col :span="24">
         <div id="myPromotionChart" :style="{height:height,width:width}"></div>
       </el-col>
     </el-row>
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;" v-show="this.$store.state.user.roles === 'administrator' || this.$store.state.user.roles === 'warehouse'">
+    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;" v-show="false">
       <el-date-picker
         v-model="warehouseMothQuery"
         style="margin-bottom: 20px;"
@@ -128,64 +47,6 @@
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;"  v-show="false">
       <el-col :span="24">
         <div id="mySupportChart" :style="{width: '100%', height: '500px'}"></div>
-      </el-col>
-    </el-row>
-    <!--<el-row class="panel-group" :gutter="40" style="background:#fff;padding:16px 16px 0;margin-bottom:32px;" v-if="this.$store.state.user.roles === 'administrator' || this.$store.state.user.roles === 'promotionGroup' || this.$store.state.user.roles === 'promotionManager'">-->
-      <!--<el-col :span="12" class="card-panel-col" v-if="this.$store.state.user.roles === 'administrator' || this.$store.state.user.roles === 'promotionGroup' || this.$store.state.user.roles === 'promotionManager'">-->
-        <!---->
-
-      <!--</el-col>-->
-      <!--<el-col :span="12"></el-col>-->
-    <!--</el-row>-->
-
-    <el-row ref="rowBox" class="panel-group" :gutter="40" v-if="this.$store.state.user.roles === 'administrator' || this.$store.state.user.roles === 'promotionGroup' || this.$store.state.user.roles === 'promotionManager' || this.$store.state.user.roles === 'promotion' || this.$store.state.user.roles === 'promotionDirector'" style="margin-left: 0px">
-      <el-col :span="24" style="background-color: #ffffff;padding-top: 10px;">
-        <div>
-          <el-date-picker
-            style="margin-bottom: 20px;display: inline-block"
-            class="filter-item"
-            v-model="listQuery.date_time"
-            align="right"
-            type="date"
-            format="yyyy-MM-dd"
-            value-format="yyyy-MM-dd"
-            placeholder="选择日期"
-            :picker-options="pickerOptions1"
-            @change="handleFilter">
-          </el-date-picker>
-          <el-tag style="display: inline-block;float:right; font-size: 16px;">未录粉丝列表</el-tag>
-        </div>
-
-        <div id="table">
-          <el-table :stripe="true" :key='tableKey' border :data="list" v-loading="listLoading" element-loading-text="给我一点时间"
-                    style="width: 100%;margin-bottom: 20px;font-size: 16px;" height="250">
-            <el-table-column align="center" label="客服" min-width="200" style="font-size: 10px">
-              <template slot-scope="scope">
-                <span style="">{{scope.row.support_member.nickname}}</span>
-                <el-tag type="success">{{scope.row.support_member.user_account_group.group_name}}</el-tag>
-                <el-tag :type="scope.row.online_type | timeIntervalFilter">{{scope.row.online_type | timeIntervalTranslator}}</el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" label="微信号" min-width="160px">
-              <template slot-scope="scope">
-                <span>{{scope.row.weixin_account}}</span>
-                <el-tag >{{scope.row.info}}</el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" label="推广员" min-width="80px">
-              <template slot-scope="scope">
-                <span>{{scope.row.promotion_member.nickname}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" label="推广渠道" min-width="80px">
-              <template slot-scope="scope">
-                <span>{{scope.row.promotion_channel.channel_name}}</span>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-      </el-col>
-      <el-col :xs="12" :sm="12" :lg="12" class="card-panel-col">
       </el-col>
     </el-row>
   </div>
@@ -370,18 +231,16 @@ export default {
       this.getWarehouseLine()
     },
     getWarehouseLine() {
-      if (this.$store.state.user.roles === 'administrator' || this.$store.state.user.roles === 'warehouse') {
-        getWarehouseMonthlyData({ month: this.warehouseMothQuery }).then(response => {
-          this.warehouseMothData = []
-          for (const v of response.data) {
-            const date = v.delivered_date.split('-')
-            const day = date[2]
-            const day_index = parseInt(day) - 1
-            this.warehouseMothData[day_index] = parseInt(v.count)
-          }
-          this.myWarehouseLine()
-        })
-      }
+        // getWarehouseMonthlyData({ month: this.warehouseMothQuery }).then(response => {
+        //   this.warehouseMothData = []
+        //   for (const v of response.data) {
+        //     const date = v.delivered_date.split('-')
+        //     const day = date[2]
+        //     const day_index = parseInt(day) - 1
+        //     this.warehouseMothData[day_index] = parseInt(v.count)
+        //   }
+        //   this.myWarehouseLine()
+        // })
     },
     myPromotionLine() {
       const myPromotionChart = this.$echarts.init(document.getElementById('myPromotionChart'))

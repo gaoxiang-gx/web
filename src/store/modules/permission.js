@@ -8,7 +8,6 @@ import { getUserPermissionMenu, getUserAccountTypeList } from '@/api/login'
  */
 function hasPermission(route, routesName) {
   if (route.name) {
-    console.log(route.name, routesName.indexOf(route.name) >= 0)
     return routesName.indexOf(route.name) >= 0
   } else {
     return false
@@ -64,7 +63,6 @@ const permission = {
     },
     // 加载路由
     GenerateRoutes({ commit }, data) {
-      console.log('GenerateRoutes')
       const { roles } = data
       const { menuCode } = data
       return new Promise(resolve => {

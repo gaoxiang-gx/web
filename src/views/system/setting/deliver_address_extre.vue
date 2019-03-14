@@ -1,34 +1,7 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-      <!--<el-date-picker class="filter-item"-->
-                      <!--v-model="listQuery.date_range"-->
-                      <!--type="daterange"-->
-                      <!--format="yyyy-MM-dd"-->
-                      <!--value-format="yyyy-MM-dd"-->
-                      <!--align="right"-->
-                      <!--unlink-panels-->
-                      <!--range-separator="~"-->
-                      <!--start-placeholder="开始日期"-->
-                      <!--end-placeholder="结束日期"-->
-                      <!--:picker-options="pickerOptions"-->
-                      <!--@change='handleFilter'>-->
-      <!--</el-date-picker>-->
-      <!--<el-select  class="filter-item"-->
-                  <!--style="width:200px;"-->
-                  <!--@change='handleFilter'-->
-                  <!--v-model="listQuery.product_id"-->
-                  <!--placeholder="状态">-->
-        <!--<el-option  v-for="item in stateOptions"-->
-                    <!--:key="item.id"-->
-                    <!--:label="item.label"-->
-                    <!--:value="item.id">-->
-        <!--</el-option>-->
-      <!--</el-select>-->
-      <!--<el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="客户名称" v-model="listQuery.name"></el-input>-->
-      <!--<el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">搜索</el-button>-->
       <el-button class="filter-item" @click="handleCreate" type="primary" icon="el-icon-edit">添加物流额外信息</el-button>
-
       <el-table :key='tableKey'
                 :data="list"
                 v-loading="listLoading"
@@ -69,21 +42,17 @@
 
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
         <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="150px" style='width: 80%;margin-left: 10%'>
-          <el-form-item label="额外信息名称" prop="name">
-            <el-input size="mini" v-model="temp.description"></el-input>
-          </el-form-item>
           <el-form-item label="物流公司" prop="order_logistics_type_id">
             <el-select
-                       v-model="temp.order_logistics_type_id"
-                       filterable
-                       style="width: 100%"
-                       size="mini"
-                       clearable
-                       :disabled="disabled_order_logistics_type_id"
-                       remote
-                       placeholder="请选择物流公司"
-                       :remote-method="queryLogisticsTypeList"
-                       :loading="logisticsTypeLoading">
+              v-model="temp.order_logistics_type_id"
+              filterable
+              style="width: 100%"
+              clearable
+              :disabled="disabled_order_logistics_type_id"
+              remote
+              placeholder="请选择物流公司"
+              :remote-method="queryLogisticsTypeList"
+              :loading="logisticsTypeLoading">
               <el-option v-for="item in logisticsTypeOptions"
                          :key="item.id"
                          :label="item.name"
@@ -91,11 +60,14 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="额外信息名称" prop="name">
+            <el-input v-model="temp.description"></el-input>
+          </el-form-item>
           <el-form-item v-if="this.temp.order_logistics_type_id === 1" label="月结账号" prop="configs.sf_monthly_account">
-            <el-input size="mini" v-model="temp.configs.sf_monthly_account"></el-input>
+            <el-input v-model="temp.configs.sf_monthly_account"></el-input>
           </el-form-item>
           <el-form-item v-if="this.temp.order_logistics_type_id === 1 || this.temp.order_logistics_type_id === 6" label="发货产品名称" prop="configs.delivery_product_name">
-            <el-input size="mini" v-model="temp.configs.delivery_product_name"></el-input>
+            <el-input v-model="temp.configs.delivery_product_name"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -195,6 +167,26 @@
         }
       }
     },
+    watch: {
+      dialogFormVisible(val) {
+        if (!val) {
+          this.$refs['dataForm'].resetFields()
+          this.disabled_order_logistics_type_id = false
+          this.temp = {
+            description: undefined,
+            order_logistics_type_id: undefined,
+            configs: {
+              sf_monthly_account: undefined,
+              delivery_product_name: undefined
+            }
+          }
+        }
+      }
+    },
+    created() {
+      this.getList()
+      this.queryLogisticsTypeList()
+    },
     methods: {
       handleFilter() {
         this.listQuery.page = 1
@@ -225,7 +217,6 @@
         })
       },
       createData() {
-        console.log(this.temp)
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             createProductDeliverExtra(this.temp).then(res => {
@@ -279,26 +270,6 @@
         this.listQuery.page = val
         this.getList()
       }
-    },
-    watch: {
-      dialogFormVisible(val) {
-        if (!val) {
-          this.$refs['dataForm'].resetFields()
-          this.disabled_order_logistics_type_id = false
-          this.temp = {
-            description: undefined,
-            order_logistics_type_id: undefined,
-            configs: {
-              sf_monthly_account: undefined,
-              delivery_product_name: undefined
-            }
-          }
-        }
-      }
-    },
-    created() {
-      this.getList()
-      this.queryLogisticsTypeList()
     }
   }
 </script>

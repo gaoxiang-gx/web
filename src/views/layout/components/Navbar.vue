@@ -6,24 +6,6 @@
              mode="horizontal">
       <!--<hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>-->
       <breadcrumb></breadcrumb>
-      <el-dropdown class="realtime-container" v-if="$store.state.user.roles === 'support'">
-        <span class="el-dropdown-link" style="color: white">
-          今日业绩
-          <i style="color:red;font-size: 32px;" ref="RealTimeformance">0</i>
-        </span>
-        <span class="el-dropdown-link" style="color: white;margin-left: 5px">
-          排名
-          <i style="color:red;font-size: 32px;" >{{ranking_number}}</i>
-        </span>
-        <el-dropdown-menu slot="dropdown">
-          <router-link class="inlineBlock" to="/support/support_rating/achievement_rating">
-            <el-dropdown-item>
-              今日销售排名
-            </el-dropdown-item>
-          </router-link>
-        </el-dropdown-menu>
-      </el-dropdown>
-
       <el-submenu index="1" class="avatar-container">
         <img slot="title" style="cursor: pointer" class="user-img" :src="avatar+'?imageView2/1/w/80/h/80'">
         <div class="user-dropdown">
@@ -89,7 +71,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import { getUnreadNoticeData } from '@/api/user'
-import { getSupportRealTimePerformance } from '@/api/support_rating'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import bus from '@/views/layout/bus'
@@ -129,22 +110,6 @@ export default {
     this.upDateRealTimeformance()
   },
   methods: {
-    upDateRealTimeformance() {
-      if (this.$store.state.user.roles === 'support') {
-        getSupportRealTimePerformance().then(res => {
-          if (res.data.performance !== this.oldPerformance) {
-            this.numAnim = new CountUp(this.$refs.RealTimeformance, this.oldPerformance, res.data.performance)
-            this.numAnim.start()
-          }
-          this.oldPerformance = res.data.performance
-          if (res.data.ranking_number === 0) {
-            this.ranking_number = '--'
-          } else {
-            this.ranking_number = res.data.ranking_number
-          }
-        })
-      }
-    },
     refreshMessage() {
       setInterval(() => {
         // this.getCount()

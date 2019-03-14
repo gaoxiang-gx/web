@@ -271,14 +271,4 @@
   }
 </script>
 <style scoped>
-  .el-tabs__item {
-    font-size: 16px;
-    font-weight: 600;
-  }
-  .el-table >>> thead{
-    font-size: 14px;
-  }
-  .el-table{
-    font-size: 14px;
-  }
 </style>

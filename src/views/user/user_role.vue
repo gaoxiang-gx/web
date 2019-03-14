@@ -80,7 +80,7 @@
         <el-button v-else type="primary" @click="updateData">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog :title="dialogAuthTitle + '权限设置'" :visible.sync="dialogAuthVisible" width="30%">
+    <el-dialog :title="dialogAuthTitle + '--权限设置'" :visible.sync="dialogAuthVisible" width="30%">
       <div class="tree_iconBox">
         <el-tree
           :data="data"
@@ -410,11 +410,5 @@
   }
 </script>
 <style rel="stylesheet/scss" lang="scss">
-  .tree_iconBox {
-    .el-tree-node__content{
-      .el-tree-node__expand-icon:before {
-        content: "\E620";
-      }
-    }
-  }
+
 </style>

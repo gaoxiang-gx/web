@@ -161,9 +161,16 @@ export default {
     this.getList()
     this.getUserAccountGroupTree()
   },
+  deactivated() {
+    this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+  },
+  activated() {
+    this.getList()
+    this.getUserAccountGroupTree()
+    window.scrollTo(0, this.scrollTop)
+  },
   methods: {
     handlecheck(obj) {
-      console.log(obj)
       const checked = this.$refs.tree.getCheckedKeys()
       if (checked.length === 1) {
         this.$refs.tree.setCheckedKeys([obj.id])
@@ -316,14 +323,6 @@ export default {
         })
       })
     }
-  },
-  deactivated() {
-    this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-  },
-  activated() {
-    this.getList()
-    this.getUserAccountGroupTree()
-    window.scrollTo(0, this.scrollTop)
   }
 }
 </script>

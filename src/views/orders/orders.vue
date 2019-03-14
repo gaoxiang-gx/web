@@ -1,6 +1,11 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
+      <el-select @change='handleFilter' clearable style="width: 120px" class="filter-item" v-model="listQuery.status"
+                 placeholder="订单状态">
+        <el-option v-for="item in statusOptions" :key="item.key" :label="item.label" :value="item.key">
+        </el-option>
+      </el-select>
       <el-date-picker
         class="filter-item"
         v-model="listQuery.date_range"
@@ -15,11 +20,6 @@
         :picker-options="pickerOptions2"
         @change='handleFilter'>
       </el-date-picker>
-      <el-select @change='handleFilter' clearable style="width: 120px" class="filter-item" v-model="listQuery.status"
-                 placeholder="订单状态">
-        <el-option v-for="item in statusOptions" :key="item.key" :label="item.label" :value="item.key">
-        </el-option>
-      </el-select>
       <el-input @keyup.enter.native="handleFilter" style="width: 250px;" class="filter-item" placeholder="订单号"
                 v-model="listQuery.orders_unique_id">
       </el-input>
@@ -90,7 +90,8 @@
             <el-form-item label="收货信息">
               <div v-if="scope.row.product_weixin_fans_address">
                 <p class="my-form-p">
-                  <span class="label-span">收货人：</span><span v-if="scope.row.product_weixin_fans_address.receive_name">{{scope.row.product_weixin_fans_address.receive_name}}</span>
+                  <span class="label-span">收货人：</span>
+                  <span v-if="scope.row.product_weixin_fans_address">{{scope.row.product_weixin_fans_address.receive_name}}</span>
                 </p>
                 <p class="my-form-p">
                   <span class="label-span">联系电话：</span>
@@ -105,9 +106,9 @@
                   </span>
                 </p>
               </div>
-              <el-button size="mini" type="primary" icon="el-icon-edit" @click="handleOpenAnotherInner4(scope.row)">
-                编辑收货信息
-              </el-button>
+              <!--<el-button size="mini" type="primary" icon="el-icon-edit" @click="handleOpenAnotherInner4(scope.row)">-->
+                <!--编辑收货信息-->
+              <!--</el-button>-->
             </el-form-item>
             <el-form-item label="留言备注">
               <p class="my-form-p" v-for="item in scope.row.orders_remarks" :class="item.status===0?if_deleted:''">
@@ -179,9 +180,9 @@
           <!--<el-button v-if="scope.row.status===2" size="small" type="info" @click="handleModifyStatus(scope.row,1)">未确认</el-button>-->
           <el-button v-if="scope.row.status===2 || scope.row.status === 4" size="small" type="success" @click="handleDeliverOrders(scope.row,0)">确认发货</el-button>
           <el-button v-if="scope.row.status===2" size="small" type="warning" @click="handleDeliverOrders(scope.row,1)">已断货</el-button>
-          <el-button v-if="scope.row.status===3" size="small" type="success" @click="handleHandleOrders(scope.row,1)">确认签收</el-button>
-          <el-button v-if="scope.row.status===3" size="small" type="warning" @click="handleHandleOrders(scope.row,0)">已拒收</el-button>
-          <el-button v-if="scope.row.status===5" size="small" type="success" @click="handleResultOrders(scope.row)">已完成</el-button>
+          <!--<el-button v-if="scope.row.status===3" size="small" type="success" @click="handleHandleOrders(scope.row,1)">确认签收</el-button>-->
+          <!--<el-button v-if="scope.row.status===3" size="small" type="warning" @click="handleHandleOrders(scope.row,0)">已拒收</el-button>-->
+          <!--<el-button v-if="scope.row.status===5" size="small" type="success" @click="handleResultOrders(scope.row)">已完成</el-button>-->
           <!--<el-button v-if="scope.row.status!==9" size="small" type="danger" @click="handleDestoryOrders(scope.row)">删除</el-button>-->
           <!--<el-button v-if="scope.row.status===1" size="small" type="danger" @click="handleDeleteOrder(scope.row,9)">删除</el-button>-->
         </template>
@@ -1275,7 +1276,7 @@
           1: 'info',
           2: 'warning',
           3: '',
-          4: '',
+          4: 'danger',
           5: '',
           6: 'danger',
           7: 'success',
@@ -1490,7 +1491,7 @@
         // downloadNeedCheckOrder().then()
       },
       printOrders(row) {
-        // console.log(JSON.stringify(row))
+        console.log(JSON.parse(JSON.stringify(row)))
         if (row.product_weixin.weixin_nickname === undefined || row.product_weixin.weixin_nickname === '' || row.product_weixin.weixin_nickname === null) {
           this.$message({
             type: 'error',
@@ -1502,6 +1503,13 @@
           this.$message({
             type: 'error',
             message: '请先设置发件人电话'
+          })
+          return
+        }
+        if (row.product_weixin_fans_address === undefined || row.product_weixin_fans_address === '' || row.product_weixin_fans_address === null) {
+          this.$message({
+            type: 'error',
+            message: '请先设置收件人信息'
           })
           return
         }

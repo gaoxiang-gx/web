@@ -34,12 +34,12 @@
       </el-table-column>
       <el-table-column min-width="200px" align="center" label="所属产品">
         <template slot-scope="scope">
-          <span class="link-type" v-for="item in scope.row.goods_pivot">
+          <div v-for="item in scope.row.goods_pivot">
             <span v-if="item.product">
               {{item.product.product_name}}
             </span>
             <el-tag style="height:20px;line-height:20px;" :type="item.product.is_promote | statusFilter">{{item.product.is_promote | statusTranslator}}</el-tag>
-          </span>
+          </div>
         </template>
       </el-table-column>
       <el-table-column min-width="100px" align="center" label="价格">
@@ -47,14 +47,15 @@
           <span>￥{{scope.row.price}}</span>
         </template>
       </el-table-column>
-      <el-table-column :key="Math.random()" align="center" label="规格" min-width="80">
-        <template slot-scope="scope">
-          <span>{{scope.row.unit | statusUnit}}</span>
-        </template>
-      </el-table-column>
+
       <el-table-column min-width="100px" align="center" label="库存">
         <template slot-scope="scope">
           <span>{{scope.row.stock}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :key="Math.random()" align="center" label="规格" min-width="80">
+        <template slot-scope="scope">
+          <span>{{scope.row.unit | statusUnit}}</span>
         </template>
       </el-table-column>
       <el-table-column min-width="180px" align="center" label="更新时间">
@@ -64,10 +65,7 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="160" class-name="small-padding">
         <template slot-scope="scope">
-          <el-button v-show="scope.row.is_promote == 1" type="info" size="mini" @click="handleOpenInner1(scope.row)">模板</el-button>
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除
-          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -80,12 +78,6 @@
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="25%" style='width: 55%; margin-left:15%;'>
-        <!--<el-form-item label="所属产品" prop="product_name">-->
-        <!--<multiselect v-model="temp.product" :options="productOptions" @search-change="queryProductList" placeholder="搜索商品" selectLabel="选择"-->
-        <!--deselectLabel="删除" track-by="product_name" :internalSearch="false" label="product_name">-->
-        <!--<span slot='noResult'>无结果</span>-->
-        <!--</multiselect>-->
-        <!--</el-form-item>-->
         <el-form-item label="产品名称" prop="goods_name">
           <el-input v-model="temp.goods_name"></el-input>
         </el-form-item>
@@ -355,19 +347,6 @@
         })
       },
       handleUpdate(row) {
-        // this.temp = Object.assign({}, row) // copy obj
-        // this.dialogStatus = 'update'
-        // this.dialogFormVisible = true
-        // this.productResult = this.temp.product
-        // var i = 0
-        // this.temp.product_ids = []
-        // for (const v of this.temp.product) {
-        //   this.temp.product_ids[i] = v.id
-        //   i++
-        // }
-        // this.$nextTick(() => {
-        //   this.$refs['dataForm'].clearValidate()
-        // })
         const tempData = Object.assign({}, row) // copy obj
         this.getProductList(' ')
         tempData.product_ids = []
@@ -377,13 +356,6 @@
         this.temp = tempData
         this.dialogStatus = 'update'
         this.dialogFormVisible = true
-        // this.productResult = this.temp.product
-        // var i = 0
-        // this.temp_product_ids = []
-        // for (const v of this.temp.product) {
-        //   this.temp_product_ids[i] = v.id
-        //   i++
-        // }
         this.$nextTick(() => {
           this.$refs['dataForm'].clearValidate()
         })
