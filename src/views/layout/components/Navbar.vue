@@ -100,20 +100,16 @@ export default {
     ])
   },
   mounted() {
-    bus.$on('upDateRealTimeRanking', () => {
-      this.upDateRealTimeformance()
-    })
+
   },
   created() {
     this.refreshMessage()
     // this.getCount()
-    this.upDateRealTimeformance()
   },
   methods: {
     refreshMessage() {
       setInterval(() => {
         // this.getCount()
-        this.upDateRealTimeformance()
       }, 60000)
     },
     toggleSideBar() {
