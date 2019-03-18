@@ -43,17 +43,21 @@ router.beforeEach((to, from, next) => {
   if (getAccountToken()) {
     if (store.getters.roles.length === 0) {
       getUserInfo(to, from, next)
+    } else {
+      next()
     }
-    next()
     return false
   }
   if (!getAccountToken() && getUserToken()) {
     store.dispatch('LoginAccount').then(() => {
       if (store.getters.roles.length === 0) {
         getUserInfo(to, from, next)
+      } else {
+        next()
       }
-      next()
       return false
+    }).catch(() => {
+      window.location.href = process.env.HOME_URL
     })
   }
   if (!getAccountToken() && !getUserToken()) {
