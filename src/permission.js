@@ -57,7 +57,7 @@ router.beforeEach((to, from, next) => {
     })
   }
   if (!getAccountToken() && !getUserToken()) {
-    window.location = process.env.HOME_URL
+    window.location.href = process.env.HOME_URL
   }
 })
 

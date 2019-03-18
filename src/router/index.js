@@ -29,10 +29,9 @@ export const constantRouterMap = [
       component: _import('dashboard/index')
     }]
   },
-  {
-    path: '*', hidden: true, component: _import('404'), name: '404',
-    meta: { title: '404', icon: 'form' }
-  }
+  // {
+  //   path: '*', hidden: true, component: _import('404'), name: '404',
+  // }
 ]
 export const asyncRouterMap = [
   {
