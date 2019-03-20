@@ -5,7 +5,8 @@
              background-color="#252a2f"
              mode="horizontal">
       <!--<hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>-->
-      <breadcrumb></breadcrumb>
+      <!--<breadcrumb></breadcrumb>-->
+      <span class="system-name">{{project_name}}</span>
       <el-submenu index="1" class="avatar-container">
         <img slot="title" style="cursor: pointer" class="user-img" :src="avatar+'?imageView2/1/w/80/h/80'">
         <div class="user-dropdown">
@@ -78,6 +79,7 @@ import CountUp from 'countup.js'
 export default {
   data() {
     return {
+      project_name: process.env.PRO_NAME,
       performance: 0,
       oldPerformance: 0,
       curperformance: 0,
@@ -137,6 +139,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .system-name {
+    font-size: 16px;
+    color: white;
+    height: 50px;
+    line-height: 50px;
+    text-indent: 36px;
+    margin-left: 10px;
+  }
   .navbar {
     height: 50px;
     line-height: 50px;

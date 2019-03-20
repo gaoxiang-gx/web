@@ -25,28 +25,6 @@
 export default {
   data() {
     return {
-      sidebarItem: [
-        {
-          name: '推广',
-          icon: 'promote',
-          url: ''
-        },
-        {
-          name: '客服',
-          icon: 'support',
-          url: ''
-        },
-        {
-          name: '仓库',
-          icon: 'stock',
-          url: ''
-        },
-        {
-          name: '数据',
-          icon: 'data',
-          url: ''
-        }
-      ]
     }
   },
   methods: {
@@ -59,7 +37,7 @@ export default {
 <style lang="scss" scoped>
   .sidebar-warrper {
     border-top: 1px solid #3b4044;
-    z-index: 9999;
+    z-index: 1001;
     position: fixed;
     height: auto;
     top: 50px;

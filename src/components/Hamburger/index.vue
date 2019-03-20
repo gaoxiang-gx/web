@@ -35,7 +35,7 @@ export default {
     top: 16px;
     width: 16px;
     height: 16px;
-    background: #8a8a8ab8;
+    background: #8a8a8a;
   }
   .svg-warpper:before {
     content: '';
@@ -43,8 +43,9 @@ export default {
     height: 0;
     top: -16px;
     left: 0;
-    border: 8px solid;
-    border-color: transparent transparent #8a8a8ab8 #8a8a8ab8;
+    border: 8px solid transparent;
+    border-bottom-color: #8a8a8a;
+    border-left-color: #8a8a8a;
     position: absolute;
   }
   .svg-warpper:after {
@@ -55,7 +56,7 @@ export default {
     bottom: -16px;
     position: absolute;
     border: 8px solid;
-    border-color: #8a8a8ab8 transparent transparent #8a8a8ab8;
+    border-color: #8a8a8a transparent transparent #8a8a8a;
   }
 .hamburger {
   font-size: 14px;
