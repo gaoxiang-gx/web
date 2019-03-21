@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-editor-container">
+  <div class="dashboard-editor-container" v-if="false">
     <el-row ref="rowBox" class="panel-group" :gutter="20">
       <el-col :xs="12" :sm="12" :lg="screen" class="card-panel-col">
         <div class='card-panel'>
@@ -151,18 +151,18 @@ export default {
     ])
   },
   mounted() {
-    this.myPromotionLine()
-    this.myWarehouseLine()
-    this.mySupportLine()
+    // this.myPromotionLine()
+    // this.myWarehouseLine()
+    // this.mySupportLine()
   },
   created() {
-    this.ifShowNum()
-    this.initMothParam()
-    this.getCount()
-    this.getYestdayAddFanTotal()
-    this.getTodayAddFanTotal()
-    this.initWarehouseLineData()
-    this.getList()
+    // this.ifShowNum()
+    // this.initMothParam()
+    // this.getCount()
+    // this.getYestdayAddFanTotal()
+    // this.getTodayAddFanTotal()
+    // this.initWarehouseLineData()
+    // this.getList()
   },
   methods: {
     getList() {
