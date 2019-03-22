@@ -71,4 +71,11 @@ export function readNotice(param) {
     data: param
   })
 }
+export function updateOwnUserAccount(param) {
+  return request({
+    url: '/api/user/updateOwnUserAccount',
+    method: 'post',
+    data: param
+  })
+}
 

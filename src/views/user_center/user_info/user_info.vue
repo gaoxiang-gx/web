@@ -35,7 +35,7 @@
 
 <script>
 import { getInfo } from '@/api/login'
-import { updateOwnUserPassword, updateUserAccount } from '@/api/user'
+import { updateOwnUserPassword, updateOwnUserAccount } from '@/api/user'
 import waves from '@/directive/waves'
 import myUpload from 'vue-image-crop-upload'
 import PanThumb from '@/components/PanThumb'
@@ -172,7 +172,7 @@ export default {
         const tempData = {}
         tempData.head_img = jsonData.data.url
         tempData.user_account_id = this.temp.id
-        updateUserAccount(tempData).then(response => {
+        updateOwnUserAccount(tempData).then(response => {
           this.temp.head_img = response.data.head_img
         })
       } else {
