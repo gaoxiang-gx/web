@@ -61,5 +61,5 @@ service.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-
-export default service
+const aaa = service
+export default aaa

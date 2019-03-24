@@ -1,5 +1,4 @@
 import request from '@/utils/request'
-
 export function getUserMenu(param) {
   return request({
     url: 'api/user/getUserMenu',

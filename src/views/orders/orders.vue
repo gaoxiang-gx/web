@@ -177,12 +177,12 @@
           <!--<el-button v-if="scope.row.status===1" type="primary" size="small" @click="handleUpdate(scope.row)">编辑</el-button>-->
           <!--<el-button v-if="scope.row.status===1" :loading="btnLoading" size="small" type="success" @click="handleCheckOrders(scope.row)">确认订单</el-button>-->
           <!--<el-button v-if="scope.row.status===2" size="small" type="info" @click="handleModifyStatus(scope.row,1)">未确认</el-button>-->
-          <el-button v-if="scope.row.status===2 || scope.row.status === 4" size="small" type="success" @click="handleDeliverOrders(scope.row,0)">确认发货</el-button>
-          <el-button v-if="scope.row.status===2" size="small" type="warning" @click="handleDeliverOrders(scope.row,1)">已断货</el-button>
+          <el-button v-if="scope.row.status === 2 || scope.row.status === 4" size="small" type="success" @click="handleDeliverOrders(scope.row,0)">确认发货</el-button>
+          <el-button v-if="scope.row.status === 2" size="small" type="warning" @click="handleDeliverOrders(scope.row,1)">已断货</el-button>
           <!--<el-button v-if="scope.row.status===3" size="small" type="success" @click="handleHandleOrders(scope.row,1)">确认签收</el-button>-->
           <!--<el-button v-if="scope.row.status===3" size="small" type="warning" @click="handleHandleOrders(scope.row,0)">已拒收</el-button>-->
           <!--<el-button v-if="scope.row.status===5" size="small" type="success" @click="handleResultOrders(scope.row)">已完成</el-button>-->
-          <!--<el-button v-if="scope.row.status!==9" size="small" type="danger" @click="handleDestoryOrders(scope.row)">删除</el-button>-->
+          <el-button v-if="scope.row.status === 3" size="small" type="danger" @click="handleDestoryOrders(scope.row)">废弃</el-button>
           <!--<el-button v-if="scope.row.status===1" size="small" type="danger" @click="handleDeleteOrder(scope.row,9)">删除</el-button>-->
         </template>
       </el-table-column>
