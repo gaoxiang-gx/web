@@ -2959,13 +2959,12 @@
         }
       },
       handleInnerUpdate3(row) {
-        console.log(row)
         this.logisticsTypeOptions = []
         this.tempProductId = row.product_id
         this.temp = Object.assign({}, row)
         this.dialogStatus = 'update'
         this.innerDialogFormVisible3 = true
-        if (row.orders_logistics.id !== 0) {
+        if (row.orders_logistics !== null) {
           this.logisticsTypeOptions.push({
             id: row.orders_logistics.orders_logistics_type.id,
             name: row.orders_logistics.orders_logistics_type.name,
@@ -2982,7 +2981,6 @@
             name: row.orders_logistics.product_deliver.name
           }]
           this.innerTemp3 = Object.assign({}, row.orders_logistics)
-          console.log('innerTemp3', this.innerTemp3)
         } else {
           this.resetInnerTemp3()
           this.productDeliverOptions = []
