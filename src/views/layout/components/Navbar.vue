@@ -6,7 +6,7 @@
              mode="horizontal">
       <!--<hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>-->
       <!--<breadcrumb></breadcrumb>-->
-      <span class="system-name">{{project_name}}</span>
+      <router-link to="/dashboard" class="system-name">{{project_name}}</router-link>
       <el-submenu index="1" class="avatar-container">
         <img slot="title" style="cursor: pointer" class="user-img" :src="avatar+'?imageView2/1/w/80/h/80'">
         <div class="user-dropdown">

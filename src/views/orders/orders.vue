@@ -31,12 +31,12 @@
       <!--</el-input>-->
       <!--<el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="推广渠道" v-model="listQuery.channel_name">-->
       <!--</el-input>-->
-      <!--<el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="收件人电话"-->
-                <!--v-model="listQuery.weixin_fans_address_phone">-->
-      <!--</el-input>-->
-      <!--<el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="收件人姓名"-->
-                <!--v-model="listQuery.weixin_fans_address_receive_name">-->
-      <!--</el-input>-->
+      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="收件人电话"
+                v-model="listQuery.weixin_fans_address_phone">
+      </el-input>
+      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="收件人姓名"
+                v-model="listQuery.weixin_fans_address_receive_name">
+      </el-input>
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="备注信息"
                 v-model="listQuery.remark">
       </el-input>

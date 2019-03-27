@@ -1,6 +1,6 @@
 <template>
-  <div class="dashboard-editor-container" v-if="false">
-    <el-row ref="rowBox" class="panel-group" :gutter="20">
+  <div class="dashboard-editor-container">
+    <el-row ref="rowBox" class="panel-group" :gutter="20" v-show="false">
       <el-col :xs="12" :sm="12" :lg="screen" class="card-panel-col">
         <div class='card-panel'>
           <div class="card-panel-icon-wrapper icon-people">
@@ -29,24 +29,26 @@
         <div id="myPromotionChart" :style="{height:height,width:width}"></div>
       </el-col>
     </el-row>
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;" v-show="false">
+    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;" >
       <el-date-picker
-        v-model="warehouseMothQuery"
-        style="margin-bottom: 20px;"
-        type="month"
-        format="yyyy-MM"
-        value-format="yyyy-MM"
+        v-model="warehouseQuery"
+        type="daterange"
+        size="mini"
         :clearable="false"
-        @change="initWarehouseLineData"
-        placeholder="选择月">
+        format="yyyy-MM-dd"
+        value-format="yyyy-MM-dd"
+        @change="getWarehouseLine"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期">
       </el-date-picker>
       <el-col :span="24">
-        <div id="myWarehouseChart" :style="{width: '100%', height: '500px'}"></div>
+        <div id="myWarehouseChart" :style="{width: '100%', height: '400px'}"></div>
       </el-col>
     </el-row>
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;"  v-show="false">
       <el-col :span="24">
-        <div id="mySupportChart" :style="{width: '100%', height: '500px'}"></div>
+        <div id="mySupportChart" :style="{width: '100%', height: '400px'}"></div>
       </el-col>
     </el-row>
   </div>
@@ -56,7 +58,9 @@
 <script>
 import { parseTime } from '@/utils/index'
 import { mapGetters } from 'vuex'
-import { getWarehouseStatisticsData, getWarehouseMonthlyData, getWeixinFansRecordData, getWeixinRecordUnfilledList } from '@/api/overview'
+import { getWarehouseStatisticsData, getWeixinFansRecordData, getWeixinRecordUnfilledList } from '@/api/overview'
+import { getDailyLogisticsOrdersCountStatistics } from '@/api/orders'
+
 
 export default {
   name: 'dashboard',
@@ -78,9 +82,9 @@ export default {
       today_add_count_total: 0,
       today_consult_count_total: 0,
       delivered_date: undefined,
-      warehouseMothQuery: '',
-      warehouseMothLine: [],
-      warehouseMothData: [],
+      warehouseQuery: [parseTime(new Date().getTime(), '{y}-{m}-{d}'),parseTime(new Date().getTime(), '{y}-{m}-{d}')],
+      warehouseData_X: [],
+      warehouseData_Y: [],
       pickerOptions1: {
         shortcuts: [{
           text: '今天',
@@ -152,16 +156,15 @@ export default {
   },
   mounted() {
     // this.myPromotionLine()
-    // this.myWarehouseLine()
+    this.initWarehouseLine()
     // this.mySupportLine()
   },
   created() {
     // this.ifShowNum()
-    // this.initMothParam()
     // this.getCount()
     // this.getYestdayAddFanTotal()
     // this.getTodayAddFanTotal()
-    // this.initWarehouseLineData()
+    this.getWarehouseLine()
     // this.getList()
   },
   methods: {
@@ -181,10 +184,6 @@ export default {
       if (this.$store.state.user.roles !== 'administrator') {
         this.screen = 12
       }
-    },
-    initMothParam() {
-      const temp_date = new Date()
-      this.warehouseMothQuery = temp_date.getFullYear() + '-' + (temp_date.getMonth() + 1)
     },
     getCount() {
       if (this.$store.state.user.roles === 'administrator' || this.$store.state.user.roles === 'warehouse') {
@@ -215,32 +214,14 @@ export default {
         })
       }
     },
-    initWarehouseLineData() {
-      // this.warehouseMothQuery = new Date().getMonth() + 1
-      // alert(this.warehouseMothQuery)
-      const tempDate = this.warehouseMothQuery.split('-')
-      const year = parseInt(tempDate[0])
-      const month = parseInt(tempDate[1])
-      const full_date = new Date(year, month, 0)
-      const tempMonthData = new Array(full_date.getDate())
-      for (let i = 0; i < full_date.getDate();) {
-        tempMonthData[i] = ++i + '日'
-        this.warehouseMothData[i] = 0
-      }
-      this.warehouseMothLine = tempMonthData
-      this.getWarehouseLine()
-    },
     getWarehouseLine() {
-        // getWarehouseMonthlyData({ month: this.warehouseMothQuery }).then(response => {
-        //   this.warehouseMothData = []
-        //   for (const v of response.data) {
-        //     const date = v.delivered_date.split('-')
-        //     const day = date[2]
-        //     const day_index = parseInt(day) - 1
-        //     this.warehouseMothData[day_index] = parseInt(v.count)
-        //   }
-        //   this.myWarehouseLine()
-        // })
+        getDailyLogisticsOrdersCountStatistics({ date_range: this.warehouseQuery }).then(res => {
+          this.warehouseData_X = res.data.map( e => e.logistics_name)
+          this.warehouseData_Y = res.data.map( e => e.count)
+          console.log(this.warehouseData_X)
+          console.log(this.warehouseData_Y)
+          this.initWarehouseLine()
+        })
     },
     myPromotionLine() {
       const myPromotionChart = this.$echarts.init(document.getElementById('myPromotionChart'))
@@ -310,17 +291,20 @@ export default {
         }, 500)
       })
     },
-    myWarehouseLine() {
+    initWarehouseLine() {
       const myWarehouseChart = this.$echarts.init(document.getElementById('myWarehouseChart'))
       myWarehouseChart.setOption({
         title: {
-          text: '每日发货数',
+          text: '物流发货数',
           textStyle: {
             color: '#c23531'
           }
         },
         tooltip: {
-          trigger: 'axis'
+          trigger: 'axis',
+          axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+          }
         },
         legend: {
           data: ['发货数']
@@ -329,7 +313,8 @@ export default {
         xAxis: [
           {
             type: 'category',
-            data: this.warehouseMothLine
+            name: '快递',
+            data: this.warehouseData_X
           }
         ],
         yAxis: [
@@ -341,7 +326,7 @@ export default {
           {
             name: '发货数',
             type: 'bar',
-            data: this.warehouseMothData,
+            data: this.warehouseData_Y,
             markPoint: {
               data: [
                 { type: 'max', name: '最大值' },

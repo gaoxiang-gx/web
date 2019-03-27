@@ -243,3 +243,10 @@ export function findOrdersList(param) {
     data: param
   })
 }
+export function getDailyLogisticsOrdersCountStatistics(param) {
+  return request({
+    url: '/api/orders/getDailyLogisticsOrdersCountStatistics',
+    method: 'post',
+    data: param
+  })
+}
