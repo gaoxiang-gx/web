@@ -4,15 +4,17 @@ const userTokenKey = 'User-Token'
 const accountTokenKey = 'Account-Token'
 
 export function getUserToken() {
-  return Cookies.get(userTokenKey, { domain: '7055.net' })
+  return Cookies.get(userTokenKey, { domain: process.env.COOKIE_DOMAIN })
 }
 
 export function setUserToken(token) {
-  return Cookies.set(userTokenKey, token, { domain: '7055.net' })
+  let d = new Date();
+  d.setTime(d.getTime() + ( 7 * 3600 * 1000));
+  return Cookies.set(userTokenKey, token, { domain: process.env.COOKIE_DOMAIN, expires: d  })
 }
 
 export function removeUserToken() {
-  return Cookies.remove(userTokenKey, { domain: '7055.net' })
+  return Cookies.remove(userTokenKey, { domain: process.env.COOKIE_DOMAIN })
 }
 
 export function getAccountToken() {
