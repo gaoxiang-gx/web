@@ -9,7 +9,7 @@ export function getUserToken() {
 
 export function setUserToken(token) {
   let d = new Date();
-  d.setTime(d.getTime() + ( 7 * 3600 * 1000));
+  d.setTime(d.getTime() + ( 10 * 3600 * 1000));
   return Cookies.set(userTokenKey, token, { domain: process.env.COOKIE_DOMAIN, expires: d  })
 }
 
@@ -22,7 +22,9 @@ export function getAccountToken() {
 }
 
 export function setAccountToken(token) {
-  return Cookies.set(accountTokenKey, token)
+  let d = new Date();
+  d.setTime(d.getTime() + ( 10 * 3600 * 1000));
+  return Cookies.set(accountTokenKey, token, { domain: process.env.COOKIE_DOMAIN, expires: d  })
 }
 
 export function removeAccountToken() {
