@@ -24,7 +24,7 @@ export function getAccountToken() {
 export function setAccountToken(token) {
   let d = new Date();
   d.setTime(d.getTime() + ( 10 * 3600 * 1000));
-  return Cookies.set(accountTokenKey, token, { domain: process.env.COOKIE_DOMAIN, expires: d  })
+  return Cookies.set(accountTokenKey, token, { expires: d  })
 }
 
 export function removeAccountToken() {
