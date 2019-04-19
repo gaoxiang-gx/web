@@ -28,7 +28,7 @@ export const constantRouterMap = [
       path: 'dashboard',
       component: _import('dashboard/index')
     }]
-  },
+  }
   // {
   //   path: '*', hidden: true, component: _import('404'), name: '404',
   // }

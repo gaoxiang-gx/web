@@ -72,7 +72,7 @@
 </template>
 
 <script>
-  import { getProductList, createProduct, updateProduct, deleteProduct } from '@/api/product'
+  import { getProductList, createProduct, updateProduct } from '@/api/product'
   import waves from '@/directive/waves' // 水波纹指令
   import { getProductDeliverList } from '@/api/product'
   export default {

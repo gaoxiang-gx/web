@@ -16,11 +16,12 @@ import i18n from './lang' // Internationalization
 import '@/icons' // icon
 import '@/permission' // permission control
 import echarts from 'echarts'
+// 拖拽排序
+import VueDND from 'awe-dnd'
+Vue.use(VueDND)
 Vue.prototype.$echarts = echarts
-
 Vue.use(ElementUI, { locale })
 Vue.config.productionTip = false
-
 new Vue({
   el: '#app',
   router,
