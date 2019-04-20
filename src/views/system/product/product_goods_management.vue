@@ -74,7 +74,7 @@
 <script>
   import { getProductList, createProduct, updateProduct } from '@/api/product'
   import waves from '@/directive/waves' // 水波纹指令
-  import { getProductDeliverList } from '@/api/product'
+  import { getWarehouseList } from '@/api/product'
   export default {
     name: 'goodsManagement',
     directives: {
@@ -257,10 +257,10 @@
           }
         })
       },
-      getProductDeliverList(query) {
+      getWarehouseList(query) {
         if (query !== '') {
           this.getProductDeliverListLoading = true
-          getProductDeliverList({ name: query }).then(response => {
+          getWarehouseList({ name: query }).then(response => {
             this.productDeliverOptions = response.data.data
             this.getProductDeliverListLoading = false
           })

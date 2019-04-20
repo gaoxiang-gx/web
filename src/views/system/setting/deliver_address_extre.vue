@@ -82,7 +82,7 @@
 
 <script>
   import waves from '@/directive/waves'
-  import { updateProductDeliverExtra, getProductDeliverExtraList, createProductDeliverExtra } from '@/api/product'
+  import { updateWarehouseLogisticsExtra, getWarehouseLogisticsExtraList, createProductDeliverExtra } from '@/api/product'
   import { getOrdersLogisticsTypeList } from '@/api/orders'
   export default {
     components: { },
@@ -203,7 +203,7 @@
       },
       getList() {
         this.listLoading = true
-        getProductDeliverExtraList(this.listQuery).then(response => {
+        getWarehouseLogisticsExtraList(this.listQuery).then(response => {
           this.list = response.data.data
           this.total = response.data.total
           this.listLoading = false
@@ -249,7 +249,7 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             const tempparm = Object.assign({ id: this.temp_id }, this.temp)
-            updateProductDeliverExtra(tempparm).then(res => {
+            updateWarehouseLogisticsExtra(tempparm).then(res => {
               this.$notify({
                 title: '成功',
                 message: '修改成功',

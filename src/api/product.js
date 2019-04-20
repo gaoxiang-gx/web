@@ -211,49 +211,49 @@ export function deleteProductStorageManual(param) {
   })
 }
 
-export function updateProductDeliver(param) {
+export function updateWarehouse(param) {
   return request({
-    url: '/api/logistics/updateProductDeliver ',
+    url: '/api/logistics/updateWarehouse ',
     method: 'post',
     data: param
   })
 }
 
-export function createProductDeliver(param) {
+export function createWarehouse(param) {
   return request({
-    url: '/api/logistics/createProductDeliver ',
+    url: '/api/logistics/createWarehouse ',
     method: 'post',
     data: param
   })
 }
 
-export function getProductDeliverList(param) {
+export function getWarehouseList(param) {
   return request({
-    url: '/api/logistics/getProductDeliverList ',
+    url: '/api/logistics/getWarehouseList ',
     method: 'post',
     data: param
   })
 }
 
-export function createProductDeliverExtra(param) {
+export function createWarehouseExtra(param) {
   return request({
-    url: '/api/logistics/createProductDeliverExtra ',
+    url: '/api/logistics/createWarehouseExtra ',
     method: 'post',
     data: param
   })
 }
 
-export function getProductDeliverExtraList(param) {
+export function getWarehouseLogisticsExtraList(param) {
   return request({
-    url: '/api/logistics/getProductDeliverExtraList ',
+    url: '/api/logistics/getWarehouseLogisticsExtraList ',
     method: 'post',
     data: param
   })
 }
 
-export function updateProductDeliverExtra(param) {
+export function updateWarehouseLogisticsExtra(param) {
   return request({
-    url: '/api/logistics/updateProductDeliverExtra ',
+    url: '/api/logistics/updateWarehouseLogisticsExtra ',
     method: 'post',
     data: param
   })

@@ -145,11 +145,11 @@
 <script>
   import waves from '@/directive/waves'
   import {
-    updateProductDeliver,
-    getProductDeliverList,
-    createProductDeliver,
+    updateWarehouse,
+    getWarehouseList,
+    createWarehouse,
     getProductList,
-    getProductDeliverExtraList
+    getWarehouseLogisticsExtraList
   } from '@/api/product'
   import { getOrdersLogisticsTypeList } from '@/api/orders'
 
@@ -253,7 +253,7 @@
       },
       getList() {
         this.listLoading = true
-        getProductDeliverList(this.listQuery).then(response => {
+        getWarehouseList(this.listQuery).then(response => {
           this.list = response.data.data
           this.total = response.data.total
           this.listLoading = false
@@ -276,7 +276,7 @@
             if (this.temp.product_deliver_extra_yt !== undefined) {
               this.temp.product_deliver_extra_ids.push(this.temp.product_deliver_extra_yt)
             }
-            createProductDeliver(this.temp).then(res => {
+            createWarehouse(this.temp).then(res => {
               this.$notify({
                 title: '成功',
                 message: '创建成功',
@@ -322,7 +322,7 @@
               this.temp.product_deliver_extra_ids.push(this.temp.product_deliver_extra_yt)
             }
             const tempparm = Object.assign({ id: this.temp_id }, this.temp)
-            updateProductDeliver(tempparm).then(res => {
+            updateWarehouse(tempparm).then(res => {
               this.$message({
                 title: '成功',
                 message: '修改成功',
@@ -346,14 +346,14 @@
       },
       getProductDeliverExtrasf() {
         this.logisticsTypeLoading_sf = true
-        getProductDeliverExtraList({ order_logistics_type_id: 1 }).then(response => {
+        getWarehouseLogisticsExtraList({ order_logistics_type_id: 1 }).then(response => {
           this.logisticsTypeOptions_sf = response.data.data
           this.logisticsTypeLoading_sf = false
         })
       },
       getProductDeliverExtrayt() {
         this.logisticsTypeLoading_yt = true
-        getProductDeliverExtraList({ order_logistics_type_id: 6 }).then(response => {
+        getWarehouseLogisticsExtraList({ order_logistics_type_id: 6 }).then(response => {
           this.logisticsTypeOptions_yt = response.data.data
           this.logisticsTypeLoading_yt = false
         })

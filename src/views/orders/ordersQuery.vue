@@ -472,7 +472,7 @@
                      filterable
                      remote
                      placeholder="请选择物流仓库"
-                     :remote-method="getProductDeliverList"
+                     :remote-method="getWarehouseList"
                      :loading="productDeliverLoading">
             <el-option v-for="item in productDeliverOptions"
                        :key="item.id"
@@ -514,7 +514,7 @@
                      filterable
                      remote
                      placeholder="请选额外信息"
-                     :remote-method="getProductDeliverExtraList"
+                     :remote-method="getWarehouseLogisticsExtraList"
                      :loading="productDeliverExtraLoading">
             <el-option v-for="item in productDeliverExtraOptions"
                        :key="item.id"
@@ -771,8 +771,8 @@
     getProductList,
     deleteProduct,
     getProductTemplateList,
-    getProductDeliverList,
-    getProductDeliverExtraList
+    getWarehouseList,
+    getWarehouseLogisticsExtraList
   } from '@/api/product'
   import { getProductGoodsList } from '@/api/product_goods'
   // import { getSystemGlobalSettingInfo } from '@/api/system_global_setting'
@@ -1343,13 +1343,13 @@
           this.regionData = response.data
         })
       },
-      getProductDeliverExtraList(query) {
+      getWarehouseLogisticsExtraList(query) {
         if (query !== '') {
           console.log(this.logisticsTypeOptions)
           console.log(this.innerTemp3.orders_logistics_type.code)
           console.log(this.logisticsTypeOptions[this.logisticsTypeOptions.findIndex(d => d.company_code === this.innerTemp3.orders_logistics_type.code)])
           this.productDeliverExtraLoading = true
-          getProductDeliverExtraList({
+          getWarehouseLogisticsExtraList({
             order_logistics_type_id: this.logisticsTypeOptions[this.logisticsTypeOptions.findIndex(d => d.code === this.innerTemp3.orders_logistics_type.code)].id,
             product_deliver_id: this.innerTemp3.product_deliver_id,
             description: query
@@ -1359,10 +1359,10 @@
           })
         }
       },
-      getProductDeliverList(query) {
+      getWarehouseList(query) {
         if (query !== '') {
           this.productDeliverLoading = true
-          getProductDeliverList({ product_id: this.tempProductId, name: query }).then(response => {
+          getWarehouseList({ product_id: this.tempProductId, name: query }).then(response => {
             this.productDeliverOptions = response.data.data
             this.productDeliverLoading = false
           })
