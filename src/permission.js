@@ -12,13 +12,9 @@ const whiteList = ['/login', '/404'] // 不重定向白名单
 function getUserInfo(to, from, next) {
   let roles
   // store.dispatch('GetActivity')
-  store.dispatch('GetInfo')
-    .then(resolve => {
-      roles = resolve.data.user_account_role.role_code
-    })
-    .then(() => {
+  store.dispatch('GetInfo').then(() => {
       store.dispatch('GetMenu').then(menuCode => {
-        store.dispatch('GenerateRoutes', {roles, menuCode}).then(() => { // 生成可访问的路由表
+        store.dispatch('GenerateRoutes', menuCode ).then(() => { // 生成可访问的路由表
           router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
           next({...to, replace: true}) // hack方法 确保addRoutes已完成
         })

@@ -63,8 +63,7 @@ const permission = {
     },
     // 加载路由
     GenerateRoutes({ commit }, data) {
-      const { roles } = data
-      const { menuCode } = data
+      const menuCode = data
       return new Promise(resolve => {
         let accessedRouters
         accessedRouters = filterAsyncRouter(asyncRouterMap, menuCode)
