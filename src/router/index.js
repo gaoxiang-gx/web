@@ -90,26 +90,26 @@ export const asyncRouterMap = [
         path: 'inventory_management',
         name: 'inventoryManagement',
         component: _import('purchase/inventory_management'),
-        meta: { title: '盘库管理', icon: 'inventoryManagement'}
+        meta: { title: '盘库管理', icon: 'inventoryManagement' }
       },
       {
         path: '/purchase_management',
         name: 'purchaseManagement',
         redirect: 'noredirect',
         component: _import('purchase/purchase_management/index'),
-        meta: { title: '订货管理', icon: 'purchaseManagement'},
+        meta: { title: '订货管理', icon: 'purchaseManagement' },
         children: [
           {
             path: 'purchase_management',
             name: 'purchaseItemManagement',
             component: _import('purchase/purchase_management/purchase_management'),
-            meta: { title: '订货条目管理'}
+            meta: { title: '订货条目管理' }
           },
           {
             path: 'purchase_in_storage',
             name: 'purchaseInStorage',
             component: _import('purchase/purchase_management/purchase_in_storage'),
-            meta: { title: '订货入库管理'}
+            meta: { title: '订货入库管理' }
           }
         ]
       },
@@ -117,7 +117,7 @@ export const asyncRouterMap = [
         path: 'manual_Management',
         name: 'manual_Management',
         component: _import('purchase/manual_Management'),
-        meta: { title: '人工出入库', icon: 'manual_Management'}
+        meta: { title: '人工出入库', icon: 'manual_Management' }
       }
     ]
   },
@@ -198,13 +198,13 @@ export const asyncRouterMap = [
         path: 'system/product_goods_management',
         name: 'productGoodsManagement',
         component: _import('system/product/product_goods_management'),
-        meta: { title: '产品管理', icon: 'productGoodsManagement'}
+        meta: { title: '产品管理', icon: 'productGoodsManagement' }
       },
       {
         path: 'system/goods_class',
         name: 'productGoodsClass',
         component: _import('system/product/goods_class'),
-        meta: { title: '商品分类', icon: 'productGoodsManagement'}
+        meta: { title: '商品分类', icon: 'productGoodsManagement' }
       },
       {
         path: 'system/address_management',
