@@ -133,13 +133,13 @@
                        style="width: 100%"
                        filterable
                        clearable
-                       @focus="getProductGoodsListImportStorage(' ')"
+                       @focus="getProductGoodsSkuList(' ')"
                        remote
                        placeholder="选择规格"
-                       :remote-method="getProductGoodsListImportStorage"
+                       :remote-method="getProductGoodsSkuList"
                        :loading="importGoodsLoading">
-              <el-option  v-for="(item, index) in importGoodsOptions"
-                          :key="index"
+              <el-option  v-for="item in importGoodsOptions"
+                          :key="item.product_goods_id"
                           :label="item.sku_value"
                           :value="item.product_goods_id">
               </el-option>
@@ -162,7 +162,7 @@
 <script>
   import waves from '@/directive/waves'
   import { getProdcutStorageImportList, deleteProductStorageImport, createProductStorageImport } from '@/api/warehouse'
-  import { getProductGoodsCommonBaseList, getProductGoodsListImportStorage} from '@/api/goods'
+  import { getProductGoodsCommonBaseList, getProductGoodsSkuList} from '@/api/goods'
   import { getWarehouseList} from '@/api/product'
   import { parseTime } from '@/utils/index'
 
@@ -297,14 +297,14 @@
           })
         }
       },
-      getProductGoodsListImportStorage(query) {
+      getProductGoodsSkuList(query) {
         if (!this.temp.product_commonBase_id) {
           this.$message.error('先选择商品')
           return false
         }
         if (query !== '') {
           this.importGoodsLoading = true
-          getProductGoodsListImportStorage({ product_goods_common_id: this.temp.product_commonBase_id}).then(response => {
+          getProductGoodsSkuList({ product_goods_common_id: this.temp.product_commonBase_id}).then(response => {
             this.importGoodsOptions = response.data
             this.importGoodsLoading = false
           })

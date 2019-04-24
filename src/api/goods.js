@@ -95,20 +95,14 @@ export function getProductCategoryTreeList(param) {
     data: param
   })
 }
-export function getProductGoodsListImportStorage(param) {
+export function getProductGoodsSkuList(param) {
   return request({
-    url: '/api/goods/getProductGoodsListImportStorage',
+    url: '/api/goods/getProductGoodsSkuList',
     method: 'post',
     data: param
   })
 }
-export function getProductCategoryTreeList(param) {
-  return request({
-    url: '/api/goods/getProductCategoryTreeList',
-    method: 'post',
-    data: param
-  })
-}
+
 export function createProductCategory(param) {
   return request({
     url: '/api/goods/createProductCategory',

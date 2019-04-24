@@ -9,6 +9,10 @@
       <el-tree :data="data"
                :props="defaultProps"
                node-key="id"
+               :indent="20"
+               @node-expand="treeExpand"
+               @node-collapse="treeCollapse"
+               :default-expanded-keys="expandTree"
                :expand-on-click-node="false"
                :default-expand-all="false">
       <span class="custom-tree-node" slot-scope="{ node, data }">
@@ -82,6 +86,7 @@
         dialogFormVisible: false,
         currentData: {},
         data: [],
+        expandTree: [],
         menunode: undefined,
         temp: {
           category_name: undefined,
@@ -151,6 +156,12 @@
         }).catch(() => {
           data.status = value == 0 ? 1 : 0
         })
+      },
+      treeExpand(data) {
+        this.expandTree.push(data.id)
+      },
+      treeCollapse(data) {
+        this.expandTree.splice(this.expandTree.findIndex(item => item.id === data.id), 1)
       },
       remove(node, data) {
         this.$confirm('此操作将永久删除该域名, 是否继续?', '提示', {

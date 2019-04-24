@@ -143,13 +143,13 @@
                        filterable
                        v-if="dialogStatus == 'create'"
                        clearable
-                       @focus="getProductGoodsListImportStorage"
+                       @focus="getProductGoodsSkuList"
                        remote
                        placeholder="选择规格"
-                       :remote-method="getProductGoodsListImportStorage"
+                       :remote-method="getProductGoodsSkuList"
                        :loading="importGoodsLoading">
-              <el-option  v-for="(item, index) in importGoodsOptions"
-                          :key="index"
+              <el-option  v-for="item in importGoodsOptions"
+                          :key="item.product_goods_id"
                           :label="item.sku_value"
                           :value="item.product_goods_id">
               </el-option>
@@ -189,7 +189,7 @@
   import { getProductStorageOrderList } from '@/api/product'
   import { getProductGoodsList } from '@/api/product_goods'
   import { getWarehouseList} from '@/api/product'
-  import { getProductGoodsCommonBaseList, getProductGoodsListImportStorage} from '@/api/goods'
+  import { getProductGoodsCommonBaseList, getProductGoodsSkuList} from '@/api/goods'
   import { createProductStorageOrder } from '@/api/product'
   import { updateProductStorageOrder } from '@/api/product'
   import { deleteProductStorageOrder } from '@/api/product'
@@ -368,13 +368,13 @@
           })
         }
       },
-      getProductGoodsListImportStorage() {
+      getProductGoodsSkuList() {
         if (!this.temp.product_commonBase_id) {
           this.$message.error('先选择商品')
           return false
         }
         this.importGoodsLoading = true
-        getProductGoodsListImportStorage({ product_goods_common_id: this.temp.product_commonBase_id}).then(response => {
+        getProductGoodsSkuList({ product_goods_common_id: this.temp.product_commonBase_id}).then(response => {
           this.importGoodsOptions = response.data
           this.importGoodsLoading = false
         })
