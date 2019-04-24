@@ -210,7 +210,7 @@ export const asyncRouterMap = [
         path: 'system/address_management',
         name: 'addressManagement',
         component: _import('system/address/address_management'),
-        meta: { title: '敏感地址管理', icon: 'addressManagement'}
+        meta: { title: '敏感地址管理', icon: 'addressManagement' }
       }
     ]
   },
