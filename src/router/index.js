@@ -54,62 +54,62 @@ export const asyncRouterMap = [
     component: Layout,
     name: 'purchaseSellManagement',
     redirect: 'noredirect',
-    meta: { title: '进销存管理', icon: 'purchaseSellManagement', role: ['administrator', 'warehouse'] },
+    meta: { title: '进销存管理', icon: 'purchaseSellManagement'},
     children: [
       {
         path: 'product_management',
         name: 'productManagement',
         component: _import('purchase/product_management'),
-        meta: { title: '商品管理', icon: 'productManagement', role: ['administrator', 'warehouse'] }
+        meta: { title: '商品管理', icon: 'productManagement'}
       },
       {
         path: 'product_cost',
         name: 'productCost',
         component: _import('purchase/product_cost'),
-        meta: { title: '商品成本', icon: 'productCost', role: ['administrator'] }
+        meta: { title: '商品成本', icon: 'productCost'}
       },
       {
         path: 'inventory_warning',
         name: 'inventoryWarning',
         component: _import('purchase/inventory_warning'),
-        meta: { title: '商品库存预警', icon: 'warn', role: ['administrator', 'warehouse'] }
+        meta: { title: '商品库存预警', icon: 'warn'}
       },
       {
         path: 'inventory_statistics',
         name: 'inventoryStatistics',
         component: _import('purchase/inventory_statistics'),
-        meta: { title: '商品出入库明细', icon: 'inventoryStatistics', role: ['administrator', 'warehouse'] }
+        meta: { title: '商品出入库明细', icon: 'inventoryStatistics'}
       },
       {
         path: 'inventory_expend',
         name: 'inventoryExpend',
         component: _import('purchase/inventory_expend'),
-        meta: { title: '商品日消耗查询', icon: 'data', role: ['administrator', 'warehouse'] }
+        meta: { title: '商品日消耗查询', icon: 'data'}
       },
       {
         path: 'inventory_management',
         name: 'inventoryManagement',
         component: _import('purchase/inventory_management'),
-        meta: { title: '盘库管理', icon: 'inventoryManagement', role: ['administrator', 'warehouse'] }
+        meta: { title: '盘库管理', icon: 'inventoryManagement' }
       },
       {
         path: '/purchase_management',
         name: 'purchaseManagement',
         redirect: 'noredirect',
         component: _import('purchase/purchase_management/index'),
-        meta: { title: '订货管理', icon: 'purchaseManagement', role: ['administrator', 'warehouse'] },
+        meta: { title: '订货管理', icon: 'purchaseManagement'},
         children: [
           {
             path: 'purchase_management',
             name: 'purchaseItemManagement',
             component: _import('purchase/purchase_management/purchase_management'),
-            meta: { title: '订货条目管理', role: ['administrator', 'warehouse'] }
+            meta: { title: '订货条目管理' }
           },
           {
             path: 'purchase_in_storage',
             name: 'purchaseInStorage',
             component: _import('purchase/purchase_management/purchase_in_storage'),
-            meta: { title: '订货入库管理', role: ['administrator', 'warehouse'] }
+            meta: { title: '订货入库管理' }
           }
         ]
       },
@@ -117,7 +117,7 @@ export const asyncRouterMap = [
         path: 'manual_Management',
         name: 'manual_Management',
         component: _import('purchase/manual_Management'),
-        meta: { title: '人工出入库', icon: 'manual_Management', role: ['administrator', 'warehouse'] }
+        meta: { title: '人工出入库', icon: 'manual_Management' }
       }
     ]
   },
@@ -126,25 +126,25 @@ export const asyncRouterMap = [
     component: Layout,
     name: 'userManagement',
     redirect: 'noredirect',
-    meta: { title: '用户管理', icon: 'MemberManagement', role: ['administrator'] },
+    meta: { title: '用户管理', icon: 'MemberManagement' },
     children: [
       {
         path: 'user_group',
         name: 'userGroupManagement',
         component: _import('user/user_group'),
-        meta: { title: '小组管理', icon: 'userGroupManagement', role: ['administrator'] }
+        meta: { title: '小组管理', icon: 'userGroupManagement' }
       },
       {
         path: 'user',
         name: 'userManage',
         component: _import('user/user'),
-        meta: { title: '用户管理', icon: 'MemberManagement', role: ['administrator'] }
+        meta: { title: '用户管理', icon: 'MemberManagement' }
       },
       {
         path: 'role',
         name: 'rolesManagement',
         component: _import('user/user_role'),
-        meta: { title: '权限管理', icon: 'rolesManagement', role: ['administrator'] }
+        meta: { title: '权限管理', icon: 'rolesManagement' }
       }
     ]
   },
@@ -153,44 +153,44 @@ export const asyncRouterMap = [
     component: Layout,
     name: 'systemManagement',
     redirect: 'noredirect',
-    meta: { title: '系统管理', icon: 'systemManagement', role: ['administrator', 'supportDirector', 'promotionDirector'] },
+    meta: { title: '系统管理', icon: 'systemManagement' },
     children: [
       {
         path: '/system/setting',
         name: 'systemSetting',
         redirect: 'noredirect',
         component: _import('system/setting/index'),
-        meta: { title: '系统设置', icon: 'systemSetting', role: ['administrator'] },
+        meta: { title: '系统设置', icon: 'systemSetting' },
         children: [
           {
             path: 'deliver_address_setting',
             name: 'deliverAddressSetting',
             component: _import('system/setting/deliver_address_setting'),
-            meta: { title: '发货仓库设置', role: ['administrator'] }
+            meta: { title: '发货仓库设置' }
           },
           {
             path: 'deliver_address_extre',
             name: 'deliverAddressExtre',
             component: _import('system/setting/deliver_address_extre'),
-            meta: { title: '发货额外信息', role: ['administrator'] }
+            meta: { title: '发货额外信息' }
           },
           {
             path: 'authMenu_setting',
             name: 'AuthMenuSetting',
             component: _import('system/setting/authMenu_setting'),
-            meta: { title: '菜单设置', role: ['administrator'] }
+            meta: { title: '菜单设置' }
           },
           {
             path: 'auth_setting',
             name: 'AuthSetting',
             component: _import('system/setting/auth_setting'),
-            meta: { title: '权限设置', role: ['administrator'] }
+            meta: { title: '权限设置' }
           },
           {
             path: 'port_setting',
             name: 'PortSetting',
             component: _import('system/setting/port_setting'),
-            meta: { title: 'API设置', role: ['administrator'] }
+            meta: { title: 'API设置' }
           }
         ]
       },
@@ -198,13 +198,13 @@ export const asyncRouterMap = [
         path: 'system/product_goods_management',
         name: 'productGoodsManagement',
         component: _import('system/product/product_goods_management'),
-        meta: { title: '产品管理', icon: 'productGoodsManagement', role: ['administrator'] }
+        meta: { title: '产品管理', icon: 'productGoodsManagement' }
       },
       {
         path: 'system/address_management',
         name: 'addressManagement',
         component: _import('system/address/address_management'),
-        meta: { title: '敏感地址管理', icon: 'addressManagement', role: ['administrator'] }
+        meta: { title: '敏感地址管理', icon: 'addressManagement' }
       }
     ]
   },

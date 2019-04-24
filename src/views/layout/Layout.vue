@@ -4,7 +4,7 @@
     <div class="main-container">
       <homesidebar></homesidebar>
       <sidebar class="sidebar-container"></sidebar>
-      <!--<tags-view></tags-view>-->
+      <tags-view v-show="false"></tags-view>
       <app-main></app-main>
     </div>
   </div>

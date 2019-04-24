@@ -35,7 +35,7 @@ export function createProductGoodsCommonBase(param) {
 // 修改商品基础信息
 export function updateProductGoodsCommonBase(param) {
   return request({
-    url: '/api/logistics_warehouse/updateProductGoodsCommonBase',
+    url: '/api/goods/updateProductGoodsCommonBase',
     method: 'post',
     data: param
   })
@@ -43,9 +43,55 @@ export function updateProductGoodsCommonBase(param) {
 // 修改(与创建)产品与公共商品
 export function updateProductRProductGoodsCommon(param) {
   return request({
-    url: '/api/logistics_warehouse/updateProductRProductGoodsCommon',
+    url: '/api/goods/updateProductRProductGoodsCommon',
     method: 'post',
     data: param
   })
 }
-
+// 规格设置
+export function getProductGoodsList(param) {
+  return request({
+    url: '/api/goods/getProductGoodsList',
+    method: 'post',
+    data: param
+  })
+}
+// 规格设置创建
+export function createProductGoods(param) {
+  return request({
+    url: '/api/goods/createProductGoods',
+    method: 'post',
+    data: param
+  })
+}
+// 规格设置编辑
+export function updateProductGoods(param) {
+  return request({
+    url: '/api/goods/updateProductGoods',
+    method: 'post',
+    data: param
+  })
+}
+// 所属产品
+export function getProductList(param) {
+  return request({
+    url: '/api/goods/getProductList',
+    method: 'post',
+    data: param
+  })
+}
+export function changeProductGoodsStatus(param) {
+  return request({
+    url: '/api/goods/changeProductGoodsStatus',
+    method: 'post',
+    data: param
+  })
+}
+// 获取商品分类树
+export function getProductCategoryTreeList(param) {
+  return request({
+    url: '/api/goods/getProductCategoryTreeList',
+    method: 'post',
+    data: param
+  })
+}
