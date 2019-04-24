@@ -27,6 +27,18 @@
                     :value="item.id">
         </el-option>
       </el-select>
+      <el-select class="filter-item"
+                 v-model="listQuery.warehouse_id"
+                 filterable
+                 @change="handleFilter"
+                 clearable
+                 placeholder="仓库">
+        <el-option  v-for="item in warehouseOptions"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
+        </el-option>
+      </el-select>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">搜索</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加</el-button>
 
@@ -39,37 +51,43 @@
                 highlight-current-row
                 style="width: 100%"
                 stripe>
-        <el-table-column align="center" label="商品名称" min-width="150" >
+        <el-table-column align="center" label="仓库" min-width="150" >
           <template slot-scope="scope">
-            <span>{{scope.row.product_goods.goods_name}}</span>
+            <span>{{scope.row.warehouse_name}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="产品" min-width="100">
+        <el-table-column align="center" label="商品" min-width="150" >
           <template slot-scope="scope">
-            <el-tag v-for="item in scope.row.product_goods.product" :key="item.id">{{item.product_name}}</el-tag>
+            <span>{{scope.row.goods_name}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="数量" min-width="150" >
+        <el-table-column align="center" label="规格" min-width="100">
+          <template slot-scope="scope">
+            <span>{{scope.row.sku_name}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="数量" min-width="100" >
           <template slot-scope="scope">
             <span>{{scope.row.number}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="到货状态" min-width="150" >
+        <el-table-column align="center" label="到货状态" min-width="100" >
           <template slot-scope="scope">
             <el-tag :type="scope.row.status | handleTypeClass">{{scope.row.status | handleType}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="预定时间" min-width="150" >
+        <el-table-column align="center" label="预定时间" min-width="170" >
           <template slot-scope="scope">
             <span>{{scope.row.deliver_at}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作人" min-width="150" >
+        <el-table-column align="center" label="操作人" min-width="160" >
           <template slot-scope="scope">
-            <span>{{scope.row.operator_account.nickname}}</span>
+            <span>{{scope.row.operator_account_name}}</span><br>
+            <span>{{scope.row.created_at}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作" min-width="150" >
+        <el-table-column align="center" label="操作" width="150" >
           <template slot-scope="scope">
             <el-button size="mini" @click="handleUpdate(scope.row)" type="primary">编辑</el-button>
             <el-button size="mini" @click="handleDelete(scope.row)" type="danger">删除</el-button>
@@ -85,24 +103,61 @@
 
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
         <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="120px" style='width: 80%; margin-left:10%;'>
-          <el-form-item label="选择商品" prop="product_goods_id">
-            <el-select v-model="temp.product_goods_id"
+          <el-form-item label="仓库" prop="warehouse_id">
+            <el-select v-model="temp.warehouse_id"
+                       filterable
+                       v-if="dialogStatus == 'create'"
+                       clearable
+                       placeholder="仓库">
+              <el-option  v-for="item in warehouseOptions"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id">
+              </el-option>
+            </el-select>
+            <span v-else>{{temp.warehouse_name}}</span>
+          </el-form-item>
+          <el-form-item label="商品" prop="product_commonBase_id">
+            <el-select v-model="temp.product_commonBase_id"
                        style="width: 100%"
-                        filterable
-                        clearable
-                        remote
-                        placeholder="请选择商品"
-                        :remote-method="getProductList"
-                        :loading="productLoading">
-              <el-option  v-for="item in productOptions"
+                       @focus="getProductGoodsCommonBaseList(' ')"
+                       filterable
+                       v-if="dialogStatus == 'create'"
+                       clearable
+                       remote
+                       @change="handleFilterCommonBase"
+                       placeholder="选择商品"
+                       :remote-method="getProductGoodsCommonBaseList"
+                       :loading="commonBaseLoading">
+              <el-option  v-for="item in commonBaseOptions"
                           :key="item.id"
                           :label="item.goods_name"
                           :value="item.id">
               </el-option>
             </el-select>
+            <span v-else>{{temp.goods_name}}</span>
+          </el-form-item>
+          <el-form-item label="规格" prop="product_goods_id">
+            <el-select v-model="temp.product_goods_id"
+                       style="width: 100%"
+                       filterable
+                       v-if="dialogStatus == 'create'"
+                       clearable
+                       @focus="getProductGoodsListImportStorage"
+                       remote
+                       placeholder="选择规格"
+                       :remote-method="getProductGoodsListImportStorage"
+                       :loading="importGoodsLoading">
+              <el-option  v-for="(item, index) in importGoodsOptions"
+                          :key="index"
+                          :label="item.sku_value"
+                          :value="item.product_goods_id">
+              </el-option>
+            </el-select>
+            <span v-else> {{temp.sku_name}}</span>
           </el-form-item>
           <el-form-item label="商品数量" prop="number">
-            <el-input v-model.number="temp.number" style="width: 100%"></el-input>
+            <el-input-number v-model.number="temp.number" style="width: 100%"></el-input-number>
           </el-form-item>
           <el-form-item label="状态" prop="status">
             <el-select v-model="temp.status"
@@ -133,6 +188,8 @@
   import waves from '@/directive/waves'
   import { getProductStorageOrderList } from '@/api/product'
   import { getProductGoodsList } from '@/api/product_goods'
+  import { getWarehouseList} from '@/api/product'
+  import { getProductGoodsCommonBaseList, getProductGoodsListImportStorage} from '@/api/goods'
   import { createProductStorageOrder } from '@/api/product'
   import { updateProductStorageOrder } from '@/api/product'
   import { deleteProductStorageOrder } from '@/api/product'
@@ -149,7 +206,9 @@
         if (value === '') {
           callback(new Error('请输入数量'))
         } else if (typeof value !== 'number') {
-          callback(new Error('输入数字!'))
+          callback(new Error('输入数字'))
+        } else if (value < 0) {
+          callback(new Error('大于0'))
         } else if (/[^\w]/g.test(value + '')) {
           callback(new Error('输入整数!'))
         } else {
@@ -171,8 +230,13 @@
         ],
         productOptions: [],
         productLoading: false,
+        commonBaseLoading: false,
+        commonBaseOptions: [],
+        importGoodsLoading: false,
+        importGoodsOptions: [],
         listQuery: {
           status: undefined,
+          warehouse_id: undefined,
           date_range: [
             parseTime(new Date(new Date().getTime() - 1000 * 3600 * 24 * 7), '{y}-{m}-{d}'),
             parseTime(new Date(), '{y}-{m}-{d}')],
@@ -187,16 +251,20 @@
         temp: {
           product_storage_order_id: undefined,
           product_goods_id: undefined,
+          warehouse_id: undefined,
           number: undefined,
           status: undefined
         },
         rules: {
-          product_goods_id: [{ required: true, message: '选择商品', trigger: 'change' }],
+          product_commonBase_id: [{ required: true, message: '选择商品', trigger: 'change' }],
+          warehouse_id: [{ required: true, message: '选择仓库', trigger: 'change' }],
+          product_goods_id: [{ required: true, message: '选择规格', trigger: 'change' }],
           number: [
             { validator: validate, trigger: 'change' }
           ],
           status: [{ required: true, message: '选择状态', trigger: 'change' }]
         },
+        warehouseOptions: [],
         pickerOptions: {
           shortcuts: [{
             text: '最近一周',
@@ -248,6 +316,7 @@
       dialogFormVisible(val) {
         if (!val) {
           this.$refs['dataForm'].resetFields()
+          this.resetTemp()
         }
       }
     },
@@ -255,6 +324,15 @@
       handleSizeChange(val) {
         this.listQuery.page_size = val
         this.getList()
+      },
+      resetTemp() {
+        this.temp = {
+          product_storage_order_id: undefined,
+          product_goods_id: undefined,
+          warehouse_id: undefined,
+          number: undefined,
+          status: undefined
+        }
       },
       handleCurrentChange(val) {
         this.listQuery.page = val
@@ -264,12 +342,41 @@
         this.listQuery.page = 1
         this.getList()
       },
+      handleFilterCommonBase() {
+        this.temp.product_goods_id = undefined
+        this.importGoodsOptions = []
+      },
       getList() {
         this.listLoading = true
         getProductStorageOrderList(this.listQuery).then(res => {
           this.list = res.data.data
           this.total = res.data.total
           this.listLoading = false
+        })
+      },
+      getWarehouseList() {
+        getWarehouseList().then(response => {
+          this.warehouseOptions = response.data.data
+        })
+      },
+      getProductGoodsCommonBaseList(query) {
+        if (query !== '') {
+          this.commonBaseLoading = true
+          getProductGoodsCommonBaseList().then(response => {
+            this.commonBaseOptions = response.data.data
+            this.commonBaseLoading = false
+          })
+        }
+      },
+      getProductGoodsListImportStorage() {
+        if (!this.temp.product_commonBase_id) {
+          this.$message.error('先选择商品')
+          return false
+        }
+        this.importGoodsLoading = true
+        getProductGoodsListImportStorage({ product_goods_common_id: this.temp.product_commonBase_id}).then(response => {
+          this.importGoodsOptions = response.data
+          this.importGoodsLoading = false
         })
       },
       handleCreate() {
@@ -304,6 +411,12 @@
             updateProductStorageOrder(this.temp).then(() => {
               this.getList()
               this.dialogFormVisible = false
+              this.$notify({
+                title: '成功',
+                message: '修改成功',
+                type: 'success',
+                duration: 2000
+              })
             })
           }
         })
@@ -311,16 +424,9 @@
       handleUpdate(row) {
         this.dialogStatus = 'update'
         this.dialogFormVisible = true
-        this.$nextTick(() => {
-          this.$refs['dataForm'].clearValidate()
-        })
-        if (this.productOptions.findIndex(d => d.id === row.product_goods.id) === -1) {
-          this.productOptions.push(row.product_goods)
-        }
+        this.temp = Object.assign({}, row)
         this.temp.product_storage_order_id = row.id
-        this.temp.product_goods_id = row.product_goods_id
-        this.temp.number = row.number
-        this.temp.status = row.status
+        this.temp.product_commonBase_id = 0
       },
       handleDelete(row) {
         this.$confirm('此操作将永久删除, 是否继续?', '提示', {
@@ -328,19 +434,17 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          const ttempData = {
+          const parms = {
             product_storage_order_id: row.id
           }
-          deleteProductStorageOrder(ttempData).then(response => {
+          deleteProductStorageOrder(parms).then(() => {
             this.$notify({
               title: '成功',
               message: '删除成功',
               type: 'success',
               duration: 2000
             })
-            const index = this.list.indexOf(row)
-            this.list.splice(index, 1)
-            this.total--
+            this.getList()
           })
         }).catch(() => {
           this.$message({
@@ -351,8 +455,8 @@
       }
     },
     created() {
-      this.getProductList(' ')
       this.getList()
+      this.getWarehouseList()
     }
   }
 </script>

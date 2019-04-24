@@ -48,4 +48,39 @@ export function updateProductRProductGoodsCommon(param) {
     data: param
   })
 }
+export function getProductGoodsListImportStorage(param) {
+  return request({
+    url: '/api/goods/getProductGoodsListImportStorage',
+    method: 'post',
+    data: param
+  })
+}
+export function getProductCategoryTreeList(param) {
+  return request({
+    url: '/api/goods/getProductCategoryTreeList',
+    method: 'post',
+    data: param
+  })
+}
+export function createProductCategory(param) {
+  return request({
+    url: '/api/goods/createProductCategory',
+    method: 'post',
+    data: param
+  })
+}
+export function updateProductCategory(param) {
+  return request({
+    url: '/api/goods/updateProductCategory',
+    method: 'post',
+    data: param
+  })
+}
+export function changeProductCategoryStatus(param) {
+  return request({
+    url: '/api/goods/changeProductCategoryStatus',
+    method: 'post',
+    data: param
+  })
+}
 

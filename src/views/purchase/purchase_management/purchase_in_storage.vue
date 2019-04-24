@@ -14,6 +14,19 @@
                       :picker-options="pickerOptions"
                       @change='handleFilter'>
       </el-date-picker>
+      <el-select class="filter-item"
+                  v-model="listQuery.warehouse_id"
+                 filterable
+                 @change="handleFilter"
+                 clearable
+                 placeholder="仓库"
+                 :loading="warehouseLoading">
+        <el-option  v-for="item in warehouseOptions"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
+        </el-option>
+      </el-select>
       <!--<el-select  class="filter-item"-->
                   <!--style="width:200px;"-->
                   <!--@change='handleFilter'-->
@@ -27,8 +40,7 @@
         <!--</el-option>-->
       <!--</el-select>-->
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">搜索</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加</el-button>
-
+      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">入库</el-button>
       <el-table :key='tableKey'
                 :data="list"
                 v-loading="listLoading"
@@ -38,34 +50,40 @@
                 highlight-current-row
                 style="width: 100%"
                 stripe>
-        <el-table-column align="center" label="商品名称" min-width="150" >
+        <el-table-column align="center" label="仓库" min-width="150" >
           <template slot-scope="scope">
-            <span>{{scope.row.product_goods.goods_name}}</span>
+            <span >{{scope.row.warehouse_name}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作类型" min-width="100">
+        <el-table-column align="center" label="商品" min-width="150" >
           <template slot-scope="scope">
-            <el-tag type="primary">订货到货</el-tag>
+            <span >{{scope.row.goods_name}}</span>
           </template>
         </el-table-column>
+        <el-table-column align="center" label="规格" min-width="150" >
+          <template slot-scope="scope">
+            <span>{{scope.row.sku_name}}</span>
+          </template>
+        </el-table-column>
+        <!--<el-table-column align="center" label="操作类型" min-width="100">-->
+          <!--<template slot-scope="scope">-->
+            <!--<el-tag type="primary">订货到货</el-tag>-->
+          <!--</template>-->
+        <!--</el-table-column>-->
         <el-table-column align="center" label="数量" min-width="150" >
           <template slot-scope="scope">
             <span>{{scope.row.number}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="完成时间" min-width="150" >
-          <template slot-scope="scope">
-            <span>{{scope.row.datetime}}</span>
-          </template>
-        </el-table-column>
         <el-table-column align="center" label="操作人" min-width="150" >
           <template slot-scope="scope">
-            <span>{{scope.row.operator_account.nickname}}</span>
+            <span>{{scope.row.operator_account_name}}</span><br/>
+            <span>{{scope.row.datetime}}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作" min-width="150" >
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleUpdate(scope.row)" type="primary">编辑</el-button>
+            <!--<el-button size="mini" @click="handleUpdate(scope.row)" type="primary">编辑</el-button>-->
             <el-button size="mini" @click="handleDelete(scope.row)" type="danger">删除</el-button>
           </template>
         </el-table-column>
@@ -78,31 +96,63 @@
       </div>
 
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
-        <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="120px" style='width: 80%; margin-left:10%;'>
-          <el-form-item label="选择商品" prop="product_goods_id">
-            <el-select v-model="temp.product_goods_id"
+        <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="80px" style='width: 80%; margin-left:10%;'>
+          <el-form-item label="仓库" prop="warehouse_id">
+            <el-select v-model="temp.warehouse_id"
                        style="width: 100%"
                        filterable
                        clearable
+                       placeholder="选择仓库">
+              <el-option  v-for="item in warehouseOptions"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="商品">
+            <el-select v-model="temp.product_commonBase_id"
+                       style="width: 100%"
+                       @focus="getProductGoodsCommonBaseList(' ')"
+                       filterable
+                       clearable
                        remote
-                       placeholder="请选择商品"
-                       :remote-method="getProductList"
-                       :loading="productLoading">
-              <el-option  v-for="item in productOptions"
+                       @change="handleFilterCommonBase"
+                       placeholder="选择商品"
+                       :remote-method="getProductGoodsCommonBaseList"
+                       :loading="commonBaseLoading">
+              <el-option  v-for="item in commonBaseOptions"
                           :key="item.id"
                           :label="item.goods_name"
                           :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="规格" prop="product_goods_id">
+            <el-select v-model="temp.product_goods_id"
+                       style="width: 100%"
+                       filterable
+                       clearable
+                       @focus="getProductGoodsListImportStorage(' ')"
+                       remote
+                       placeholder="选择规格"
+                       :remote-method="getProductGoodsListImportStorage"
+                       :loading="importGoodsLoading">
+              <el-option  v-for="(item, index) in importGoodsOptions"
+                          :key="index"
+                          :label="item.sku_value"
+                          :value="item.product_goods_id">
+              </el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="商品数量" prop="number">
-            <el-input v-model.number="temp.number" style="width: 100%"></el-input>
+            <el-input-number v-model.number="temp.number" style="width: 50%"></el-input-number>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
           <el-button v-if="dialogStatus === 'create'" type="primary" @click="createData">确 定</el-button>
-          <el-button v-else type="primary" @click="updateData">确 定</el-button>
+          <!--<el-button v-else type="primary" @click="updateData">确 定</el-button>-->
         </div>
       </el-dialog>
     </div>
@@ -111,8 +161,9 @@
 
 <script>
   import waves from '@/directive/waves'
-  import { getProductGoodsList } from '@/api/product_goods'
-  import { getProdcutStorageImportList, createProductStorageImport, deleteProductStorageImport, updateProductStorageImport } from '@/api/product'
+  import { getProdcutStorageImportList, deleteProductStorageImport, createProductStorageImport } from '@/api/warehouse'
+  import { getProductGoodsCommonBaseList, getProductGoodsListImportStorage} from '@/api/goods'
+  import { getWarehouseList} from '@/api/product'
   import { parseTime } from '@/utils/index'
 
   export default {
@@ -145,13 +196,18 @@
         },
         dialogStatus: undefined,
         dialogFormVisible: false,
-        productOptions: [],
-        productLoading: false,
+        importGoodsOptions: [],
+        importGoodsLoading: false,
+        commonBaseLoading: false,
+        commonBaseOptions: [],
+        warehouseOptions: [],
+        warehouseLoading: false,
         listQuery: {
           date_range: [
             parseTime(new Date(new Date().getTime() - 1000 * 3600 * 24 * 7), '{y}-{m}-{d}'),
             parseTime(new Date(), '{y}-{m}-{d}')
           ],
+          warehouse_id: undefined,
           page: 1,
           page_size: 20,
           sort: '-id'
@@ -162,14 +218,15 @@
         ],
         product_storage_import_id: undefined,
         temp: {
+          warehouse_id: undefined,
+          product_commonBase_id: undefined,
           product_goods_id: undefined,
           number: undefined
         },
         rules: {
-          product_id: [{ required: true, message: '选择商品', trigger: 'change' }],
-          product_total: [
-            { validator: validate, trigger: 'change' }
-          ]
+          product_goods_id: [{ required: true, message: '选择商品', trigger: 'change' }],
+          warehouse_id: [{ required: true, message: '选择仓库', trigger: 'change' }],
+          number: [{ required: true, message: '填写数量', trigger: 'change' }]
         },
         pickerOptions: {
           shortcuts: [{
@@ -209,20 +266,53 @@
         this.listLoading = true
         getProdcutStorageImportList(this.listQuery).then(res => {
           this.list = res.data.data
+          this.tableKey++
           this.total = res.data.total
           this.listLoading = false
         })
       },
-      getProductList(query) {
+      handleFilterCommonBase() {
+        this.temp.product_goods_id = undefined
+        this.importGoodsOptions = []
+      },
+      resetTemp() {
+        this.temp =  {
+          warehouse_id: undefined,
+          product_commonBase_id: undefined,
+          product_goods_id: undefined,
+          number: undefined
+        }
+      },
+      getWarehouseList() {
+        getWarehouseList().then(response => {
+          this.warehouseOptions = response.data.data
+        })
+      },
+      getProductGoodsCommonBaseList(query) {
         if (query !== '') {
-          this.productLoading = true
-          getProductGoodsList({ goods_name: query, status: 1 }).then(response => {
-            this.productOptions = response.data.data
-            this.productLoading = false
+          this.commonBaseLoading = true
+          getProductGoodsCommonBaseList().then(response => {
+            this.commonBaseOptions = response.data.data
+            this.commonBaseLoading = false
+          })
+        }
+      },
+      getProductGoodsListImportStorage(query) {
+        if (!this.temp.product_commonBase_id) {
+          this.$message.error('先选择商品')
+          return false
+        }
+        if (query !== '') {
+          this.importGoodsLoading = true
+          getProductGoodsListImportStorage({ product_goods_common_id: this.temp.product_commonBase_id}).then(response => {
+            this.importGoodsOptions = response.data
+            this.importGoodsLoading = false
           })
         }
       },
       handleCreate() {
+        this.resetTemp()
+        this.importGoodsOptions = []
         this.dialogStatus = 'create'
         this.dialogFormVisible = true
         this.$nextTick(() => {
@@ -249,36 +339,34 @@
         this.temp.product_goods_id = row.product_goods_id
         this.temp.number = row.number
       },
-      updateData() {
-        this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
-            const temp = Object.assign({ product_storage_import_id: this.product_storage_import_id }, this.temp)
-            updateProductStorageImport(temp).then(res => {
-              this.getList()
-              this.dialogFormVisible = false
-            })
-          }
-        })
-      },
+      // updateData() {
+      //   this.$refs['dataForm'].validate((valid) => {
+      //     if (valid) {
+      //       const temp = Object.assign({ product_storage_import_id: this.product_storage_import_id }, this.temp)
+      //       updateProductStorageImport(temp).then(res => {
+      //         this.getList()
+      //         this.dialogFormVisible = false
+      //       })
+      //     }
+      //   })
+      // },
       handleDelete(row) {
         this.$confirm('此操作将永久删除, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          const ttempData = {
+          const parms = {
             product_storage_import_id: row.id
           }
-          deleteProductStorageImport(ttempData).then(response => {
+          deleteProductStorageImport(parms).then(res => {
+            this.getList()
             this.$notify({
               title: '成功',
               message: '删除成功',
               type: 'success',
               duration: 2000
             })
-            const index = this.list.indexOf(row)
-            this.list.splice(index, 1)
-            this.total--
           })
         }).catch(() => {
           this.$message({
@@ -298,7 +386,7 @@
     },
     created() {
       this.getList()
-      this.getProductList(' ')
+      this.getWarehouseList()
     }
   }
 </script>

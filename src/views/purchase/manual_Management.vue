@@ -15,12 +15,11 @@
                       @change='handleFilter'>
       </el-date-picker>
       <el-select  class="filter-item"
-                  style="width:200px;"
+                  style="width:150px;"
                   clearable
                   @change='handleFilter'
                   v-model="listQuery.is_input"
-                  placeholder="出入库"
-      >
+                  placeholder="出入库">
         <el-option  v-for="item in stateOptions"
                     :key="item.id"
                     :label="item.label"
@@ -28,7 +27,7 @@
         </el-option>
       </el-select>
       <el-select  class="filter-item"
-                  style="width:200px;"
+                  style="width:150px;"
                   clearable
                   @change='handleFilter'
                   v-model="listQuery.operate_type"
@@ -37,6 +36,18 @@
         <el-option  v-for="item in stateOptions2"
                     :key="item.id"
                     :label="item.label"
+                    :value="item.id">
+        </el-option>
+      </el-select>
+      <el-select  class="filter-item"
+                  style="width:200px"
+                  @change='handleFilter'
+                  v-model="listQuery.warehouse_id"
+                  clearable
+                  placeholder="仓库">
+        <el-option  v-for="item in warehouseOptions"
+                    :key="item.id"
+                    :label="item.name"
                     :value="item.id">
         </el-option>
       </el-select>
@@ -54,7 +65,12 @@
                 stripe>
         <el-table-column align="center" label="商品名称" min-width="150" >
           <template slot-scope="scope">
-            <span>{{scope.row.product_goods.goods_name}}</span>
+            <span>{{scope.row.goods_name}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="规格" min-width="150" >
+          <template slot-scope="scope">
+            <span>{{scope.row.sku_name}}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="出入库" min-width="100">
@@ -77,19 +93,15 @@
             <span>{{scope.row.info}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="完成时间" min-width="150" >
-          <template slot-scope="scope">
-            <span>{{scope.row.datetime}}</span>
-          </template>
-        </el-table-column>
         <el-table-column align="center" label="操作人" min-width="150" >
           <template slot-scope="scope">
-            <span>{{scope.row.operator_account.nickname}}</span>
+            <span>{{scope.row.operator_account_name}}</span><br>
+            <span>{{scope.row.datetime}}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作" min-width="150" >
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleUpdate(scope.row)" type="primary">编辑</el-button>
+            <!--<el-button size="mini" @click="handleUpdate(scope.row)" type="primary">编辑</el-button>-->
             <el-button size="mini" @click="handleDelete(scope.row)" type="danger">删除</el-button>
           </template>
         </el-table-column>
@@ -104,24 +116,37 @@
 
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
         <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="120px" style='width: 80%; margin-left:10%;'>
-          <el-form-item label="选择商品" prop="product_goods_id">
-            <el-select v-model="temp.product_goods_id"
+          <el-form-item label="仓库" prop="warehouse_id">
+            <el-select  style="width:100%"
+                        @change="handleWarehouse"
+                        v-model="temp.warehouse_id"
+                        clearable
+                        placeholder="仓库">
+              <el-option  v-for="item in warehouseOptions"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="商品" prop="product_goods_storage_id">
+            <el-select v-model="temp.product_goods_storage_id"
                        style="width: 100%"
                        filterable
                        clearable
                        remote
                        placeholder="请选择商品"
-                       :remote-method="getProductList"
+                       :remote-method="getWarehouseProductGoodsStorageList"
                        :loading="productLoading">
               <el-option  v-for="item in productOptions"
                           :key="item.id"
-                          :label="item.goods_name"
+                          :label="item.goods_sku_name"
                           :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="商品数量" prop="number">
-            <el-input v-model.number="temp.number" style="width: 100%"></el-input>
+            <el-input-number v-model.number="temp.number" style="width: 100%"></el-input-number>
           </el-form-item>
           <el-form-item label="出入库" prop="is_input">
             <el-select  style="width: 100%"
@@ -167,6 +192,8 @@
 <script>
   import waves from '@/directive/waves'
   import { getProductGoodsList } from '@/api/product_goods'
+  import { getWarehouseList} from '@/api/product'
+  import { getWarehouseProductGoodsStorageList } from '@/api/warehouse'
   import { updateProductStorageManual, createProductStorageManual, getProductStorageManualList, deleteProductStorageManual } from '@/api/product'
   import { parseTime } from '@/utils/index'
 
@@ -204,6 +231,8 @@
         dialogFormVisible: false,
         productOptions: [],
         productLoading: false,
+        warehouseLoading: false,
+        warehouseOptions: [],
         listQuery: {
           operate_type: undefined,
           is_input: undefined,
@@ -224,14 +253,16 @@
           { id: 1, label: '人工退货' }
         ],
         temp: {
-          product_goods_id: undefined,
+          warehouse_id: undefined,
+          product_goods_storage_id: undefined,
           number: undefined,
           operate_type: undefined,
           info: undefined,
           is_input: undefined
         },
         rules: {
-          product_goods_id: [{ required: true, message: '选择商品', trigger: 'change' }],
+          warehouse_id: [{ required: true, message: '选择仓库', trigger: 'change' }],
+          product_goods_storage_id: [{ required: true, message: '选择商品', trigger: 'change' }],
           number: [
             { validator: validate, trigger: 'change' }
           ],
@@ -280,20 +311,33 @@
           this.listLoading = false
         })
       },
-      getProductList(query) {
+      getWarehouseProductGoodsStorageList(query) {
+        if (!this.temp.warehouse_id) {
+          this.$message.error('先选择仓库')
+          return false
+        }
         if (query !== '') {
           this.productLoading = true
-          getProductGoodsList({ goods_name: query, status: 1 }).then(response => {
-            this.productOptions = response.data.data
+          getWarehouseProductGoodsStorageList({ warehouse_id: this.temp.warehouse_id }).then(response => {
+            this.productOptions = response.data
             this.productLoading = false
           })
         }
+      },
+      handleWarehouse() {
+        this.productOptions = []
+        this.temp.product_goods_id = undefined
       },
       handleCreate() {
         this.dialogStatus = 'create'
         this.dialogFormVisible = true
         this.$nextTick(() => {
           this.$refs['dataForm'].clearValidate()
+        })
+      },
+      getWarehouseList() {
+        getWarehouseList().then(response => {
+          this.warehouseOptions = response.data.data
         })
       },
       createData() {
@@ -349,10 +393,10 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          const ttempData = {
+          const parms = {
             product_storage_manual_id: row.id
           }
-          deleteProductStorageManual(ttempData).then(response => {
+          deleteProductStorageManual(parms).then(response => {
             this.$notify({
               title: '成功',
               message: '删除成功',
@@ -380,18 +424,21 @@
       }
     },
     created() {
-      this.getProductList(' ')
       this.getList()
+      this.getWarehouseList()
     },
     watch: {
       dialogFormVisible(val) {
         if (!val) {
           this.$refs['dataForm'].resetFields()
-          this.temp.info = undefined
-          this.temp.product_goods_id = undefined
-          this.temp.number = undefined
-          this.temp.operate_type = undefined
-          this.temp.is_input = undefined
+          this.temp = {
+            warehouse_id: undefined,
+            number: undefined,
+            product_goods_storage_id: undefined,
+            operate_type: undefined,
+            info: undefined,
+            is_input: undefined
+          }
         }
       }
     },
