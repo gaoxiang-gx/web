@@ -60,7 +60,7 @@
           <el-form label-position="left" inline class="demo-table-expand">
             <el-form-item label="所有商品">
               <p class="my-form-p" v-for="item in scope.row.orders_items">
-                {{item.product_goods.goods_name}} x {{item.number}} {{item.product_goods.unit | statusUnit}}
+                {{item.product_common.goods_sku_name}} x {{item.number}}
               </p>
               <!--<el-button size="mini" type="primary" icon="el-icon-edit" @click="handleOpenInner1(scope.row)">编辑商品信息</el-button>-->
             </el-form-item>
@@ -76,7 +76,7 @@
             </el-form-item>
             <el-form-item label="收款信息">
               <p class="my-form-p" v-for="item in scope.row.orders_payment.orders_payment_items"
-                 :class="item.status===2?if_deleted:''">
+                 :class="item.status === 2?if_deleted:''">
                 <el-tag style="height:20px;line-height:20px;" :type="'success'" :class="item.status===2?if_deleted:''">
                   {{item.orders_pay_type.type_name}}
                 </el-tag>
@@ -87,21 +87,19 @@
               <!--</el-button>-->
             </el-form-item>
             <el-form-item label="收货信息">
-              <div v-if="scope.row.product_weixin_fans_address">
+              <div v-if="scope.row.orders_receiver_info">
                 <p class="my-form-p">
-                  <span class="label-span">收货人：</span>
-                  <span v-if="scope.row.product_weixin_fans_address">{{scope.row.product_weixin_fans_address.receive_name}}</span>
+                  <span class="label-span">收货人：</span><span v-if="scope.row.orders_receiver_info">{{scope.row.orders_receiver_info.receive_name}}</span>
                 </p>
                 <p class="my-form-p">
                   <span class="label-span">联系电话：</span>
-                  <span v-if="scope.row.product_weixin_fans_address">{{scope.row.product_weixin_fans_address.phone}}</span>
-                  <span v-else-if="scope.row.product_weixin_fans_address">{{scope.row.product_weixin_fans_address.phone}}</span>
+                  <span>{{scope.row.orders_receiver_info.phone}}</span>
                 </p>
                 <p class="my-form-p">
                   <span class="label-span">收货地址：</span>
                   <span>
-                    {{scope.row.product_weixin_fans_address.province_name}} {{scope.row.product_weixin_fans_address.city_name}} {{scope.row.product_weixin_fans_address.district_name}}
-                    {{scope.row.product_weixin_fans_address.address}}
+                    {{scope.row.orders_receiver_info.province_name}} {{scope.row.orders_receiver_info.city_name}} {{scope.row.orders_receiver_info.district_name}}
+                    {{scope.row.orders_receiver_info.address}}
                   </span>
                 </p>
               </div>
@@ -416,23 +414,23 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="innerDialogFormVisible3" width="70%">
       <el-form :rules="innerRules3" ref="innerDataForm3" :model="innerTemp3" label-position="left" label-width="80px"
                style='width: 80%; margin-left:10%;'>
-        <el-form-item label="物流仓库" prop="product_deliver_id">
-          <el-select v-model="innerTemp3.product_deliver_id"
-                     @change="resetLogisticsNumber3"
-                     style="width: 100%"
-                     clearable
-                     filterable
-                     remote
-                     placeholder="请选择物流仓库"
-                     :remote-method="getWarehouseList"
-                     :loading="productDeliverLoading">
-            <el-option v-for="item in productDeliverOptions"
-                       :key="item.id"
-                       :label="item.name"
-                       :value="item.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
+        <!--<el-form-item label="物流仓库" prop="product_deliver_id">-->
+          <!--<el-select v-model="innerTemp3.product_deliver_id"-->
+                     <!--@change="resetLogisticsNumber3"-->
+                     <!--style="width: 100%"-->
+                     <!--clearable-->
+                     <!--filterable-->
+                     <!--remote-->
+                     <!--placeholder="请选择物流仓库"-->
+                     <!--:remote-method="getWarehouseList"-->
+                     <!--:loading="productDeliverLoading">-->
+            <!--<el-option v-for="item in productDeliverOptions"-->
+                       <!--:key="item.id"-->
+                       <!--:label="item.name"-->
+                       <!--:value="item.id">-->
+            <!--</el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
         <!--<el-form-item label="物流名称" prop="product_weixin">-->
         <!--<multiselect v-model="innerTemp3.orders_logistics_type" :options="logisticsTypeOptions" @input="resetLogisticsNumber" @search-change="queryLogisticsTypeList" placeholder="搜索物流名称" selectLabel="选择"-->
         <!--deselectLabel="删除" track-by="name" :internalSearch="false" label="name">-->
@@ -442,6 +440,7 @@
         <el-form-item label="物流名称" prop="orders_logistics_type.code">
           <el-select v-model="innerTemp3.orders_logistics_type"
                      @change="resetLogisticsNumber"
+                     @focus="queryLogisticsTypeList(' ')"
                      style="width: 100%"
                      value-key="id"
                      clearable
@@ -461,8 +460,8 @@
                       v-if="innerTemp3.orders_logistics_type.code === '1001' || innerTemp3.orders_logistics_type.code === '1006'">
           <el-select v-model="innerTemp3.product_deliver_extra_id"
                      @change="resetLogisticsNumber2"
+                     @focus="getWarehouseLogisticsExtraList(' ')"
                      style="width: 100%"
-                     clearable
                      filterable
                      remote
                      placeholder="请选额外信息"
@@ -520,14 +519,13 @@
           <template slot-scope="scope">
             <span>
               {{scope.row.province_name}} {{scope.row.city_name}} {{scope.row.district_name}} {{scope.row.address}}
-              <el-tag :type="'success'"
-                      v-if="scope.row.id === temp.product_weixin_fans.default_address_id">默认收货地址</el-tag>
+              <el-tag type="success" v-if="scope.row.id === temp.product_weixin_fans.default_address_id">默认收货地址</el-tag>
             </span>
           </template>
         </el-table-column>
         <el-table-column min-width="100px" align="center" label="状态">
           <template slot-scope="scope">
-            <el-tag :type="'warning'" v-if="scope.row.id === temp.product_weixin_fans_address_id">已选中</el-tag>
+            <el-tag type="warning" v-if="scope.row.id === temp.product_weixin_fans_address_id">已选中</el-tag>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作" width="320" class-name="small-padding">
@@ -1352,16 +1350,13 @@
       },
       getWarehouseLogisticsExtraList(query) {
         if (query !== '') {
-          console.log(this.logisticsTypeOptions)
-          console.log(this.innerTemp3.orders_logistics_type.code)
-          console.log(this.logisticsTypeOptions[this.logisticsTypeOptions.findIndex(d => d.company_code === this.innerTemp3.orders_logistics_type.code)])
           this.productDeliverExtraLoading = true
           getWarehouseLogisticsExtraList({
             order_logistics_type_id: this.logisticsTypeOptions[this.logisticsTypeOptions.findIndex(d => d.code === this.innerTemp3.orders_logistics_type.code)].id,
-            product_deliver_id: this.innerTemp3.product_deliver_id,
+            warehouse_id: this.innerTemp3.warehouse_id,
             description: query
           }).then(response => {
-            this.productDeliverExtraOptions = response.data.data
+            this.productDeliverExtraOptions = response.data
             this.productDeliverExtraLoading = false
           })
         }
@@ -1409,12 +1404,8 @@
           }).then(() => {
             const tempdata = {}
             tempdata.orders_id = this.temp.id
-            tempdata.product_deliver_id = this.innerTemp3.product_deliver_id
-            tempdata.product_deliver_extra_id = this.innerTemp3.product_deliver_extra_id
-            tempdata.province_name = this.temp.product_weixin_fans_address.province_name
-            tempdata.city_name = this.temp.product_weixin_fans_address.city_name
-            tempdata.district_name = this.temp.product_weixin_fans_address.district_name
-            tempdata.address = this.temp.product_weixin_fans_address.province_name + this.temp.product_weixin_fans_address.city_name + this.temp.product_weixin_fans_address.district_name + this.temp.product_weixin_fans_address.address
+            tempdata.warehouse_extra_id = this.innerTemp3.warehouse_logistics_extra_id
+            tempdata.address = this.temp.orders_receiver_info.province_name + this.temp.orders_receiver_info.city_name + this.temp.orders_receiver_info.district_name + this.temp.orders_receiver_info.address
             getOrdersSFLogisticsNumber(tempdata).then(response => {
               this.innerTemp3.logistics_number = response.data.logistics_number
               this.innerTemp3.dest_code = response.data.dest_code
@@ -1433,19 +1424,16 @@
           }).then(() => {
             const tempdata = {}
             tempdata.orders_id = this.temp.id
-            tempdata.product_deliver_id = this.innerTemp3.product_deliver_id
-            tempdata.product_deliver_extra_id = this.innerTemp3.product_deliver_extra_id
-            tempdata.province = this.temp.product_weixin_fans_address.province_name
-            tempdata.city = this.temp.product_weixin_fans_address.city_name
-            let tempCity = this.temp.product_weixin_fans_address.city_name
+            tempdata.warehouse_extra_id	 = this.innerTemp3.warehouse_logistics_extra_id
+            let tempCity = this.temp.orders_receiver_info.city_name
             if ((tempCity === undefined) || (tempCity === null)) {
               tempCity = ''
             }
-            let tempDistrict = this.temp.product_weixin_fans_address.district_name
+            let tempDistrict = this.temp.orders_receiver_info.district_name
             if ((tempDistrict === undefined) || (tempDistrict === null)) {
               tempDistrict = ''
             }
-            tempdata.address = this.temp.product_weixin_fans_address.province_name + tempCity + tempDistrict + this.temp.product_weixin_fans_address.address
+            tempdata.address = this.temp.orders_receiver_info.province_name + tempCity + tempDistrict + this.temp.orders_receiver_info.address
             getOrdersYTOLogisticsNumber(tempdata).then(response => {
               this.innerTemp3.logistics_number = response.data.logistics_number
               this.innerTemp3.dest_code = response.data.dest_code
@@ -1460,7 +1448,6 @@
         }
       },
       resetLogisticsNumber() {
-        console.log(this.innerTemp3)
         this.productDeliverExtraOptions = []
         this.innerTemp3.logistics_number = ''
         this.innerTemp3.dest_code = undefined
@@ -2318,23 +2305,12 @@
           this.productGoodsOptions = response.data.data
         })
       },
-      queryLogisticsTypeList(query) {
-        if (this.innerTemp3.product_deliver_id === undefined || this.innerTemp3.product_deliver_id === '') {
-          this.$message.error('先选择仓库')
-          return
-        }
-        if (query !== '') {
-          this.queryLogisticsTypeLoading = true
-          getOrdersLogisticsTypeList({
-            logistics_name: query,
-            product_deliver_id: this.innerTemp3.product_deliver_id
-          }).then(response => {
-            // if (!response.data.data) return
-            console.log(response)
-            this.logisticsTypeOptions = response.data.data
-            this.queryLogisticsTypeLoading = false
-          })
-        }
+      queryLogisticsTypeList() {
+        this.queryLogisticsTypeLoading = true
+        getOrdersLogisticsTypeList().then(res => {
+          this.logisticsTypeOptions = res.data.data
+          this.queryLogisticsTypeLoading = false
+        })
       },
       resetSupportMember() {
         this.temp.product_weixin_id = undefined
@@ -2959,6 +2935,7 @@
         }
       },
       handleInnerUpdate3(row) {
+        console.log(row)
         this.logisticsTypeOptions = []
         this.tempProductId = row.product_id
         this.temp = Object.assign({}, row)
@@ -2970,17 +2947,18 @@
             name: row.orders_logistics.orders_logistics_type.name,
             code: row.orders_logistics.orders_logistics_type.code
           })
-          if (row.orders_logistics.product_deliver_extra_id !== null) {
+          if (row.orders_logistics.product_deliver_extra !== null) {
             this.productDeliverExtraOptions = [{
               id: row.orders_logistics.product_deliver_extra.id,
               description: row.orders_logistics.product_deliver_extra.description
             }]
           }
-          this.productDeliverOptions = [{
-            id: row.orders_logistics.product_deliver.id,
-            name: row.orders_logistics.product_deliver.name
-          }]
+          // this.productDeliverOptions = [{
+          //   id: row.orders_logistics.product_deliver.id,
+          //   name: row.orders_logistics.product_deliver.name
+          // }]
           this.innerTemp3 = Object.assign({}, row.orders_logistics)
+          this.innerTemp3.product_deliver_extra_id = this.innerTemp3.product_deliver_extra.id
         } else {
           this.resetInnerTemp3()
           this.productDeliverOptions = []
@@ -2997,6 +2975,7 @@
             const tempData = this.innerTemp3
             tempData.orders_id = this.temp.id
             tempData.logistics_type_id = this.innerTemp3.orders_logistics_type.id
+            tempData.warehouse_extra_id	 = this.innerTemp3.warehouse_logistics_extra_id
             updateOrdersLogistics(tempData).then(response => {
               this.temp.orders_logistics = tempData
               this.innerDialogFormVisible3 = false
