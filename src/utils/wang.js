@@ -27,7 +27,6 @@ const wangeditormenus = [
 export function wangEditor(parm, fun) {
   const editor = new E(parm)
   editor.customConfig.menus = wangeditormenus
-  editor.customConfig.emotions = Emojibox
   editor.customConfig.linkImgCallback = function(url) {
   }
   if (fun) {
