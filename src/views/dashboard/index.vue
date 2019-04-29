@@ -33,7 +33,6 @@
       <el-date-picker
         v-model="warehouseQuery"
         type="daterange"
-        size="mini"
         :clearable="false"
         format="yyyy-MM-dd"
         value-format="yyyy-MM-dd"

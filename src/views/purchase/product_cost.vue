@@ -18,11 +18,11 @@
                      :value="item.id">
           </el-option>
         </el-select>
-        <el-button type="primary" class="filter-item"
+        <el-button type="primary" icon="el-icon-search" class="filter-item"
                    @click="handleFilter">
                     搜索
         </el-button>
-        <el-button type="primary" class="filter-item" icon="el-icon-edit" @click="handleAddCost" v-waves>添加
+        <el-button type="primary" class="filter-item" icon="el-icon-edit" @click="handleAddCost">添加
         </el-button>
 
         <el-switch v-model="listQuery.show_terminal"
@@ -42,41 +42,38 @@
               element-loading-text="给我一点时间"
               border fit highlight-current-row
               style="width: 100%;" >
-      <el-table-column :key="Math.random()" align="center" label="ID" width="60">
+      <el-table-column align="center" label="ID" width="60">
         <template slot-scope="scope">
               <span >
                 {{scope.row.id}}
               </span>
         </template>
       </el-table-column>
-      <el-table-column :key="Math.random()" align="center" label="商品" min-width="100">
+      <el-table-column align="center" label="商品" min-width="250">
         <template slot-scope="scope">
           <span >
-            {{scope.row.product_good.goods_name}}
+            {{scope.row.goods_name}}
           </span>
         </template>
       </el-table-column>
-      <el-table-column :key="Math.random()" align="center" label="规格" min-width="80">
+      <el-table-column align="center" label="规格" min-width="80">
         <template slot-scope="scope">
-          <span>{{scope.row.product_good.unit | statusUnit}}</span>
+          <span>{{scope.row.sku_name}}</span>
         </template>
       </el-table-column>
-      <el-table-column :key="Math.random()" align="center" label="时间" min-width="100">
+      <el-table-column align="center" label="时间" min-width="350">
         <template slot-scope="scope">
-          <span >
-            {{scope.row.start_at}}
-          </span> --
+          <span>{{scope.row.start_at}}</span>
+          --
           <span v-if="scope.row.terminal_at !== null">
             {{scope.row.terminal_at}}
           </span>
           <span v-else> 今 </span>
         </template>
       </el-table-column>
-      <el-table-column :key="Math.random()" align="center" label="消费" min-width="100">
+      <el-table-column align="center" label="消费" min-width="100">
         <template slot-scope="scope">
-              <span >
-                ¥ {{scope.row.money}}
-              </span>
+          <span>¥ {{scope.row.money}}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -89,13 +86,13 @@
 
     <el-dialog title="成本录入" :visible.sync="dialogFormVisible" width="40%">
       <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="80px" style='width:90%; margin-left:5%;'>
-        <el-form-item label="商品" prop="product_good_id">
+        <el-form-item label="商品" prop="product_goods_common_id">
           <el-select style="width: 100%"
-                     v-model="temp.product_good_id"
+                     v-model="temp.product_goods_common_id"
                      filterable
                      clearable
                      remote
-                     placeholder="产品"
+                     placeholder="商品"
                      :remote-method="getProductGoodsList"
                      :loading="productGoodsLoading">
             <el-option
@@ -103,6 +100,24 @@
               :key="item.id"
               :label="item.goods_name"
               :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="规格" prop="product_good_id">
+          <el-select style="width: 100%"
+                     v-model="temp.product_good_id"
+                     filterable
+                     @focus="getProductGoodsSkuList"
+                     clearable
+                     remote
+                     placeholder="规格"
+                     :remote-method="getProductGoodsSkuList"
+                     :loading="productGoodsSkuLoading">
+            <el-option
+              v-for="item in productGoodsSkuOptions"
+              :key="item.product_goods_id"
+              :label="item.sku_value"
+              :value="item.product_goods_id">
             </el-option>
           </el-select>
         </el-form-item>
@@ -120,6 +135,7 @@
 
 <script>
   import { createProductGoodCost, getProductGoodCostList, getProductGoodsList } from '@/api/product_goods'
+  import { getProductGoodsCommonBaseList, getProductGoodsSkuList } from '@/api/goods'
   import waves from '@/directive/waves' // 水波纹指令
 
   export default {
@@ -154,16 +170,17 @@
           sort: '-id'
         },
         rules: {
-          product_good_id: [{ required: true, message: '选择商品', trigger: 'change' }],
+          product_goods_common_id: [{ required: true, message: '选择商品', trigger: 'change' }],
+          product_good_id: [{ required: true, message: '选择规格', trigger: 'change' }],
           money: [
             { validator: validate, trigger: 'change' }
           ]
         },
         sortOptions: [{ label: '按ID升序列', key: '+id' }, { label: '按ID降序', key: '-id' }],
         temp: {
-          promotion_channel_id: undefined,
-          money: undefined,
-          product_id: undefined
+          product_goods_common_id: undefined,
+          product_good_id: undefined,
+          money: undefined
         },
         dialogFormVisible: false,
         dialogStatus: '',
@@ -172,7 +189,9 @@
           create: '创建'
         },
         productGoodsOptions: [],
-        productGoodsLoading: false
+        productGoodsLoading: false,
+        productGoodsSkuLoading: false,
+        productGoodsSkuOptions: []
       }
     },
     created() {
@@ -200,11 +219,22 @@
       getProductGoodsList(query) {
         if (query !== '') {
           this.productGoodsLoading = true
-          getProductGoodsList({ goods_name: query, page_size: 0, status: 1 }).then(response => {
+          getProductGoodsCommonBaseList({ goods_name: query, page_size: 0, status: 1 }).then(response => {
             this.productGoodsOptions = response.data
             this.productGoodsLoading = false
           })
         }
+      },
+      getProductGoodsSkuList() {
+        if (!this.temp.product_goods_common_id) {
+          this.$message.error('选择商品')
+          return false
+        }
+          this.productGoodsSkuLoading = true
+          getProductGoodsSkuList({ product_goods_common_id: this.temp.product_goods_common_id, page_size: 0}).then(response => {
+            this.productGoodsSkuOptions = response.data
+            this.productGoodsSkuLoading = false
+          })
       },
       handleFilter() {
         this.listQuery.page = 1

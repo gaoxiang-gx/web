@@ -42,6 +42,24 @@
 
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
         <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="150px" style='width: 80%;margin-left: 10%'>
+          <el-form-item label="仓库" prop="order_logistics_type_id">
+            <el-select
+              v-model="temp.order_logistics_type_id"
+              filterable
+              style="width: 100%"
+              clearable
+              :disabled="disabled_order_logistics_type_id"
+              remote
+              placeholder="请选择物流公司"
+              :remote-method="queryLogisticsTypeList"
+              :loading="logisticsTypeLoading">
+              <el-option v-for="item in logisticsTypeOptions"
+                         :key="item.id"
+                         :label="item.name"
+                         :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="物流公司" prop="order_logistics_type_id">
             <el-select
               v-model="temp.order_logistics_type_id"

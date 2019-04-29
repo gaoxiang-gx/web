@@ -260,8 +260,7 @@
                 :on-success="handleUp1">
                 <i class="el-icon-plus"></i>
               </el-upload>
-
-              <div>只能上传jpg/png文件,图片大小不能超过１M</div>
+              <span>只能上传jpg/png文件,图片大小不能超过2M</span>
             </el-form-item>
             <el-form-item label="商品轮播图">
               <el-upload
@@ -276,7 +275,7 @@
                 multiple>
                 <i class="el-icon-plus"></i>
               </el-upload>
-              <div>只能上传jpg/png文件,图片大小不能超过１M</div>
+              <span>只能上传jpg/png文件,图片大小不能超过2M</span>
               <template>
                 <div style="margin-top: 10px;" v-for="(item, index) in fileList"  v-dragging="{ list: fileList, item: item, group: 'fileList' }" :key="index">
                   <i class="el-icon-rank iconStyle"></i>
@@ -333,10 +332,10 @@
           </div>
         </el-tab-pane>
         <el-tab-pane :disabled="dialogStatus =='create'" label="规格设置" name="five">
-          <el-form :rules="rules" ref="dataForm5" :model="temp5" label-position="left" label-width="10%" style='width: 100%;'>
+          <el-form :rules="rules" ref="dataForm5" :model="temp5" label-position="left" label-width="15%" style='width: 100%;'>
             <el-form-item label="规格设置">
                 <div style="margin-top: 10px;" v-for="(item,index) in temp5.species_values"  v-dragging="{ item: item, list: temp5.species_values, group:'species_values', comb: 'isComb'}" :key="index">
-                  <el-input v-model="item.attr" style="width:320px;"></el-input>
+                  <el-input v-model="item.attr" style="width:60%;"></el-input>
                   <el-button type="success" @click="handleDetails(index)">
                     <i class="el-icon-plus"></i>
                   </el-button>
@@ -356,7 +355,7 @@
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="handleAttr">添加规格分类</el-button>
-              <div>(可以进行拖拽排序)</div>
+              <span>(可以进行拖拽排序)</span>
             </el-form-item>
           </el-form>
           <div style="text-align: right;">
@@ -861,8 +860,9 @@
             if (temp === '4') {
               str = this.temp4.product_goods_category_id.join()
               let rules = false
+              console.log(this.temp4.goods_attribute)
               rules = this.temp4.goods_attribute.every(item => {
-                return item.label !== undefined && item.value !== undefined
+                return item.label !== undefined && item.label !== "" && item.label !== " " && item.value !== undefined && item.value !== "" && item.value !== " "
               })
               if (!rules) {
                 this.$message.error('属性设置不能为空')
@@ -918,7 +918,7 @@
               url: item.url
             }
           }) : []
-          this.temp2.main_images = this.fileList
+          this.temp2.main_images = JSON.parse(JSON.stringify(this.fileList))
           this.fileList1 = response.data.main_images_default !== null ? [{
             name: 0,
             url: response.data.main_images_default
@@ -965,15 +965,9 @@
           name: undefined,
           status: 1
         })
-        this.$nextTick(() => {
-          this.dragend()
-        })
       },
-      // 商品轮播图拖拽
+      // 商品轮播图上传
       handleUp(response, file, fileList) {
-        console.log(file)
-        console.log(response)
-        console.log(fileList)
         this.fileList = fileList.map(item => {
           return {
             name: item.name,
@@ -1030,8 +1024,11 @@
       handleExceed1() {
         this.$message.error('主图限制上传一张')
       },
+      handleRemove1(file, fileList) {
+        this.temp2.main_images_default = ''
+      },
       handleRemove3(file, fileList) {
-        this.price1.image_thumb = undefined
+        this.price1.image_thumb = undefined9
       },
       handleRemove(file, fileList) {
         this.fileList = fileList.map(item => {
@@ -1055,13 +1052,12 @@
       },
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg' || 'image/png'
-        const isLt2M = file.size / 1024 / 1024 < 3
-
+        const isLt2M = file.size / 1024 / 1024 < 2
         if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!')
+          this.$message.error('上传图片只能是 JPG png 格式!')
         }
         if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 3MB!')
+          this.$message.error('上传图片大小不能超过 2MB!')
         }
         return isJPG && isLt2M
       },

@@ -2,7 +2,7 @@
   <div class="app-container calendar-list-container">
     <div class="filter-container">
       <el-row :gutter="20">
-        <el-col :span="12">
+        <el-col :span="20">
           <el-date-picker class="filter-item"
                           v-model="listQuery.date_range"
                           type="daterange"
@@ -10,14 +10,28 @@
                           value-format="yyyy-MM-dd"
                           align="right"
                           unlink-panels
+                          :clearable="false"
                           range-separator="~"
                           start-placeholder="开始日期"
                           end-placeholder="结束日期"
                           :picker-options="pickerOptions"
                           @change='handleFilter'>
           </el-date-picker>
+          <el-select  class="filter-item"
+                      style="width:200px"
+                      @change='handleFilter'
+                      v-model="listQuery.warehouse_id"
+                      clearable
+                      placeholder="仓库">
+            <el-option  v-for="item in warehouseOptions"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+            </el-option>
+          </el-select>
+          <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">搜索</el-button>
         </el-col>
-        <el-col :span="4" :offset="8">
+        <el-col :span="4" >
           <el-col :span="12">
             <div style="background-color: #d6fdc1;height: 20px;"></div>
           </el-col>
@@ -42,9 +56,10 @@
                 :cell-class-name="tableRowClassName"
                 fit
                 style="width: 100%">
-        <el-table-column align="center" label="商品名称" min-width="200" fixed>
+        <el-table-column align="center" label="商品" min-width="100" fixed>
           <template slot-scope="scope">
-            <span>{{scope.row.product_good}}</span>
+            <span>{{scope.row.goods_name}}</span><br/>
+            <span>{{scope.row.goods_sku_name}}</span>
           </template>
         </el-table-column>
         <el-table-column v-for="item in columnList" :key="Math.random()" align="center" :label="item + '\n新粉 / 复购'" min-width="100">
@@ -65,6 +80,7 @@
 
 <script>
   import waves from '@/directive/waves'
+  import { getWarehouseList} from '@/api/product'
   import { getProductStorageByDay } from '@/api/product'
   import { parseTime } from '@/utils/index'
 
@@ -87,10 +103,12 @@
             parseTime(new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * 7), '{y}-{m}-{d}'),
             parseTime(new Date(), '{y}-{m}-{d}')
           ],
+          warehouse_id: undefined,
           page: 1,
           page_size: 20,
           sort: '-id'
         },
+        warehouseOptions: [],
         pickerOptions: {
           shortcuts: [{
             text: '最近一周',
@@ -124,6 +142,11 @@
       handleFilter() {
         this.listQuery.page = 1
         this.getList()
+      },
+      getWarehouseList() {
+        getWarehouseList().then(response => {
+          this.warehouseOptions = response.data.data
+        })
       },
       getTotal(data) {
         let order_out = 0
@@ -217,6 +240,7 @@
     },
     created() {
       this.getList()
+      this.getWarehouseList()
     },
     deactivated() {
       this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop

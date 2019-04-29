@@ -16,18 +16,31 @@
       </el-date-picker>
       <el-select  class="filter-item"
                   style="width:200px"
+                  @change='handleWarehouse'
+                  v-model="listQuery.warehouse_id"
+                  clearable
+                  placeholder="仓库">
+        <el-option  v-for="item in warehouseOptions"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
+        </el-option>
+      </el-select>
+      <el-select  class="filter-item"
+                  style="width:200px"
                   @change='handleFilter'
+                  @focus="getWarehouseProductGoodsStorageList(' ')"
                   v-model="listQuery.product_goods_id"
                   filterable
                   clearable
                   remote
-                  placeholder="请选择商品"
-                  :remote-method="getProductList"
+                  placeholder="商品"
+                  :remote-method="getWarehouseProductGoodsStorageList"
                   :loading="productLoading">
         <el-option  v-for="item in productOptions"
                     :key="item.id"
-                    :label="item.goods_name"
-                    :value="item.id">
+                    :label="item.goods_sku_name"
+                    :value="item.product_goods_id">
         </el-option>
       </el-select>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">搜索</el-button>
@@ -44,12 +57,12 @@
                 stripe>
         <el-table-column align="center" label="商品名称" min-width="150" >
           <template slot-scope="scope">
-            <span>{{scope.row.product_goods.goods_name}}</span>
+            <span>{{scope.row.goods_name}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="盘货日期" min-width="150">
+        <el-table-column align="center" label="规格" min-width="150" >
           <template slot-scope="scope">
-            <span>{{scope.row.datetime}}</span>
+            <span>{{scope.row.sku_name}}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="账面数量"  >
@@ -80,7 +93,8 @@
       </el-table-column>
         <el-table-column align="center" label="稽查人" min-width="150" >
           <template slot-scope="scope">
-            <span>{{scope.row.operator_account.nickname}}</span>
+            <span>{{scope.row.operator_account_name}}</span><br/>
+            <span>{{scope.row.datetime}}</span>
           </template>
         </el-table-column>
         <!--<el-table-column align="center" label="操作" min-width="150" >-->
@@ -99,11 +113,24 @@
 
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
         <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="120px" style='width: 80%; margin-left:10%;'>
-          <el-form-item label="选择商品" prop="product_goods_id">
-            <el-select v-model="temp.product_goods_id"
+          <el-form-item label="仓库" prop="warehouse_id">
+            <el-select  style="width:100%"
+                        v-model="temp.warehouse_id"
+                        clearable
+                        @change="handleFilterWarehouse"
+                        placeholder="仓库">
+              <el-option  v-for="item in warehouseOptions"
+                          :key="item.id"
+                          :label="item.name"
+                          :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="选择商品" prop="product_goods_storage_id">
+            <el-select v-model="temp.product_goods_storage_id"
                        style="width: 100%"
-                       @change="temp.origin_num = productOptions2[productOptions2.findIndex( d => d.id === temp.product_goods_id)].stock;
-                                temp.checked_num = productOptions2[productOptions2.findIndex( d => d.id === temp.product_goods_id)].stock;"
+                       @change="temp.origin_num = productOptions2.find( d => d.id === temp.product_goods_storage_id).stock;
+                                temp.checked_num = productOptions2.find( d => d.id === temp.product_goods_storage_id).stock;"
                        filterable
                        clearable
                        remote
@@ -112,13 +139,13 @@
                        :loading="productLoading2">
               <el-option  v-for="item in productOptions2"
                           :key="item.id"
-                          :label="item.goods_name"
+                          :label="item.goods_sku_name"
                           :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="账面数量" prop="origin_num">
-            <el-input v-model.number="temp.origin_num" style="width: 100%;text-align: center;" disabled></el-input>
+            <div style="text-align: center">{{temp.origin_num}}</div>
           </el-form-item>
           <el-form-item label="稽查数量" prop="checked_num">
             <el-input-number v-model.number="temp.checked_num" style="width: 100%"></el-input-number>
@@ -134,7 +161,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="备注" >
+          <el-form-item label="备注" prop="info">
             <el-input v-model="temp.info"
                        style="width: 100%"
                        type="textarea">
@@ -144,7 +171,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
           <el-button v-if="dialogStatus === 'create'" type="primary" @click="createData">确 定</el-button>
-          <el-button v-else type="primary" @click="updateData">确 定</el-button>
+          <!--<el-button v-else type="primary" @click="updateData">确 定</el-button>-->
         </div>
       </el-dialog>
     </div>
@@ -153,7 +180,8 @@
 
 <script>
   import waves from '@/directive/waves'
-  import { getProductGoodsList } from '@/api/product_goods'
+  import { getWarehouseProductGoodsStorageList } from '@/api/warehouse'
+  import { getWarehouseList} from '@/api/product'
   import { getProductStorageAdjustList } from '@/api/product'
   import { createProductStorageAdjust } from '@/api/product'
   export default {
@@ -167,9 +195,9 @@
         if (value === '') {
           callback(new Error('请输入数量'))
         } else if (typeof value !== 'number') {
-          callback(new Error('输入数字!'))
+          callback(new Error('输入数字'))
         } else if (/[^\w]/g.test(value + '')) {
-          callback(new Error('输入整数!'))
+          callback(new Error('输入正整数'))
         } else {
           callback()
         }
@@ -184,6 +212,8 @@
           update: '编辑',
           create: '创建'
         },
+        warehouseLoading: false,
+        warehouseOptions: [],
         dialogStatus: undefined,
         dialogFormVisible: false,
         productOptions: [],
@@ -192,6 +222,7 @@
         productLoading2: false,
         listQuery: {
           product_id: undefined,
+          warehouse_id: undefined,
           date_range: '',
           page: 1,
           page_size: 20,
@@ -206,18 +237,21 @@
           { id: 1, label: '发货错误' }
         ],
         temp: {
-          product_goods_id: undefined,
+          warehouse_id: undefined,
+          product_goods_storage_id: undefined,
           origin_num: undefined,
           checked_num: undefined,
           adjust_type_id: undefined,
           info: undefined
         },
         rules: {
-          product_goods_id: [{ required: true, message: '选择商品', trigger: 'change' }],
+          warehouse_id: [{ required: true, message: '选择仓库', trigger: 'change' }],
+          product_goods_storage_id: [{ required: true, message: '选择商品', trigger: 'change' }],
           checked_num: [
             { validator: validate, trigger: 'change' }
           ],
-          adjust_type_id: [{ required: true, message: '必选差异原因', trigger: 'change' }]
+          adjust_type_id: [{ required: true, message: '必选差异原因', trigger: 'change' }],
+          info: [{ required: true, message: '备注', trigger: 'change' }]
         },
         pickerOptions: {
           shortcuts: [{
@@ -253,6 +287,17 @@
         this.listQuery.page = 1
         this.getList()
       },
+      handleFilterWarehouse() {
+        this.temp.product_goods_storage_id = undefined
+        this.productOptions2 = []
+        this.origin_num = undefined
+        this.checked_num = undefined
+      },
+      handleWarehouse() {
+        this.listQuery.product_goods_id = undefined
+        this.productOptions = []
+        this.handleFilter()
+      },
       getList() {
         this.listLoading = true
         getProductStorageAdjustList(this.listQuery).then(response => {
@@ -261,20 +306,33 @@
           this.total = response.data.total
         })
       },
-      getProductList(query) {
+      getWarehouseList() {
+        getWarehouseList().then(response => {
+          this.warehouseOptions = response.data.data
+        })
+      },
+      getWarehouseProductGoodsStorageList(query) {
+        if (! this.listQuery.warehouse_id) {
+          this.$message.error('先选择仓库')
+          return false
+        }
         if (query !== '') {
           this.productLoading = true
-          getProductGoodsList({ goods_name: query, status: 1 }).then(response => {
-            this.productOptions = response.data.data
+          getWarehouseProductGoodsStorageList({ warehouse_id: this.listQuery.warehouse_id, goods_name: query }).then(response => {
+            this.productOptions = response.data
             this.productLoading = false
           })
         }
       },
       getProductList2(query) {
+        if (! this.temp.warehouse_id) {
+          this.$message.error('先选择仓库')
+          return false
+        }
         if (query !== '') {
           this.productLoading2 = true
-          getProductGoodsList({ goods_name: query, status: 1 }).then(response => {
-            this.productOptions2 = response.data.data
+          getWarehouseProductGoodsStorageList({ warehouse_id: this.temp.warehouse_id, goods_name: query }).then(response => {
+            this.productOptions2 = response.data
             this.productLoading2 = false
           })
         }
@@ -304,19 +362,20 @@
         this.listQuery.page = val
         this.getList()
       },
-      handleUpdate() {
-      },
-      updateData() {
-      },
-      handleDelete() {
-      }
     },
     watch: {
       dialogFormVisible(val) {
         if (!val) {
           this.$refs['dataForm'].resetFields()
           this.productOptions2 = []
-          this.temp.info = undefined
+          this.temp = {
+            warehouse_id: undefined,
+            product_goods_storage_id: undefined,
+            origin_num: undefined,
+            checked_num: undefined,
+            adjust_type_id: undefined,
+            info: undefined
+          }
         }
       }
     },
@@ -337,8 +396,8 @@
       }
     },
     created() {
-      this.getProductList(' ')
       this.getList()
+      this.getWarehouseList()
     }
   }
 </script>

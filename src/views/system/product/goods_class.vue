@@ -1,21 +1,20 @@
 <template>
   <div class="app-container calendar-list-container">
-
-    <el-card style="width: 60%">
+    <el-card style="width: 50%">
       <template slot="header">
         <el-button type="primary"
-                   @click="append(' ')" >
-          创建根目录
+                   @click="append(0)">创建根分类
         </el-button>
       </template>
-    <el-tree
-      :data="data"
-      :props="defaultProps"
-      node-key="id"
-      @node-drop="handleDrop"
-      draggable
-      :default-expand-all="false"
-      >
+      <el-tree :data="data"
+               :props="defaultProps"
+               node-key="id"
+               :indent="20"
+               @node-expand="treeExpand"
+               @node-collapse="treeCollapse"
+               :default-expanded-keys="expandTree"
+               :expand-on-click-node="false"
+               :default-expand-all="false">
       <span class="custom-tree-node" slot-scope="{ node, data }">
         <span>{{ node.label }}</span>
         <span style="position: absolute;right: 0;top: 0;">
@@ -23,40 +22,47 @@
              type="text"
              size="mini"
              style="font-size: 12px;text-align: right;"
-             @click="() => exit(node, data)">
+             @click.stop="() => exit(node, data)">
             编辑
           </el-button>
           <el-button
             type="text"
+            v-if="data.deep < 3"
             size="mini"
             style="font-size: 12px;text-align: right;"
-            @click="() => append(data)">
+            @click.stop="() => append(data)">
             添加
           </el-button>
-          <el-button
-            type="text"
-            size="mini"
-            style="font-size: 12px;text-align: right;"
-            @click="() => remove(node, data)">
-            删除
-          </el-button>
+          <el-switch
+            v-model="data.status"
+            :active-value="1"
+            @change="value => changeStatus(value,data)"
+            :inactive-value="0"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
+          <!--<el-button-->
+            <!--type="text"-->
+            <!--size="mini"-->
+            <!--style="font-size: 12px;text-align: right;"-->
+            <!--@click="() => remove(node, data)">-->
+            <!--删除-->
+          <!--</el-button>-->
         </span>
       </span>
-    </el-tree>
+      </el-tree>
     </el-card>
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="innerDataForm1" :model="temp" label-position="left" label-width="80px" style='width: 400px; margin-left:50px;'>
-        <el-form-item label="菜单名称" prop="auth_name">
-          <el-input v-model="temp.menu_name"></el-input>
-        </el-form-item>
-        <el-form-item label="菜单编码" prop="auth_code">
-          <el-input v-model="temp.menu_code"></el-input>
+      <el-form ref="innerDataForm1" :model="temp" label-position="left" label-width="80px"
+               style='width: 400px; margin-left:50px;'>
+        <el-form-item label="分类名称" prop="auth_name">
+          <el-input v-model="temp.category_name"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button v-if="dialogStatus=='create'" type="primary" @click="createData(currentData)">确 定</el-button>
+        <el-button v-if="dialogStatus == 'create'" type="primary" @click="createData(currentData)">确 定</el-button>
         <el-button v-else type="primary" @click="updataData(currentData)">确 定</el-button>
       </div>
     </el-dialog>
@@ -65,23 +71,30 @@
 </template>
 
 <script>
-  import { getUserMenu, createUserMenu, updateUserMenu, deleteUserMenu } from '@/api/auth'
+  import {
+    getProductCategoryTreeList,
+    createProductCategory,
+    updateProductCategory,
+    changeProductCategoryStatus
+  } from '@/api/goods'
+
   export default {
-    name: '',
+    name: 'productGoodsClass',
     data() {
       return {
         listLoading: true,
         dialogFormVisible: false,
         currentData: {},
         data: [],
+        expandTree: [],
         menunode: undefined,
         temp: {
-          menu_name: undefined,
-          menu_code: undefined
+          category_name: undefined,
+          deep: 1
         },
         defaultProps: {
-          children: 'children',
-          label: 'menu_name'
+          children: 'son',
+          label: 'category_name'
         },
         dialogStatus: '',
         textMap: {
@@ -101,7 +114,7 @@
     methods: {
       getMenuList() {
         this.listLoading = true
-        getUserMenu().then(response => {
+        getProductCategoryTreeList().then(response => {
           this.data = response.data
           this.listLoading = false
         })
@@ -115,24 +128,40 @@
       exit(node, data) {
         this.menunode = node
         this.temp = {
-          menu_name: data.menu_name,
-          menu_code: data.menu_code
+          category_name: data.category_name
         }
         this.dialogStatus = 'update'
         this.dialogFormVisible = true
         this.currentData = data
       },
       updataData(data) {
-        const tempData = this.temp
-        tempData.user_menu_id = data.id
-        updateUserMenu(tempData).then(response => {
+        const parms = this.temp
+        parms.product_category_id = data.id
+        updateProductCategory(parms).then(response => {
           const parent = this.menunode.parent
-          const children = parent.data.children || parent.data
+          const children = parent.data.son || parent.data
           const index = children.findIndex(d => d.id === data.id)
-          children[index].menu_name = tempData.menu_name
-          children[index].menu_code = tempData.menu_code
+          children[index].category_name = parms.category_name
           this.dialogFormVisible = false
         })
+      },
+      changeStatus(value,data) {
+        const parms = {
+          product_category_id: data.id,
+          status: value,
+          deep: data.deep
+        }
+        changeProductCategoryStatus(parms).then(res => {
+          this.getMenuList()
+        }).catch(() => {
+          data.status = value == 0 ? 1 : 0
+        })
+      },
+      treeExpand(data) {
+        this.expandTree.push(data.id)
+      },
+      treeCollapse(data) {
+        this.expandTree.splice(this.expandTree.findIndex(item => item.id === data.id), 1)
       },
       remove(node, data) {
         this.$confirm('此操作将永久删除该域名, 是否继续?', '提示', {
@@ -164,26 +193,31 @@
       },
       resetTemp() {
         this.temp = {
-          menu_name: undefined,
-          menu_code: undefined
+          category_name: undefined
         }
       },
       createData(data) {
-        if (data === ' ') {
+        if (data === 0) {
           this.temp.pid = 0
+          this.temp.deep = 1
         } else {
           this.temp.pid = data.id
+          this.temp.deep = ++data.deep
         }
-        createUserMenu(this.temp).then(response => {
-          const newChild = { id: response.data.id, menu_name: this.temp.menu_name, menu_code: this.temp.menu_code, children: [] }
-          if (data === ' ') {
+        createProductCategory(this.temp).then(response => {
+          const newChild = {
+            id: response.data.id,
+            category_name: response.data.category_name,
+            son: []
+          }
+          if (data === 0) {
             this.data.push(newChild)
             this.dialogFormVisible = false
           } else {
-            if (!data.children) {
-              this.$set(data, 'children', [])
+            if (!data.son) {
+              this.$set(data, 'son', [])
             }
-            data.children.push(newChild)
+            data.son.push(newChild)
             this.dialogFormVisible = false
           }
         })
@@ -205,18 +239,7 @@
   }
 </script>
 <style rel="stylesheet/scss" lang="scss">
-  .el-tree-node__content{
+  .el-tree-node__content {
     position: relative;
   }
-</style>
-<style scoped>
-  /*.el-tree >>> .el-tree-node__content:hover {*/
-    /*background-color: #eee;*/
-  /*}*/
-  /*.el-tree >>> .el-tree-node__expand-icon {*/
-    /*color: #aaa;*/
-  /*}*/
-  /*.el-tree-node:focus>.el-tree-node__content {*/
-    /*background-color: red;*/
-  /*}*/
 </style>

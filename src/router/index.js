@@ -39,13 +39,13 @@ export const asyncRouterMap = [
     component: Layout,
     name: 'ordersManagement',
     redirect: 'noredirect',
-    meta: { title: '订单管理', icon: 'ordersManagement', role: ['administrator', 'support', 'supportManager', 'supportDirector', 'warehouse', 'clerk', 'supervisor'] },
+    meta: { title: '订单管理', icon: 'ordersManagement'},
     children: [
       {
         path: 'orders',
         name: 'ordersManage',
         component: _import('orders/orders'),
-        meta: { title: '订单管理', icon: 'ordersManage', role: ['administrator', 'support', 'supportManager', 'supportDirector', 'warehouse', 'clerk', 'supervisor'] }
+        meta: { title: '订单管理', icon: 'ordersManage'}
       }
     ]
   },
@@ -72,7 +72,7 @@ export const asyncRouterMap = [
         path: 'inventory_warning',
         name: 'inventoryWarning',
         component: _import('purchase/inventory_warning'),
-        meta: { title: '商品库存预警', icon: 'warn'}
+        meta: { title: '商品库存', icon: 'warn'}
       },
       {
         path: 'inventory_statistics',
@@ -97,7 +97,7 @@ export const asyncRouterMap = [
         name: 'purchaseManagement',
         redirect: 'noredirect',
         component: _import('purchase/purchase_management/index'),
-        meta: { title: '订货管理', icon: 'purchaseManagement'},
+        meta: { title: '订货管理', icon: 'purchaseManagement' },
         children: [
           {
             path: 'purchase_management',
@@ -199,6 +199,12 @@ export const asyncRouterMap = [
         name: 'productGoodsManagement',
         component: _import('system/product/product_goods_management'),
         meta: { title: '产品管理', icon: 'productGoodsManagement' }
+      },
+      {
+        path: 'system/goods_class',
+        name: 'productGoodsClass',
+        component: _import('system/product/goods_class'),
+        meta: { title: '商品分类', icon: 'productGoodsManagement' }
       },
       {
         path: 'system/address_management',

@@ -8,6 +8,7 @@
                       value-format="yyyy-MM-dd"
                       align="right"
                       unlink-panels
+                      :clearable="false"
                       range-separator="~"
                       start-placeholder="开始日期"
                       end-placeholder="结束日期"
@@ -15,28 +16,11 @@
                       @change='handleFilter'>
       </el-date-picker>
       <el-select  class="filter-item"
-                  style="width:150px"
-                  @change='handleFilter'
-                  v-model="listQuery.product_goods_id"
-                  filterable
-                  clearable
-                  remote
-                  placeholder="请选择商品"
-                  :remote-method="getProductList"
-                  :loading="productLoading">
-        <el-option  v-for="item in productOptions"
-                    :key="item.id"
-                    :label="item.goods_name"
-                    :value="item.id">
-        </el-option>
-      </el-select>
-      <el-select  class="filter-item"
                   style="width:100px"
                   @change='handleFilter'
                   v-model="listQuery.is_input"
                   clearable
-                  placeholder="出入库"
-      >
+                  placeholder="出入库">
         <el-option  v-for="item in typeOptions"
                     :key="item.id"
                     :label="item.label"
@@ -56,6 +40,35 @@
                     :value="item.id">
         </el-option>
       </el-select>
+      <el-select  class="filter-item"
+                  style="width:180px"
+                  @change='handleWarehouse'
+                  v-model="listQuery.warehouse_id"
+                  clearable
+                  placeholder="仓库">
+        <el-option  v-for="item in warehouseOptions"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
+        </el-option>
+      </el-select>
+      <el-select  class="filter-item"
+                  style="width:180px"
+                  @change='handleFilter'
+                  @focus="getWarehouseProductGoodsStorageList(' ')"
+                  v-model="listQuery.product_goods_id"
+                  filterable
+                  clearable
+                  remote
+                  placeholder="商品"
+                  :remote-method="getWarehouseProductGoodsStorageList"
+                  :loading="productGoodsLoading">
+        <el-option  v-for="item in productGoodsOptions"
+                    :key="item.id"
+                    :label="item.goods_sku_name"
+                    :value="item.product_goods_id">
+        </el-option>
+      </el-select>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">搜索</el-button>
 
       <el-table :key='tableKey'
@@ -67,9 +80,19 @@
                 highlight-current-row
                 style="width: 100%"
                 stripe>
+        <el-table-column align="center" label="仓库" min-width="150" >
+          <template slot-scope="scope">
+            <span>{{scope.row.warehouse_name}}</span>
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="商品名称" min-width="150" >
           <template slot-scope="scope">
-            <span>{{scope.row.product_goods.goods_name}}</span>
+            <span>{{scope.row.goods_name}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="规格" min-width="120" >
+          <template slot-scope="scope">
+            <span>{{scope.row.sku_name}}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="出入库" min-width="100">
@@ -89,14 +112,10 @@
             <span v-else style="color: #f56c6c;font-size: 20px;font-weight: 600;">{{scope.row.number}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="完成时间" min-width="150" >
-          <template slot-scope="scope">
-            <span>{{scope.row.datetime}}</span>
-          </template>
-        </el-table-column>
         <el-table-column align="center" label="操作人" min-width="150" >
           <template slot-scope="scope">
-            <span>{{scope.row.operator_account.nickname}}</span>
+            <span>{{scope.row.operator_account_name}}</span><br>
+            <span>{{scope.row.datetime}}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -113,8 +132,10 @@
 
 <script>
   import waves from '@/directive/waves'
+  import { getWarehouseList} from '@/api/product'
   import { getProductGoodsList } from '@/api/product_goods'
   import { getProductStorageDetailList } from '@/api/product'
+  import { getWarehouseProductGoodsStorageList } from '@/api/warehouse'
   import { parseTime } from '@/utils/index'
 
   export default {
@@ -149,6 +170,7 @@
         productLoading: false,
         listQuery: {
           product_goods_id: undefined,
+          warehouse_id: undefined,
           operate_type: undefined,
           date_range: [
             parseTime(new Date(new Date().getTime() - 1000 * 3600 * 24 * 7), '{y}-{m}-{d}'),
@@ -159,6 +181,9 @@
           page_size: 20,
           sort: '-id'
         },
+        warehouseOptions: [],
+        productGoodsOptions: [],
+        productGoodsLoading: false,
         pickerOptions: {
           shortcuts: [{
             text: '最近一周',
@@ -201,14 +226,28 @@
           this.total = res.data.total
         })
       },
-      getProductList(query) {
+      getWarehouseList() {
+        getWarehouseList().then(response => {
+          this.warehouseOptions = response.data.data
+        })
+      },
+      getWarehouseProductGoodsStorageList(query) {
+        if (! this.listQuery.warehouse_id) {
+          this.$message.error('先选择仓库')
+          return false
+        }
         if (query !== '') {
-          this.productLoading = true
-          getProductGoodsList({ goods_name: query, status: 1 }).then(response => {
-            this.productOptions = response.data.data
-            this.productLoading = false
+          this.productGoodsLoading = true
+          getWarehouseProductGoodsStorageList({ warehouse_id: this.listQuery.warehouse_id, goods_name: query }).then(response => {
+            this.productGoodsOptions = response.data
+            this.productGoodsLoading = false
           })
         }
+      },
+      handleWarehouse() {
+        this.listQuery.product_goods_id = undefined
+        this.productGoodsOptions = []
+        this.handleFilter()
       },
       handleSizeChange(val) {
         this.listQuery.page_size = val
@@ -230,6 +269,7 @@
         }
         return statusMap[status]
       },
+
       handleTypeClass(status) {
         const statusMap = {
           '0': 'danger',
@@ -242,8 +282,8 @@
       }
     },
     created() {
-      this.getProductList(' ')
       this.getList()
+      this.getWarehouseList()
     }
   }
 </script>

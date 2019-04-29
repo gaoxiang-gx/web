@@ -95,3 +95,32 @@ export function getProductCategoryTreeList(param) {
     data: param
   })
 }
+export function getProductGoodsSkuList(param) {
+  return request({
+    url: '/api/goods/getProductGoodsSkuList',
+    method: 'post',
+    data: param
+  })
+}
+
+export function createProductCategory(param) {
+  return request({
+    url: '/api/goods/createProductCategory',
+    method: 'post',
+    data: param
+  })
+}
+export function updateProductCategory(param) {
+  return request({
+    url: '/api/goods/updateProductCategory',
+    method: 'post',
+    data: param
+  })
+}
+export function changeProductCategoryStatus(param) {
+  return request({
+    url: '/api/goods/changeProductCategoryStatus',
+    method: 'post',
+    data: param
+  })
+}
