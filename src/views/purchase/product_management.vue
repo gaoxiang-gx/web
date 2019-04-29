@@ -40,7 +40,7 @@
       </el-table-column>
       <el-table-column min-width="200px" align="center" label="商品主图">
         <template slot-scope="scope">
-          <img v-if="scope.row.main_images_default !== null " @click="handlePictureCardPreview1(row)" style="width: 100px;height: 100px;"  :src="scope.row.main_images_default"  alt="">
+          <img v-if="scope.row.main_images_default !== null " @click="handlePictureCardPreview1(scope.row)" style="width: 100px;height: 100px;"  :src="scope.row.main_images_default"  alt="">
         </template>
       </el-table-column>
       <el-table-column min-width="75" align="center" label="类型">
@@ -105,7 +105,8 @@
           </el-table-column>
           <el-table-column prop="specPic" label="规格缩略图主图" width="180" align="center">
             <template slot-scope="scope">
-              <img :src="scope.row.image_thumb" alt="" style="width: 100px;height: 100px;">
+              <img v-if="scope.row.image_thumb !== null " @click="handlePictureCardPreview2(scope.row)" style="width: 100px;height: 100px;"  :src="scope.row.image_thumb"  alt="">
+              <!--<img :src="scope.row.image_thumb" alt="" style="width: 100px;height: 100px;">-->
             </template>
           </el-table-column>
           <el-table-column prop="originalPrice" label="原价" align="center">
@@ -422,7 +423,7 @@
   import { getProductList } from '@/api/product'
   import { getProductGoodsCommonBaseList, changeProductGoodsStatus, getBrandList, createProductGoodsCommonBase, updateProductGoodsCommonBase, getProductGoodsCommonInfo, getProductGoodsList, createProductGoods, updateProductGoods, updateProductRProductGoodsCommon, getProductCategoryTreeList } from '@/api/goods'
   import waves from '@/directive/waves' // 水波纹指令
-  import E from 'wangeditor'
+  import { wangEditor } from '@/utils/wang.js'
   import Multiselect from 'vue-multiselect'// 使用的一个多选框组件，element-ui的select不能满足所有需求
   import 'vue-multiselect/dist/vue-multiselect.min.css'// 多选框组件css
   // 富文本编辑器
@@ -441,7 +442,7 @@
         listLoading1: true,
         dialogSetEdit: false,
         dialogBelong: false,
-        editor: new E('#editor'),
+        editor: new wangEditor('#editor'),
         baseUrl: process.env.BASE_API + '/api/document/uploadImage',
         activeName: 'first',
         dialogImageUrl: '',
@@ -845,6 +846,13 @@
             let str
             if (temp === '2') {
               this.temp2.main_images = this.fileList
+              // if (this.fileList1.length === 0) {
+              //   this.temp2.main_images_default = undefined
+              //   this.$message.error('请上传主图')
+              //   return false
+              // } else {
+              //   this.temp2.main_images_default = this.fileList1[0].url
+              // }
             }
             if (temp === '3') {
               this.temp3.goods_description = this.editor.txt.html()
@@ -915,7 +923,7 @@
             name: 0,
             url: response.data.main_images_default
           }] : []
-          this.temp2.main_images_default = this.fileList1[0].url
+          this.temp2.main_images_default = response.data.main_images_default
           this.temp3.goods_description = response.data.goods_description
           this.temp4.goods_attribute = response.data.goods_attribute !== null ? response.data.goods_attribute : [{
             label: undefined,
@@ -973,6 +981,9 @@
           this.dragend()
         })
       },
+      handleRemove1(file, fileList) {
+        this.temp2.main_images_default = ''
+      },
       // 规格设置上传主图
       handlePictureSuccess(response, file, fileList) {
         this.price1.image_thumb = response.data.url
@@ -1017,7 +1028,7 @@
         this.temp2.main_images_default = ''
       },
       handleRemove3(file, fileList) {
-        this.price1.image_thumb = undefined
+        this.price1.image_thumb = undefined9
       },
       handleRemove(file, fileList) {
         this.fileList = fileList.map(item => {
@@ -1033,6 +1044,10 @@
       },
       handlePictureCardPreview1(file) {
         this.dialogImageUrl = file.main_images_default
+        this.dialogVisible = true
+      },
+      handlePictureCardPreview2(file) {
+        this.dialogImageUrl = file.image_thumb
         this.dialogVisible = true
       },
       beforeAvatarUpload(file) {
