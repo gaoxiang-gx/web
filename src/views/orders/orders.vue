@@ -54,6 +54,9 @@
 
     <el-table stripe :key='tableKey2' :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit
               highlight-current-row
+              row-key="id"
+              :expand-row-keys="expandList"
+              @expand-change="expandRow"
               style="width: 100%" :default-expand-all="ifExpandAll" :row-class-name="tableRowClassName">
       <el-table-column type="expand" :default-expand-all="ifExpandAll">
         <template slot-scope="scope">
@@ -67,11 +70,11 @@
             <el-form-item label="发货信息">
               <p class="my-form-p">
                 <span class="label-span">发货人：</span>
-                <span v-if="scope.row.product_weixin">{{scope.row.product_weixin.weixin_nickname}}</span>
+                <span v-if="scope.row.orders_sender_info">{{scope.row.orders_sender_info.sender_name}}</span>
               </p>
               <p class="my-form-p">
                 <span class="label-span">联系电话：</span>
-                <span v-if="scope.row.product_weixin">{{scope.row.product_weixin.phone}}</span>
+                <span v-if="scope.row.orders_sender_info">{{scope.row.orders_sender_info.sender_phone}}</span>
               </p>
             </el-form-item>
             <el-form-item label="收款信息">
@@ -160,17 +163,21 @@
       </el-table-column>
       <el-table-column min-width="130px" align="center" label="收货人">
         <template slot-scope="scope">
-          <span v-if="scope.row.product_weixin_fans_address">{{scope.row.product_weixin_fans_address.receive_name}}</span><br>
-          <span v-if="scope.row.product_weixin_fans_address">{{scope.row.product_weixin_fans_address.phone}}</span>
+          <span v-if="scope.row.orders_receiver_info">{{scope.row.orders_receiver_info.receive_name}}</span><br>
+          <span v-if="scope.row.orders_receiver_info">{{scope.row.orders_receiver_info.phone}}</span>
         </template>
       </el-table-column>
-
+      <el-table-column min-width="160px" align="center" label="发货仓">
+        <template slot-scope="scope">
+          <span v-if="scope.row.orders_logistics">{{scope.row.orders_logistics.warehouse.name}}</span>
+        </template>
+      </el-table-column>
       <el-table-column min-width="160px" align="center" label="创建时间">
         <template slot-scope="scope">
           <span>{{scope.row.created_at}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" min-width="320" class-name="small-padding">
+      <el-table-column align="center" label="操作" width="260" class-name="small-padding">
         <template slot-scope="scope">
           <!--<el-button v-if="scope.row.status===1" type="primary" size="small" @click="handleUpdate(scope.row)">编辑</el-button>-->
           <!--<el-button v-if="scope.row.status===1" :loading="btnLoading" size="small" type="success" @click="handleCheckOrders(scope.row)">确认订单</el-button>-->
@@ -372,7 +379,7 @@
         </el-table-column>
         <el-table-column align="center" label="操作人" min-width="100px">
           <template slot-scope="scope">
-            <el-tag type="success">{{scope.row.type_name}}</el-tag>
+            <!--<el-tag type="success">{{scope.row.type_name}}</el-tag>-->
             <span>{{scope.row.nickname}}</span>
           </template>
         </el-table-column>
@@ -897,6 +904,7 @@
         showAuditor: false,
         productWeixinLoading2: false,
         pickerOptions1: {},
+        expandList: [],
         temp: {
           id: undefined,
           orders_unique_id: '',
@@ -1141,6 +1149,7 @@
           if_default: undefined,
           product_weixin_fans_address_id: undefined
         },
+
         innerListLoading4: false,
         innerTableVisible4: false,
         innerDialogFormVisible4: false,
@@ -1364,7 +1373,7 @@
       getWarehouseList(query) {
         if (query !== '') {
           this.productDeliverLoading = true
-          getWarehouseList({ product_id: this.tempProductId, name: query }).then(response => {
+          getWarehouseList({ name: query }).then(response => {
             this.productDeliverOptions = response.data.data
             this.productDeliverLoading = false
           })
@@ -1478,49 +1487,49 @@
       },
       printOrders(row) {
         console.log(JSON.parse(JSON.stringify(row)))
-        if (row.product_weixin.weixin_nickname === undefined || row.product_weixin.weixin_nickname === '' || row.product_weixin.weixin_nickname === null) {
+        if (row.orders_sender_info.sender_name === undefined || row.orders_sender_info.sender_name === '' || row.orders_sender_info.sender_name === null) {
           this.$message({
             type: 'error',
             message: '请先设置发件人姓名'
           })
           return
         }
-        if (row.product_weixin.phone === undefined || row.product_weixin.phone === '' || row.product_weixin.phone === null) {
+        if (row.orders_sender_info.sender_phone === undefined || row.orders_sender_info.sender_phone === '' || row.orders_sender_info.sender_phone === null) {
           this.$message({
             type: 'error',
             message: '请先设置发件人电话'
           })
           return
         }
-        if (row.product_weixin_fans_address === undefined || row.product_weixin_fans_address === '' || row.product_weixin_fans_address === null) {
+        if (row.orders_receiver_info === undefined || row.orders_receiver_info === '' || row.orders_receiver_info === null) {
           this.$message({
             type: 'error',
             message: '请先设置收件人信息'
           })
           return
         }
-        if (row.product_weixin_fans_address.receive_name === undefined || row.product_weixin_fans_address.receive_name === '' || row.product_weixin_fans_address.receive_name === null) {
+        if (row.orders_receiver_info.receive_name === undefined || row.orders_receiver_info.receive_name === '' || row.orders_receiver_info.receive_name === null) {
           this.$message({
             type: 'error',
             message: '请先设置收件人姓名'
           })
           return
         }
-        if (row.product_weixin_fans_address.phone === undefined || row.product_weixin_fans_address.phone === '' || row.product_weixin_fans_address.phone === null) {
+        if (row.orders_receiver_info.phone === undefined || row.orders_receiver_info.phone === '' || row.orders_receiver_info.phone === null) {
           this.$message({
             type: 'error',
             message: '请先设置收件人电话'
           })
           return
         }
-        if (row.product_weixin_fans_address.address === undefined || row.product_weixin_fans_address.address === '' || row.product_weixin_fans_address.address === null) {
+        if (row.orders_receiver_info.address === undefined || row.orders_receiver_info.address === '' || row.orders_receiver_info.address === null) {
           this.$message({
             type: 'error',
             message: '请先设置收货地址'
           })
           return
         }
-        if (row.product_weixin_fans_address.province_name === null || row.product_weixin_fans_address.city_name === null || row.product_weixin_fans_address.district_name === null) {
+        if (row.orders_receiver_info.province_name === null || row.orders_receiver_info.city_name === null || row.orders_receiver_info.district_name === null) {
           this.$message({
             type: 'error',
             message: '请先设置收货地址'
@@ -1555,7 +1564,6 @@
           })
           return
         }
-
         let cash_on_delivery = 0
         const orders_payment_items = row.orders_payment.orders_payment_items
         for (const v of orders_payment_items) {
@@ -1564,14 +1572,14 @@
           }
         }
         const logistics_code = row.orders_logistics.orders_logistics_type.code
-        const jphone = row.product_weixin_fans_address.phone
+        const jphone = row.orders_receiver_info.phone
         const timestamp = new Date()
-        const jjname = row.product_weixin.weixin_nickname// 寄件人姓名
-        const jjtel = row.product_weixin.phone//  寄件人电话
-        const jjaddress = row.orders_logistics.product_deliver.delivery_address// 寄件人地址
-        const sjname = row.product_weixin_fans_address.receive_name//  收件人姓名
+        const jjname = row.orders_sender_info.sender_name// 寄件人姓名
+        const jjtel = row.orders_sender_info.sender_phone//  寄件人电话
+        const jjaddress = row.orders_logistics.warehouse.delivery_address// 寄件人地址
+        const sjname = row.orders_receiver_info.receive_name//  收件人姓名
         const sjtel = jphone.substr(0, 3) + '****' + jphone.substr(7)// 收件人电话
-        const sjaddress = row.product_weixin_fans_address.province_name + row.product_weixin_fans_address.city_name + row.product_weixin_fans_address.district_name + row.product_weixin_fans_address.address//  收件人地址
+        const sjaddress = row.orders_receiver_info.province_name + row.orders_receiver_info.city_name + row.orders_receiver_info.district_name + row.orders_receiver_info.address//  收件人地址
         const mailno = row.orders_logistics.logistics_number//  运单号码
         const destcode = row.orders_logistics.dest_code//  目的地代码
         const dest_extra_code = row.orders_logistics.dest_extra_code//  目的地代码
@@ -1592,7 +1600,7 @@
         const dingdanid = row.orders_unique_id//  自己的订单号
         let goods_detail = ''
         for (const v of row.orders_items) {
-          goods_detail += v.product_goods.goods_name + ' x ' + v.number + '、 '
+          goods_detail += v.product_common.goods_sku_name + ' x ' + v.number + '、 '
         }
         goods_detail = goods_detail.substring(0, goods_detail.length - 2)
 
@@ -2831,6 +2839,13 @@
         this.temp = Object.assign({}, row) // copy obj
         // this.getInnerList1()
       },
+      // 打开关闭行
+      expandRow(row, expandedRows) {
+        this.expandList = expandedRows.map(item => {
+          return item.id
+        })
+        console.log(this.expandList)
+      },
       handleInnerSizeChange3(val) {
         this.innerListQuery3.page_size = val
         this.getInnerList3()
@@ -2937,7 +2952,6 @@
       handleInnerUpdate3(row) {
         console.log(row)
         this.logisticsTypeOptions = []
-        this.tempProductId = row.product_id
         this.temp = Object.assign({}, row)
         this.dialogStatus = 'update'
         this.innerDialogFormVisible3 = true
@@ -2947,18 +2961,18 @@
             name: row.orders_logistics.orders_logistics_type.name,
             code: row.orders_logistics.orders_logistics_type.code
           })
+          this.innerTemp3 = Object.assign({}, row.orders_logistics)
           if (row.orders_logistics.product_deliver_extra !== null) {
             this.productDeliverExtraOptions = [{
               id: row.orders_logistics.product_deliver_extra.id,
               description: row.orders_logistics.product_deliver_extra.description
             }]
+            this.innerTemp3.product_deliver_extra_id = this.innerTemp3.product_deliver_extra.id
           }
           // this.productDeliverOptions = [{
           //   id: row.orders_logistics.product_deliver.id,
           //   name: row.orders_logistics.product_deliver.name
           // }]
-          this.innerTemp3 = Object.assign({}, row.orders_logistics)
-          this.innerTemp3.product_deliver_extra_id = this.innerTemp3.product_deliver_extra.id
         } else {
           this.resetInnerTemp3()
           this.productDeliverOptions = []
@@ -2976,8 +2990,7 @@
             tempData.orders_id = this.temp.id
             tempData.logistics_type_id = this.innerTemp3.orders_logistics_type.id
             tempData.warehouse_extra_id	 = this.innerTemp3.warehouse_logistics_extra_id
-            updateOrdersLogistics(tempData).then(response => {
-              this.temp.orders_logistics = tempData
+            updateOrdersLogistics(tempData).then(res => {
               this.innerDialogFormVisible3 = false
               this.$notify({
                 title: '成功',
@@ -2985,8 +2998,7 @@
                 type: 'success',
                 duration: 2000
               })
-              const index = this.list.findIndex(d => d.id === this.temp.id)
-              this.list[index].orders_logistics = response.data
+              this.getList()
             })
           }
         })

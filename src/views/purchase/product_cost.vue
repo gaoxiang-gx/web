@@ -89,6 +89,7 @@
         <el-form-item label="商品" prop="product_goods_common_id">
           <el-select style="width: 100%"
                      v-model="temp.product_goods_common_id"
+                     @change="resetProductGoodsCommon"
                      filterable
                      clearable
                      remote
@@ -244,6 +245,10 @@
         this.productOptions = []
         this.listQuery.product_id = undefined
         this.handleFilter()
+      },
+      resetProductGoodsCommon() {
+        this.temp.product_good_id = undefined
+        this.productGoodsSkuOptions = []
       },
       handleQueryTypeChange(type) {
         this.list = []
