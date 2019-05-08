@@ -719,29 +719,26 @@
       },
       // 规格设置下编辑
       handleEditSet(row) {
-        // this.price1 = Object.assign({}, row)
-        this.price1 = row
+        this.price1 = Object.assign({}, row)
         this.fileList3 = [
           {
-            name: 0,
+            name: row.image_thumb,
             url: row.image_thumb
           }
         ]
         this.dialogSetEdit = true
         this.dialogStatus1 = 'update'
-        // this.goods_common_id = row.goods_common_id
-        // this.product_goods_id = row.id
       },
       // 规格设置下创建
       handleCreateSet(row) {
+        console.log(row)
+        this.fileList3 = []
         this.dialogSetEdit = true
         this.price1 = Object.assign({}, row)
         this.dialogStatus1 = 'create'
-        this.dataPrice = {
-          image_thumb: undefined,
-          origin_price: undefined,
-          actual_price: undefined
-        }
+        this.$nextTick(() => {
+          this.$refs['dataPrice'].clearValidate()
+        })
       },
       // 规格设置操作按钮
       handleSet(row) {
@@ -1028,7 +1025,7 @@
         this.temp2.main_images_default = ''
       },
       handleRemove3(file, fileList) {
-        this.price1.image_thumb = undefined9
+        this.price1.image_thumb = undefined
       },
       handleRemove(file, fileList) {
         this.fileList = fileList.map(item => {
