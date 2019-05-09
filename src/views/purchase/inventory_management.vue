@@ -39,8 +39,8 @@
                   :loading="productLoading">
         <el-option  v-for="item in productOptions"
                     :key="item.id"
-                    :label="item.goods_sku_name"
-                    :value="item.product_goods_id">
+                    :label="item.product_goods.goods_name"
+                    :value="item.id">
         </el-option>
       </el-select>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">搜索</el-button>
@@ -58,11 +58,6 @@
         <el-table-column align="center" label="商品名称" min-width="150" >
           <template slot-scope="scope">
             <span>{{scope.row.goods_name}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="规格" min-width="150" >
-          <template slot-scope="scope">
-            <span>{{scope.row.sku_name}}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="账面数量"  >
@@ -129,8 +124,8 @@
           <el-form-item label="选择商品" prop="product_goods_storage_id">
             <el-select v-model="temp.product_goods_storage_id"
                        style="width: 100%"
-                       @change="temp.origin_num = productOptions2.find( d => d.id === temp.product_goods_storage_id).stock;
-                                temp.checked_num = productOptions2.find( d => d.id === temp.product_goods_storage_id).stock;"
+                       @change="temp.origin_num = productOptions2.find( d => d.product_goods_id === temp.product_goods_storage_id).stock;
+                                temp.checked_num = productOptions2.find( d => d.product_goods_id === temp.product_goods_storage_id).stock;"
                        filterable
                        clearable
                        remote
@@ -139,7 +134,7 @@
                        :loading="productLoading2">
               <el-option  v-for="item in productOptions2"
                           :key="item.id"
-                          :label="item.goods_sku_name"
+                          :label="item.product_goods.goods_name"
                           :value="item.id">
               </el-option>
             </el-select>
@@ -319,7 +314,7 @@
         if (query !== '') {
           this.productLoading = true
           getWarehouseProductGoodsStorageList({ warehouse_id: this.listQuery.warehouse_id, goods_name: query }).then(response => {
-            this.productOptions = response.data
+            this.productOptions = response.data.data
             this.productLoading = false
           })
         }
@@ -332,7 +327,7 @@
         if (query !== '') {
           this.productLoading2 = true
           getWarehouseProductGoodsStorageList({ warehouse_id: this.temp.warehouse_id, goods_name: query }).then(response => {
-            this.productOptions2 = response.data
+            this.productOptions2 = response.data.data
             this.productLoading2 = false
           })
         }

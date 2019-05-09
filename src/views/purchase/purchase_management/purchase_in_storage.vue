@@ -60,16 +60,6 @@
             <span >{{scope.row.goods_name}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="规格" min-width="150" >
-          <template slot-scope="scope">
-            <span>{{scope.row.sku_name}}</span>
-          </template>
-        </el-table-column>
-        <!--<el-table-column align="center" label="操作类型" min-width="100">-->
-          <!--<template slot-scope="scope">-->
-            <!--<el-tag type="primary">订货到货</el-tag>-->
-          <!--</template>-->
-        <!--</el-table-column>-->
         <el-table-column align="center" label="数量" min-width="150" >
           <template slot-scope="scope">
             <span>{{scope.row.number}}</span>
@@ -111,13 +101,12 @@
             </el-select>
           </el-form-item>
           <el-form-item label="商品">
-            <el-select v-model="temp.product_commonBase_id"
+            <el-select v-model="temp.product_goods_id"
                        style="width: 100%"
                        @focus="getProductGoodsCommonBaseList(' ')"
                        filterable
                        clearable
                        remote
-                       @change="handleFilterCommonBase"
                        placeholder="选择商品"
                        :remote-method="getProductGoodsCommonBaseList"
                        :loading="commonBaseLoading">
@@ -125,23 +114,6 @@
                           :key="item.id"
                           :label="item.goods_name"
                           :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="规格" prop="product_goods_id">
-            <el-select v-model="temp.product_goods_id"
-                       style="width: 100%"
-                       filterable
-                       clearable
-                       @focus="getProductGoodsSkuList(' ')"
-                       remote
-                       placeholder="选择规格"
-                       :remote-method="getProductGoodsSkuList"
-                       :loading="importGoodsLoading">
-              <el-option  v-for="item in importGoodsOptions"
-                          :key="item.product_goods_id"
-                          :label="item.sku_value"
-                          :value="item.product_goods_id">
               </el-option>
             </el-select>
           </el-form-item>
@@ -162,7 +134,7 @@
 <script>
   import waves from '@/directive/waves'
   import { getProdcutStorageImportList, deleteProductStorageImport, createProductStorageImport } from '@/api/warehouse'
-  import { getProductGoodsCommonBaseList, getProductGoodsSkuList} from '@/api/goods'
+  import { getProductGoodsList } from '@/api/product_goods'
   import { getWarehouseList} from '@/api/product'
   import { parseTime } from '@/utils/index'
 
@@ -219,7 +191,6 @@
         product_storage_import_id: undefined,
         temp: {
           warehouse_id: undefined,
-          product_commonBase_id: undefined,
           product_goods_id: undefined,
           number: undefined
         },
@@ -278,7 +249,6 @@
       resetTemp() {
         this.temp =  {
           warehouse_id: undefined,
-          product_commonBase_id: undefined,
           product_goods_id: undefined,
           number: undefined
         }
@@ -291,22 +261,9 @@
       getProductGoodsCommonBaseList(query) {
         if (query !== '') {
           this.commonBaseLoading = true
-          getProductGoodsCommonBaseList().then(response => {
+          getProductGoodsList().then(response => {
             this.commonBaseOptions = response.data.data
             this.commonBaseLoading = false
-          })
-        }
-      },
-      getProductGoodsSkuList(query) {
-        if (!this.temp.product_commonBase_id) {
-          this.$message.error('先选择商品')
-          return false
-        }
-        if (query !== '') {
-          this.importGoodsLoading = true
-          getProductGoodsSkuList({ product_goods_common_id: this.temp.product_commonBase_id}).then(response => {
-            this.importGoodsOptions = response.data
-            this.importGoodsLoading = false
           })
         }
       },

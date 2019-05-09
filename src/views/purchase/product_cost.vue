@@ -51,14 +51,9 @@
       </el-table-column>
       <el-table-column align="center" label="商品" min-width="250">
         <template slot-scope="scope">
-          <span >
-            {{scope.row.goods_name}}
+          <span v-if="scope.row.product_good">
+            {{scope.row.product_good.goods_name}}
           </span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="规格" min-width="80">
-        <template slot-scope="scope">
-          <span>{{scope.row.sku_name}}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="时间" min-width="350">
@@ -86,10 +81,9 @@
 
     <el-dialog title="成本录入" :visible.sync="dialogFormVisible" width="40%">
       <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="80px" style='width:90%; margin-left:5%;'>
-        <el-form-item label="商品" prop="product_goods_common_id">
+        <el-form-item label="商品" prop="product_goods_id">
           <el-select style="width: 100%"
-                     v-model="temp.product_goods_common_id"
-                     @change="resetProductGoodsCommon"
+                     v-model="temp.product_good_id"
                      filterable
                      clearable
                      remote
@@ -104,26 +98,8 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="规格" prop="product_good_id">
-          <el-select style="width: 100%"
-                     v-model="temp.product_good_id"
-                     filterable
-                     @focus="getProductGoodsSkuList"
-                     clearable
-                     remote
-                     placeholder="规格"
-                     :remote-method="getProductGoodsSkuList"
-                     :loading="productGoodsSkuLoading">
-            <el-option
-              v-for="item in productGoodsSkuOptions"
-              :key="item.product_goods_id"
-              :label="item.sku_value"
-              :value="item.product_goods_id">
-            </el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="成本" prop="money">
-          <el-input v-model="temp.money"></el-input>
+          <el-input-number v-model="temp.money"></el-input-number>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -135,8 +111,8 @@
 </template>
 
 <script>
-  import { createProductGoodCost, getProductGoodCostList, getProductGoodsList } from '@/api/product_goods'
-  import { getProductGoodsCommonBaseList, getProductGoodsSkuList } from '@/api/goods'
+  import { createProductGoodCost, getProductGoodCostList } from '@/api/product_goods'
+  import { getProductGoodsList, getProductGoodsSkuList } from '@/api/goods'
   import waves from '@/directive/waves' // 水波纹指令
 
   export default {
@@ -171,15 +147,13 @@
           sort: '-id'
         },
         rules: {
-          product_goods_common_id: [{ required: true, message: '选择商品', trigger: 'change' }],
-          product_good_id: [{ required: true, message: '选择规格', trigger: 'change' }],
+          product_good_id: [{ required: true, message: '选择商品', trigger: 'change' }],
           money: [
             { validator: validate, trigger: 'change' }
           ]
         },
         sortOptions: [{ label: '按ID升序列', key: '+id' }, { label: '按ID降序', key: '-id' }],
         temp: {
-          product_goods_common_id: undefined,
           product_good_id: undefined,
           money: undefined
         },
@@ -220,7 +194,7 @@
       getProductGoodsList(query) {
         if (query !== '') {
           this.productGoodsLoading = true
-          getProductGoodsCommonBaseList({ goods_name: query, page_size: 0, status: 1 }).then(response => {
+          getProductGoodsList({ goods_name: query, page_size: 0, status: 1 }).then(response => {
             this.productGoodsOptions = response.data
             this.productGoodsLoading = false
           })
@@ -246,10 +220,6 @@
         this.listQuery.product_id = undefined
         this.handleFilter()
       },
-      resetProductGoodsCommon() {
-        this.temp.product_good_id = undefined
-        this.productGoodsSkuOptions = []
-      },
       handleQueryTypeChange(type) {
         this.list = []
         this.handleFilter()
@@ -271,7 +241,6 @@
       createCost() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            this.temp.money = Number(this.temp.money)
             createProductGoodCost(this.temp).then(response => {
               this.getList()
               this.dialogFormVisible = false

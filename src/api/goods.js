@@ -41,9 +41,9 @@ export function updateProductGoodsCommonBase(param) {
   })
 }
 // 修改(与创建)产品与公共商品
-export function updateProductRProductGoodsCommon(param) {
+export function updateProductRProductGoods(param) {
   return request({
-    url: '/api/goods/updateProductRProductGoodsCommon',
+    url: '/api/goods/updateProductRProductGoods',
     method: 'post',
     data: param
   })
@@ -87,14 +87,7 @@ export function changeProductGoodsStatus(param) {
     data: param
   })
 }
-// 获取商品分类树
-export function getProductCategoryTreeList(param) {
-  return request({
-    url: '/api/goods/getProductCategoryTreeList',
-    method: 'post',
-    data: param
-  })
-}
+
 export function getProductGoodsSkuList(param) {
   return request({
     url: '/api/goods/getProductGoodsSkuList',
@@ -120,6 +113,13 @@ export function updateProductCategory(param) {
 export function changeProductCategoryStatus(param) {
   return request({
     url: '/api/goods/changeProductCategoryStatus',
+    method: 'post',
+    data: param
+  })
+}
+export function getProductGoodsInfo(param) {
+  return request({
+    url: '/api/goods/getProductGoodsInfo',
     method: 'post',
     data: param
   })

@@ -72,7 +72,6 @@
 
 <script>
   import {
-    getProductCategoryTreeList,
     createProductCategory,
     updateProductCategory,
     changeProductCategoryStatus

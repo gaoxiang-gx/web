@@ -38,12 +38,7 @@
       </el-table-column>
       <el-table-column align="center" label="商品" min-width="150px">
         <template slot-scope="scope">
-          <span>{{scope.row.product_goods.product_goods_common.goods_name}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="规格" min-width="140px">
-        <template slot-scope="scope">
-          <span>{{scope.row.product_goods.species_value.attr_val}}</span>
+          <span>{{scope.row.product_goods.goods_name}}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="剩余库存">
@@ -58,7 +53,7 @@
       </el-table-column>
       <el-table-column align="center" label="生产周期">
         <template slot-scope="scope">
-          <span>{{scope.row.production_cycle}}天</span>
+          <span>{{scope.row.product_goods.production_cycle}}天</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="可用天数" min-width="150">
@@ -71,10 +66,10 @@
         <template slot-scope="scope">
           <el-tag v-if="scope.row.stock === 0" type="danger">已断货</el-tag>
           <el-tag
-            v-else-if="scope.row.stock / scope.row.average_cost > scope.row.production_cycle || scope.row.stock / scope.row.average_cost === scope.row.production_cycle"
+            v-else-if="scope.row.stock / scope.row.average_cost > scope.row.product_goods.production_cycle || scope.row.stock / scope.row.average_cost === scope.row.product_goods.production_cycle"
             type="success">库存充裕
           </el-tag>
-          <el-tag v-else="scope.row.stock / scope.row.average_cost < scope.row.production_cycle" type="warning">库存告警
+          <el-tag v-else="scope.row.stock / scope.row.average_cost < scope.row.product_goods.production_cycle" type="warning">库存告警
           </el-tag>
         </template>
       </el-table-column>

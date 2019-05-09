@@ -201,12 +201,6 @@ export const asyncRouterMap = [
         meta: { title: '产品管理', icon: 'productGoodsManagement' }
       },
       {
-        path: 'system/goods_class',
-        name: 'productGoodsClass',
-        component: _import('system/product/goods_class'),
-        meta: { title: '商品分类', icon: 'productGoodsManagement' }
-      },
-      {
         path: 'system/address_management',
         name: 'addressManagement',
         component: _import('system/address/address_management'),

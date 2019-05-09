@@ -65,8 +65,8 @@
                   :loading="productGoodsLoading">
         <el-option  v-for="item in productGoodsOptions"
                     :key="item.id"
-                    :label="item.goods_sku_name"
-                    :value="item.product_goods_id">
+                    :label="item.product_goods.goods_name"
+                    :value="item.id">
         </el-option>
       </el-select>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">搜索</el-button>
@@ -88,11 +88,6 @@
         <el-table-column align="center" label="商品名称" min-width="150" >
           <template slot-scope="scope">
             <span>{{scope.row.goods_name}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="规格" min-width="120" >
-          <template slot-scope="scope">
-            <span>{{scope.row.sku_name}}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="出入库" min-width="100">
@@ -239,7 +234,7 @@
         if (query !== '') {
           this.productGoodsLoading = true
           getWarehouseProductGoodsStorageList({ warehouse_id: this.listQuery.warehouse_id, goods_name: query }).then(response => {
-            this.productGoodsOptions = response.data
+            this.productGoodsOptions = response.data.data
             this.productGoodsLoading = false
           })
         }

@@ -140,7 +140,7 @@
                        :loading="productLoading">
               <el-option  v-for="item in productOptions"
                           :key="item.id"
-                          :label="item.goods_sku_name"
+                          :label="item.product_goods.goods_name"
                           :value="item.id">
               </el-option>
             </el-select>
@@ -319,7 +319,7 @@
         if (query !== '') {
           this.productLoading = true
           getWarehouseProductGoodsStorageList({ warehouse_id: this.temp.warehouse_id }).then(response => {
-            this.productOptions = response.data
+            this.productOptions = response.data.data
             this.productLoading = false
           })
         }

@@ -61,11 +61,6 @@
             <span>{{scope.row.goods_name}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="规格" min-width="100">
-          <template slot-scope="scope">
-            <span>{{scope.row.sku_name}}</span>
-          </template>
-        </el-table-column>
         <el-table-column align="center" label="数量" min-width="100" >
           <template slot-scope="scope">
             <span>{{scope.row.number}}</span>
@@ -117,15 +112,14 @@
             </el-select>
             <span v-else>{{temp.warehouse_name}}</span>
           </el-form-item>
-          <el-form-item label="商品" prop="product_commonBase_id">
-            <el-select v-model="temp.product_commonBase_id"
+          <el-form-item label="商品" prop="product_goods_id">
+            <el-select v-model="temp.product_goods_id"
                        style="width: 100%"
                        @focus="getProductGoodsCommonBaseList(' ')"
                        filterable
                        v-if="dialogStatus == 'create'"
                        clearable
                        remote
-                       @change="handleFilterCommonBase"
                        placeholder="选择商品"
                        :remote-method="getProductGoodsCommonBaseList"
                        :loading="commonBaseLoading">
@@ -136,25 +130,6 @@
               </el-option>
             </el-select>
             <span v-else>{{temp.goods_name}}</span>
-          </el-form-item>
-          <el-form-item label="规格" prop="product_goods_id">
-            <el-select v-model="temp.product_goods_id"
-                       style="width: 100%"
-                       filterable
-                       v-if="dialogStatus == 'create'"
-                       clearable
-                       @focus="getProductGoodsSkuList"
-                       remote
-                       placeholder="选择规格"
-                       :remote-method="getProductGoodsSkuList"
-                       :loading="importGoodsLoading">
-              <el-option  v-for="item in importGoodsOptions"
-                          :key="item.product_goods_id"
-                          :label="item.sku_value"
-                          :value="item.product_goods_id">
-              </el-option>
-            </el-select>
-            <span v-else> {{temp.sku_name}}</span>
           </el-form-item>
           <el-form-item label="商品数量" prop="number">
             <el-input-number v-model.number="temp.number" style="width: 100%"></el-input-number>
@@ -189,7 +164,6 @@
   import { getProductStorageOrderList } from '@/api/product'
   import { getProductGoodsList } from '@/api/product_goods'
   import { getWarehouseList} from '@/api/product'
-  import { getProductGoodsCommonBaseList, getProductGoodsSkuList} from '@/api/goods'
   import { createProductStorageOrder } from '@/api/product'
   import { updateProductStorageOrder } from '@/api/product'
   import { deleteProductStorageOrder } from '@/api/product'
@@ -256,9 +230,8 @@
           status: undefined
         },
         rules: {
-          product_commonBase_id: [{ required: true, message: '选择商品', trigger: 'change' }],
+          product_goods_id: [{ required: true, message: '选择商品', trigger: 'change' }],
           warehouse_id: [{ required: true, message: '选择仓库', trigger: 'change' }],
-          product_goods_id: [{ required: true, message: '选择规格', trigger: 'change' }],
           number: [
             { validator: validate, trigger: 'change' }
           ],
@@ -342,10 +315,6 @@
         this.listQuery.page = 1
         this.getList()
       },
-      handleFilterCommonBase() {
-        this.temp.product_goods_id = undefined
-        this.importGoodsOptions = []
-      },
       getList() {
         this.listLoading = true
         getProductStorageOrderList(this.listQuery).then(res => {
@@ -362,22 +331,11 @@
       getProductGoodsCommonBaseList(query) {
         if (query !== '') {
           this.commonBaseLoading = true
-          getProductGoodsCommonBaseList().then(response => {
+          getProductGoodsList().then(response => {
             this.commonBaseOptions = response.data.data
             this.commonBaseLoading = false
           })
         }
-      },
-      getProductGoodsSkuList() {
-        if (!this.temp.product_commonBase_id) {
-          this.$message.error('先选择商品')
-          return false
-        }
-        this.importGoodsLoading = true
-        getProductGoodsSkuList({ product_goods_common_id: this.temp.product_commonBase_id}).then(response => {
-          this.importGoodsOptions = response.data
-          this.importGoodsLoading = false
-        })
       },
       handleCreate() {
         this.dialogStatus = 'create'
