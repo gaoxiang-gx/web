@@ -68,11 +68,6 @@
             <span>{{scope.row.goods_name}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="规格" min-width="150" >
-          <template slot-scope="scope">
-            <span>{{scope.row.sku_name}}</span>
-          </template>
-        </el-table-column>
         <el-table-column align="center" label="出入库" min-width="100">
           <template slot-scope="scope">
             <el-tag :type="scope.row.number < 0? 'danger': 'success'">{{scope.row.number < 0? '出库': '入库'}}</el-tag>

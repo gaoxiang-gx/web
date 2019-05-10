@@ -227,12 +227,12 @@ export const asyncRouterMap = [
         component: _import('user_center/action_history/action_history'),
         meta: { title: '操作记录', icon: 'form' }
       },
-      {
-        path: 'user_center/message_notification',
-        name: 'messageNotification',
-        component: _import('user_center/message_notification/message_notification'),
-        meta: { title: '消息通知', icon: 'form' }
-      },
+      // {
+      //   path: 'user_center/message_notification',
+      //   name: 'messageNotification',
+      //   component: _import('user_center/message_notification/message_notification'),
+      //   meta: { title: '消息通知', icon: 'form' }
+      // },
       {
         path: 'user_center/integral_query',
         name: 'integralQuery',
