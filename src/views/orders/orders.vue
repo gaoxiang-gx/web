@@ -63,7 +63,7 @@
           <el-form label-position="left" inline class="demo-table-expand">
             <el-form-item label="所有商品">
               <p class="my-form-p" v-for="item in scope.row.orders_items">
-                {{item.product_common.goods_sku_name}} x {{item.number}}
+                {{item.product_goods.goods_name}} x {{item.number}}
               </p>
               <!--<el-button size="mini" type="primary" icon="el-icon-edit" @click="handleOpenInner1(scope.row)">编辑商品信息</el-button>-->
             </el-form-item>
