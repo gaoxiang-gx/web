@@ -1600,10 +1600,9 @@
         const dingdanid = row.orders_unique_id//  自己的订单号
         let goods_detail = ''
         for (const v of row.orders_items) {
-          goods_detail += v.product_common.goods_sku_name + ' x ' + v.number + '、 '
+          goods_detail += v.product_goods.goods_name + ' x ' + v.number + '、 '
         }
         goods_detail = goods_detail.substring(0, goods_detail.length - 2)
-
         const chinese_number_map = []
         chinese_number_map[0] = '零'
         chinese_number_map[1] = '壹'
@@ -1638,11 +1637,11 @@
         if (money_length > 4) {
           money10000 = parseInt(money_str.substr(-5, 1))
         }
-
         const LODOP = getLodop()
+
         LODOP.PRINT_INIT('生物科技')
-        // 1001 顺丰热敏打印
         if (logistics_code === '1001') {
+          // 1001 顺丰热敏打印
           if (row.orders_logistics.dest_code === undefined || row.orders_logistics.dest_code === '' || row.orders_logistics.dest_code === null) {
             this.$message({
               type: 'error',
