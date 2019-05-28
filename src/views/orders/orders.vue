@@ -1413,7 +1413,7 @@
           }).then(() => {
             const tempdata = {}
             tempdata.orders_id = this.temp.id
-            tempdata.warehouse_extra_id = this.innerTemp3.warehouse_logistics_extra_id
+            tempdata.warehouse_extra_id = this.innerTemp3.product_deliver_extra_id
             tempdata.address = this.temp.orders_receiver_info.province_name + this.temp.orders_receiver_info.city_name + this.temp.orders_receiver_info.district_name + this.temp.orders_receiver_info.address
             getOrdersSFLogisticsNumber(tempdata).then(response => {
               this.innerTemp3.logistics_number = response.data.logistics_number
@@ -1433,7 +1433,7 @@
           }).then(() => {
             const tempdata = {}
             tempdata.orders_id = this.temp.id
-            tempdata.warehouse_extra_id	 = this.innerTemp3.warehouse_logistics_extra_id
+            tempdata.warehouse_extra_id	 = this.innerTemp3.product_deliver_extra_id
             let tempCity = this.temp.orders_receiver_info.city_name
             if ((tempCity === undefined) || (tempCity === null)) {
               tempCity = ''
@@ -2950,7 +2950,6 @@
         }
       },
       handleInnerUpdate3(row) {
-        console.log(row)
         this.logisticsTypeOptions = []
         this.temp = Object.assign({}, row)
         this.dialogStatus = 'update'
@@ -2989,7 +2988,7 @@
             const tempData = this.innerTemp3
             tempData.orders_id = this.temp.id
             tempData.logistics_type_id = this.innerTemp3.orders_logistics_type.id
-            tempData.warehouse_extra_id	 = this.innerTemp3.warehouse_logistics_extra_id
+            tempData.warehouse_extra_id	 = this.innerTemp3.product_deliver_extra_id
             updateOrdersLogistics(tempData).then(res => {
               this.innerDialogFormVisible3 = false
               this.$notify({
