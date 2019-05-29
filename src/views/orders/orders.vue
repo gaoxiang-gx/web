@@ -169,7 +169,7 @@
       </el-table-column>
       <el-table-column min-width="160px" align="center" label="发货仓">
         <template slot-scope="scope">
-          <span v-if="scope.row.orders_logistics">{{scope.row.orders_logistics.warehouse.name}}</span>
+          <span>{{scope.row.warehouse.name}}</span>
         </template>
       </el-table-column>
       <el-table-column min-width="160px" align="center" label="创建时间">
