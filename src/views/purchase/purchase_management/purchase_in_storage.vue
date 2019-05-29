@@ -261,7 +261,7 @@
       getProductGoodsCommonBaseList(query) {
         if (query !== '') {
           this.commonBaseLoading = true
-          getProductGoodsList().then(response => {
+          getProductGoodsList({ goods_name: query}).then(response => {
             this.commonBaseOptions = response.data.data
             this.commonBaseLoading = false
           })
