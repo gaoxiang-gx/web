@@ -80,7 +80,7 @@
             <el-form-item label="收款信息">
               <p class="my-form-p" v-for="item in scope.row.orders_payment.orders_payment_items"
                  :class="item.status === 2?if_deleted:''">
-                <el-tag style="height:20px;line-height:20px;" :type="'success'" :class="item.status===2?if_deleted:''">
+                <el-tag style="height:20px;line-height:20px;" :type="'success'" :class="item.status === 2?if_deleted:''">
                   {{item.orders_pay_type.type_name}}
                 </el-tag>
                 ￥{{item.paid_money}}
@@ -1411,6 +1411,10 @@
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
+            console.log(1)
+            console.log(this.temp.id)
+            console.log(this.innerTemp3.product_deliver_extra_id)
+            console.log(this.temp.orders_receiver_info.province_name + this.temp.orders_receiver_info.city_name + this.temp.orders_receiver_info.district_name + this.temp.orders_receiver_info.address)
             const tempdata = {}
             tempdata.orders_id = this.temp.id
             tempdata.warehouse_extra_id = this.innerTemp3.product_deliver_extra_id
