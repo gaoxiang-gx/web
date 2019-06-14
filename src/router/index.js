@@ -122,6 +122,27 @@ export const asyncRouterMap = [
     ]
   },
   {
+    path: '/afterManage',
+    component: Layout,
+    name: 'afterManage',
+    redirect: 'noredirect',
+    meta: { title: '售后管理', icon: 'ordersManagement'},
+    children: [
+      {
+        path: 'afterManageList',
+        name: 'afterManageList',
+        component: _import('afterManage/afterManageList'),
+        meta: { title: '售后列表', icon: 'ordersManage'}
+      },{
+        path: 'afterDetails',
+        name: 'afterDetails',
+        hidden: true,
+        component: _import('afterManage/afterDetails'),
+        meta: { title: '售后详情', icon: 'ordersManage'}
+      }
+    ]
+  },
+  {
     path: '/user',
     component: Layout,
     name: 'userManagement',
