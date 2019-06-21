@@ -80,7 +80,7 @@
             <el-form-item label="收款信息">
               <p class="my-form-p" v-for="item in scope.row.orders_payment.orders_payment_items"
                  :class="item.status === 2?if_deleted:''">
-                <el-tag style="height:20px;line-height:20px;" :type="'success'" :class="item.status===2?if_deleted:''">
+                <el-tag style="height:20px;line-height:20px;" :type="'success'" :class="item.status === 2?if_deleted:''">
                   {{item.orders_pay_type.type_name}}
                 </el-tag>
                 ￥{{item.paid_money}}
@@ -1411,6 +1411,10 @@
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
+            console.log(1)
+            console.log(this.temp.id)
+            console.log(this.innerTemp3.product_deliver_extra_id)
+            console.log(this.temp.orders_receiver_info.province_name + this.temp.orders_receiver_info.city_name + this.temp.orders_receiver_info.district_name + this.temp.orders_receiver_info.address)
             const tempdata = {}
             tempdata.orders_id = this.temp.id
             tempdata.warehouse_extra_id = this.innerTemp3.product_deliver_extra_id
@@ -1576,7 +1580,7 @@
         const timestamp = new Date()
         const jjname = row.orders_sender_info.sender_name// 寄件人姓名
         const jjtel = row.orders_sender_info.sender_phone//  寄件人电话
-        const jjaddress = row.orders_logistics.warehouse.delivery_address// 寄件人地址
+        const jjaddress = row.warehouse.delivery_address// 寄件人地址
         const sjname = row.orders_receiver_info.receive_name//  收件人姓名
         const sjtel = jphone.substr(0, 3) + '****' + jphone.substr(7)// 收件人电话
         const sjaddress = row.orders_receiver_info.province_name + row.orders_receiver_info.city_name + row.orders_receiver_info.district_name + row.orders_receiver_info.address//  收件人地址
