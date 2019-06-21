@@ -19,23 +19,23 @@
           <span>审核时间:</span>
           <span>{{list.verify_success_or_failed_time}}</span>
         </div>
-        <div class="saleChild" v-if="list.after_sale_type_id == 1">
-          <span>退款账户类型:</span>
-          <span v-if="list.after_sale_refund">{{list.after_sale_refund.after_sale_receive_type.type_name}}</span>
-        </div>
-        <div class="saleChild" v-if="list.after_sale_type_id == 1">
-          <span>退款账户:</span>
-          <span v-if="list.after_sale_refund">{{list.after_sale_refund.receive_account}}</span>
-        </div>
-        <div class="saleChild" v-if="list.after_sale_type_id == 1">
-          <span>退款金额：</span>
-          <span v-if="list.after_sale_refund">￥{{list.after_sale_refund.refund_money}}</span>
-          <el-button type="primary" class="refund" @click="handleRefundInfo">修改退款信息</el-button>
-        </div>
-        <div class="saleChild" v-if="list.after_sale_type_id == 1">
-          <span>退款凭证:</span>
-          <span v-if="list.after_sale_refund">{{list.after_sale_refund.refund_proof}}</span>
-        </div>
+        <!--<div class="saleChild" v-if="list.after_sale_type_id == 1">-->
+          <!--<span>退款账户类型:</span>-->
+          <!--<span v-if="list.after_sale_refund">{{list.after_sale_refund.after_sale_receive_type.type_name}}</span>-->
+        <!--</div>-->
+        <!--<div class="saleChild" v-if="list.after_sale_type_id == 1">-->
+          <!--<span>退款账户:</span>-->
+          <!--<span v-if="list.after_sale_refund">{{list.after_sale_refund.receive_account}}</span>-->
+        <!--</div>-->
+        <!--<div class="saleChild" v-if="list.after_sale_type_id == 1">-->
+          <!--<span>退款金额：</span>-->
+          <!--<span v-if="list.after_sale_refund">￥{{list.after_sale_refund.refund_money}}</span>-->
+          <!--<el-button type="primary" class="refund" @click="handleRefundInfo">修改退款信息</el-button>-->
+        <!--</div>-->
+        <!--<div class="saleChild" v-if="list.after_sale_type_id == 1">-->
+          <!--<span>退款凭证:</span>-->
+          <!--<span v-if="list.after_sale_refund">{{list.after_sale_refund.refund_proof}}</span>-->
+        <!--</div>-->
       </div>
     </div>
     <div style="width: 60%;margin: 0 auto;clear: both;">
@@ -43,18 +43,22 @@
       <div class="saleContainer">
         <div class="saleChild">
           <span>客户姓名:</span>
-          <span>{{list.sourceable.customer_message.shop_customer.user_nickname}}</span>
-          <el-tag type="warning">{{list.sourceable.customer_message.shop_member_level.member_level_name}}</el-tag>
+          <span>{{list.contact_name}}</span>
         </div>
-        <div class="saleChild">联系方式: {{list.sourceable.customer_message.phone}}</div>
-        <div class="saleChild">商品名称: {{list.sourceable.shop_goods_common.goods_name}}</div>
-        <div class="saleChild">购买数量: {{list.sourceable.shop_goods_shopping_number}}</div>
-        <div class="saleChild">售后数量: {{list.sourceable.shop_goods_after_number}}</div>
-        <div class="saleChild">申请原因: {{list.after_sale_apply_type.type_name}}</div>
-        <div class="saleChild">发货仓库: {{list.wareahouse.name}}</div>
+        <div class="saleChild">联系方式: {{list.contact_phone}}</div>
       </div>
     </div>
-    <div style="width: 60%;margin: 0 auto;clear: both;" v-if="list.procedure_status !== 0">
+    <div style="width: 60%;margin: 0 auto;clear: both;">
+      <div class="saleCustomer">退换货明细</div>
+      <div class="saleContainer">
+        <div class="saleChild" v-for="item in list.after_sale_items">
+          <span>{{item.goods.goods_name}}</span>
+          <span>X</span>
+          <span>{{item.after_sale_number}}</span>
+        </div>
+      </div>
+    </div>
+    <div style="width: 60%;margin: 0 auto;clear: both;">
       <div class="saleCustomer">处理流水</div>
       <div class="saleContainer">
         <div>
@@ -70,10 +74,10 @@
       <el-form :rules="rule" ref="dateForm" :model="temp" label-position="left" label-width="20%" style='width: 80%; margin-left:10%;'>
         <el-form-item>
           <el-radio-group v-model="temp.operation_status" size="medium" style="margin-bottom: 20px;">
-            <el-radio-button label="1">审核通过</el-radio-button>
-            <el-radio-button label="2">审核失败</el-radio-button>
-            <el-radio-button label="10">已完结</el-radio-button>
-            <el-radio-button label="11">已关闭</el-radio-button>
+            <el-radio-button label="3">货物数目错误</el-radio-button>
+            <el-radio-button label="4">货物数目正确(退货)</el-radio-button>
+            <el-radio-button label="5">货物数目正确(换货)</el-radio-button>
+            <el-radio-button label="6">换货已发出</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item prop="info">
@@ -85,61 +89,28 @@
         <el-button type="primary" :loading="btnLoading" @click="confirm">确 认</el-button>
       </div>
     </el-dialog>
-    <!--修改退款信息弹出-->
-    <el-dialog :visible.sync="dialogRefund">
-      <el-form :rules="rule1" ref="dateForm1" :model="temp1" label-position="left" label-width="20%" style='width: 80%; margin-left:10%;'>
-        <el-form-item label="退款账户类型" label-width="20%" prop="after_sale_id">
-          <el-select v-model="temp1.receive_type_id"
-                     filterable
-                     remote
-                     clearable
-                     :remote-method="handletypeList"
-                     :loading="typeLoading"
-                     placeholder="请选择退款账户类型"
-                     class="filter-item"
-                     style="width: 100%;">
-            <el-option
-              v-for="item in fullOptions"
-              :key="item.id"
-              :label="item.type_name"
-              :value="item.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="receive_account" label="退款账户" label-width="20%">
-          <el-input type="text" v-model="temp1.receive_account" placeholder="请输入修改售后状态的备注～"></el-input>
-        </el-form-item>
-        <el-form-item prop="refund_money" label="退款金额" label-width="20%">
-          <el-input type="text" v-model="temp1.refund_money" placeholder="请输入修改售后状态的备注～"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogRefund = false">取 消</el-button>
-        <el-button type="primary" :loading="btnLoading1" @click="confirm1">确 认</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-  import { getAfterSaleInfo, updateAfterSaleOperation, getAfterSaleReceiveTypeList, updateAfterSaleRefund } from '@/api/aftersale'
+  import { getAfterSaleInfo, updateAfterSaleWarehouse } from '@/api/aftersale'
   export default {
     name: 'afterDetails',
     data() {
       return {
         fullOptions: [],
-        typeLoading:false,
+        typeLoading: false,
         listQuery: {
-          after_sale_id: undefined,
+          after_sale_id: undefined
         },
         btnLoading: false,
         temp: {
-          operation_status: '1',
+          operation_status: '6',
           info: undefined
         },
         dialogState: false,
-        dialogRefund: false,
         list: {
+          after_sale_items: [],
           sale_unique_id: undefined,
           after_sale_refund: {
             after_sale_receive_type: {
@@ -160,22 +131,11 @@
         rule: {
           info: [{ required: true, message: '请正确填写备注', trigger: 'change' }]
         },
-        temp1: {
-          refund_money: undefined,
-          receive_account: undefined,
-          after_sale_id: undefined,
-          receive_type_id: undefined
-        },
-        btnLoading1: false,
-        rule1: {
-          receive_account: [{ required: true, message: '请正确填写退款账户', trigger: 'change' }],
-          refund_money: [{ required: true, message: '请正确填写退款金额', trigger: 'change' }],
-          receive_type_id: [{ required: true, message: '请正确选择退款账户类型', trigger: 'change' }],
-        },
+        btnLoading1: false
       }
     },
     filters: {
-      procedureStates(status){
+      procedureStates(status) {
         const statusMap = {
           1: '审核通过， 等待接收退货',
           2: '审核不通过',
@@ -192,7 +152,7 @@
         }
         return statusMap[status]
       },
-      procedureStates1(item){
+      procedureStates1(item) {
         const statusMap = {
           1: '审核通过， 等待接收退货',
           2: '审核不通过',
@@ -228,6 +188,10 @@
       // 修改状态
       handleState() {
         this.dialogState = true
+        this.resetemp()
+        this.$nextTick(() => {
+          this.$refs['dateForm'].clearValidate()
+        })
       },
       // 确认修改状态
       confirm() {
@@ -237,7 +201,7 @@
             tempData.after_sale_id = this.listQuery.after_sale_id
             console.log(tempData.after_sale_id)
             console.log(tempData)
-            updateAfterSaleOperation(tempData).then(response => {
+            updateAfterSaleWarehouse(tempData).then(response => {
               this.getList()
               this.dialogState = false
               this.$notify({
@@ -250,51 +214,15 @@
           }
         })
       },
-      // 修改退款信息
-      handleRefundInfo(){
-        this.dialogRefund = true
-      },
-      confirm1() {
-        this.$refs['dateForm1'].validate((valid) => {
-          if (valid) {
-            const tempData = Object.assign({}, this.temp1)
-            tempData.after_sale_id = this.listQuery.after_sale_id
-            tempData.receive_type_id = this.temp1.receive_type_id
-            console.log(tempData.after_sale_id)
-            console.log(tempData)
-            updateAfterSaleRefund(tempData).then(response => {
-              this.getList()
-              this.dialogRefund = false
-              this.$notify({
-                title: '成功',
-                message: '保存成功',
-                type: 'success',
-                duration: 2000
-              })
-            })
-          }
-        })
-      },
-      handletypeList(query) {
-        if (query !== '') {
-          this.typeLoading = true
-          getAfterSaleReceiveTypeList({ type_name: query, page_size: 10 }).then(response => {
-            this.fullOptions = response.data.data
-            this.typeLoading = false
-          })
-        }
-      },
       resetemp() {
-        this.temp1= {
-          refund_money: undefined,
-            receive_account: undefined,
-            after_sale_id: undefined,
-            receive_type_id: undefined
+        this.temp = {
+          operation_status: '6',
+          info: undefined
         }
       },
       // 返回上一页
       handleBack() {
-        this.$router.back();
+        this.$router.back()
       }
     }
   }

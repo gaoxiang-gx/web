@@ -25,8 +25,8 @@
       <el-input @keyup.enter.native="handleFilter" style="width: 150px;" class="filter-item" placeholder="客户电话"
                 v-model="listQuery.customer_account_phone" clearable>
       </el-input>
-      <el-select @change='handleFilter' clearable style="width: 120px" class="filter-item" v-model="listQuery.procedure_status">
-        <el-option v-for="item in procedureOptions" :key="item.key" :label="item.label" :value="item.key">
+      <el-select @change='handleFilter' clearable style="width: 120px" class="filter-item" v-model="listQuery.procedure_status_array">
+        <el-option v-for="item in procedureOptions" :key="item.key" :label="item.label" :value="item.value">
         </el-option>
       </el-select>
       <div style="float: right;">
@@ -43,6 +43,11 @@
         <el-table-column prop="name" label="售后单号" min-width="200" align="center">
           <template slot-scope="scope">
             <span>{{scope.row.sale_unique_id}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="name" label="订单号" min-width="200" align="center">
+          <template slot-scope="scope">
+            <span>{{scope.row.orders_unique_id}}</span>
           </template>
         </el-table-column>
         <el-table-column label="售后类型" align="center" min-width="100px">
@@ -64,12 +69,6 @@
         <el-table-column label="操作" align="center" min-width="150px">
           <template slot-scope="scope">
             <el-button type="primary" @click="operation(scope.row)">操作</el-button>
-            <!--<div v-if="scope.row.procedure_status == 0">-->
-              <!--<el-button type="success" @click="operation(scope.row)">审核通过</el-button>-->
-              <!--<el-button type="danger">审核失败</el-button>-->
-            <!--</div>-->
-            <!--<el-button v-else-if="scope.row.procedure_status == 6 || scope.row.procedure_status == 8" type="primary">完结</el-button>-->
-            <!--<el-button v-else-if="scope.row.procedure_status == 1 || scope.row.procedure_status == 3" type="primary">关闭</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -97,20 +96,19 @@
         tableKey: 0,
         listQuery: {
           page: 1,
-          page_size:10,
+          page_size: 10,
           date_range: [],
           after_sale_unique_id: undefined,
           orders_unique_id: undefined,
-          customer_account_phone: undefined
+          customer_account_phone: undefined,
+          procedure_status_array: [1, 3, 5]
         },
         temp: {
         },
         procedureOptions: [
-          { key: 0, label: '未审核' },
-          { key: 1, label: '审核通过' },
-          { key: 2, label: '审核不通过' },
-          { key: 10, label: '完结' },
-          { key: 11, label: '关闭' }
+          { key: 1, label: '审核通过', value: 1 },
+          { key: 3, label: '已收到退货，货物数目错误', value: 3 },
+          { key: 5, label: '已收到退货，退货数目正确(换货)', value: 5 }
         ],
         pickerOptions2: {},
         list: [],
@@ -135,8 +133,14 @@
     },
     methods: {
       getList() {
+        const params = JSON.parse(JSON.stringify(this.listQuery))
+        console.log(params)
+        if (params.procedure_status_array === null || params.procedure_status_array === '') {
+          params.procedure_status_array = [1, 3, 5]
+        }
+        console.log(params)
         this.listLoading = true
-        getAfterSaleList(this.listQuery).then(response => {
+        getAfterSaleList(params).then(response => {
           this.list = response.data.data
           this.total = response.data.total
           this.tableKey++
@@ -150,9 +154,9 @@
       // 操作
       operation(row) {
         this.$router.push({
-          path:'/afterManage/afterDetails',
-          query:{
-            after_sale_id:row.id
+          path: '/afterManage/afterDetails',
+          query: {
+            after_sale_id: row.id
           }
         })
       },
