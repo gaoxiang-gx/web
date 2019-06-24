@@ -85,6 +85,10 @@
                 </el-tag>
                 ￥{{item.paid_money}}
               </p>
+              <p class="my-form-p">
+                <span class="label-span">运费：</span>
+                <span>{{scope.row.freight_pay}}</span>
+              </p>
               <!--<el-button size="mini" type="primary" icon="el-icon-edit" @click="handleOpenAnotherInner5(scope.row)">-->
                 <!--编辑收款信息-->
               <!--</el-button>-->
