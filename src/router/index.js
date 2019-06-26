@@ -56,18 +56,18 @@ export const asyncRouterMap = [
     redirect: 'noredirect',
     meta: { title: '进销存管理', icon: 'purchaseSellManagement'},
     children: [
-      {
-        path: 'product_management',
-        name: 'productManagement',
-        component: _import('purchase/product_management'),
-        meta: { title: '商品管理', icon: 'productManagement'}
-      },
-      {
-        path: 'product_cost',
-        name: 'productCost',
-        component: _import('purchase/product_cost'),
-        meta: { title: '商品成本', icon: 'productCost'}
-      },
+      // {
+      //   path: 'product_management',
+      //   name: 'productManagement',
+      //   component: _import('purchase/product_management'),
+      //   meta: { title: '商品管理', icon: 'productManagement'}
+      // },
+      // {
+      //   path: 'product_cost',
+      //   name: 'productCost',
+      //   component: _import('purchase/product_cost'),
+      //   meta: { title: '商品成本', icon: 'productCost'}
+      // },
       {
         path: 'inventory_warning',
         name: 'inventoryWarning',
@@ -80,12 +80,12 @@ export const asyncRouterMap = [
         component: _import('purchase/inventory_statistics'),
         meta: { title: '商品出入库明细', icon: 'inventoryStatistics'}
       },
-      {
-        path: 'inventory_expend',
-        name: 'inventoryExpend',
-        component: _import('purchase/inventory_expend'),
-        meta: { title: '商品日消耗查询', icon: 'data'}
-      },
+      // {
+      //   path: 'inventory_expend',
+      //   name: 'inventoryExpend',
+      //   component: _import('purchase/inventory_expend'),
+      //   meta: { title: '商品日消耗查询', icon: 'data'}
+      // },
       {
         path: 'inventory_management',
         name: 'inventoryManagement',
@@ -215,18 +215,18 @@ export const asyncRouterMap = [
           }
         ]
       },
-      {
-        path: 'system/product_goods_management',
-        name: 'productGoodsManagement',
-        component: _import('system/product/product_goods_management'),
-        meta: { title: '产品管理', icon: 'productGoodsManagement' }
-      },
-      {
-        path: 'system/address_management',
-        name: 'addressManagement',
-        component: _import('system/address/address_management'),
-        meta: { title: '敏感地址管理', icon: 'addressManagement' }
-      }
+      // {
+      //   path: 'system/product_goods_management',
+      //   name: 'productGoodsManagement',
+      //   component: _import('system/product/product_goods_management'),
+      //   meta: { title: '产品管理', icon: 'productGoodsManagement' }
+      // },
+      // {
+      //   path: 'system/address_management',
+      //   name: 'addressManagement',
+      //   component: _import('system/address/address_management'),
+      //   meta: { title: '敏感地址管理', icon: 'addressManagement' }
+      // }
     ]
   },
   {
