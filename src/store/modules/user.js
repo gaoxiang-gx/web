@@ -113,17 +113,32 @@ const user = {
         })
       })
     },
-    LoginAccount({ commit, state }) {
-      return new Promise((resolve, reject) => {
-        loginAccount({ token: user_token }).then(response => {
-          commit('SET_TOKEN', response.data)
-          setAccountToken(response.data)
-          resolve()
-        }).catch(error => {
-          reject(error)
+    LoginAccount({ commit, state }, id) {
+      if (id) {
+        return new Promise((resolve, reject) => {
+          loginAccount({
+            user_account_id: id,
+            token: user_token
+          }).then(res => {
+            commit('SET_TOKEN', res.data)
+            setAccountToken(res.data)
+            resolve(res)
+          }).catch(error => {
+            reject(error)
+          })
         })
-      })
-    },
+      } else {
+        return new Promise((resolve, reject) => {
+          loginAccount({
+            token: user_token
+          }).then(res => {
+            resolve(res)
+          }).catch(error => {
+            reject(error)
+          })
+        })
+      }
+    }
   }
 }
 

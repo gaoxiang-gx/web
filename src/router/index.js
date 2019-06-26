@@ -28,6 +28,12 @@ export const constantRouterMap = [
       path: 'dashboard',
       component: _import('dashboard/index')
     }]
+  },
+  {
+    path: '/select_account',
+    component: _import('user/select_account'),
+    name: 'selectAccount',
+    hidden: true
   }
   // {
   //   path: '*', hidden: true, component: _import('404'), name: '404',

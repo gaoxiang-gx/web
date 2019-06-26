@@ -5,7 +5,8 @@ import 'nprogress/nprogress.css'// Progress 进度条样式
 import { Message } from 'element-ui'
 import { getUserToken, getAccountToken } from '@/utils/auth' // 验权
 
-const whiteList = ['/login', '/404'] // 不重定向白名单
+const whiteList = ['/login', '/404', '/select_account'] // 不重定向白名单
+
 /**
  * 获取用户信息、菜单路由
  */
@@ -32,7 +33,7 @@ router.beforeEach((to, from, next) => {
   /**
    * 系统独立登陆
    */
-  if (to.path === '/login') {
+  if (whiteList.indexOf(to.path) !== -1) {
     next()
     return false
   }
@@ -45,15 +46,14 @@ router.beforeEach((to, from, next) => {
     return false
   }
   if (!getAccountToken() && getUserToken()) {
-    store.dispatch('LoginAccount').then(() => {
-      if (store.getters.roles.length === 0) {
-        getUserInfo(to, from, next)
+    store.dispatch('LoginAccount').then(res => {
+      if (res.data.length === 1) {
+        return store.dispatch('LoginAccount', res.data[0].id)
       } else {
-        next()
+        next({ path: '/select_account' })
       }
-      return false
-    }).catch(() => {
-      window.location.href = process.env.HOME_URL
+    }).then(() => {
+      next()
     })
   }
   if (!getAccountToken() && !getUserToken()) {

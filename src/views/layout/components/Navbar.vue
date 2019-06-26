@@ -29,6 +29,9 @@
             </div>
           </router-link>
           <div class="user-dropdown-bottom">
+            <span class="link-hover" @click="selectAccount">切换账号</span>
+          </div>
+          <div class="user-dropdown-bottom">
             <span class="link-hover" @click="logout">退出登录</span>
           </div>
         </div>
@@ -74,6 +77,8 @@ import { mapGetters } from 'vuex'
 import { getUnreadNoticeData } from '@/api/user'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import { removeAccountToken } from '@/utils/auth'
+
 import bus from '@/views/layout/bus'
 import CountUp from 'countup.js'
 export default {
@@ -121,6 +126,10 @@ export default {
       this.$store.dispatch('FedLogOut').then(() => {
         location.reload() // 为了重新实例化vue-router对象 避免bug
       })
+    },
+    selectAccount() {
+      removeAccountToken()
+      location.reload() // 为了重新实例化vue-router对象 避免bug
     },
     getCount() {
       getUnreadNoticeData({}).then(response => {
