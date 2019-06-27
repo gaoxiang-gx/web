@@ -14,18 +14,18 @@
                       :picker-options="pickerOptions"
                       @change='handleFilter'>
       </el-date-picker>
-      <el-select  class="filter-item"
-                  style="width:200px"
-                  @change='handleWarehouse'
-                  v-model="listQuery.warehouse_id"
-                  clearable
-                  placeholder="仓库">
-        <el-option  v-for="item in warehouseOptions"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id">
-        </el-option>
-      </el-select>
+      <!--<el-select  class="filter-item"-->
+                  <!--style="width:200px"-->
+                  <!--@change='handleWarehouse'-->
+                  <!--v-model="listQuery.warehouse_id"-->
+                  <!--clearable-->
+                  <!--placeholder="仓库">-->
+        <!--<el-option  v-for="item in warehouseOptions"-->
+                    <!--:key="item.id"-->
+                    <!--:label="item.name"-->
+                    <!--:value="item.id">-->
+        <!--</el-option>-->
+      <!--</el-select>-->
       <el-select  class="filter-item"
                   style="width:200px"
                   @change='handleFilter'
@@ -108,24 +108,24 @@
 
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
         <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="120px" style='width: 80%; margin-left:10%;'>
-          <el-form-item label="仓库" prop="warehouse_id">
-            <el-select  style="width:100%"
-                        v-model="temp.warehouse_id"
-                        clearable
-                        @change="handleFilterWarehouse"
-                        placeholder="仓库">
-              <el-option  v-for="item in warehouseOptions"
-                          :key="item.id"
-                          :label="item.name"
-                          :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
+          <!--<el-form-item label="仓库" prop="warehouse_id">-->
+            <!--<el-select  style="width:100%"-->
+                        <!--v-model="temp.warehouse_id"-->
+                        <!--clearable-->
+                        <!--@change="handleFilterWarehouse"-->
+                        <!--placeholder="仓库">-->
+              <!--<el-option  v-for="item in warehouseOptions"-->
+                          <!--:key="item.id"-->
+                          <!--:label="item.name"-->
+                          <!--:value="item.id">-->
+              <!--</el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
           <el-form-item label="选择商品" prop="product_goods_storage_id">
             <el-select v-model="temp.product_goods_storage_id"
                        style="width: 100%"
-                       @change="temp.origin_num = productOptions2.find( d => d.product_goods_id === temp.product_goods_storage_id).stock;
-                                temp.checked_num = productOptions2.find( d => d.product_goods_id === temp.product_goods_storage_id).stock;"
+                       @change="temp.origin_num = productOptions2.find( d => d.id === temp.product_goods_storage_id).stock;
+                                temp.checked_num = productOptions2.find( d => d.id === temp.product_goods_storage_id).stock;"
                        filterable
                        clearable
                        remote
@@ -307,10 +307,10 @@
         })
       },
       getWarehouseProductGoodsStorageList(query) {
-        if (! this.listQuery.warehouse_id) {
-          this.$message.error('先选择仓库')
-          return false
-        }
+        // if (! this.listQuery.warehouse_id) {
+        //   this.$message.error('先选择仓库')
+        //   return false
+        // }
         if (query !== '') {
           this.productLoading = true
           getWarehouseProductGoodsStorageList({ warehouse_id: this.listQuery.warehouse_id, goods_name: query }).then(response => {
@@ -320,10 +320,10 @@
         }
       },
       getProductList2(query) {
-        if (! this.temp.warehouse_id) {
-          this.$message.error('先选择仓库')
-          return false
-        }
+        // if (! this.temp.warehouse_id) {
+        //   this.$message.error('先选择仓库')
+        //   return false
+        // }
         if (query !== '') {
           this.productLoading2 = true
           getWarehouseProductGoodsStorageList({ warehouse_id: this.temp.warehouse_id, goods_name: query }).then(response => {

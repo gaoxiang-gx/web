@@ -14,19 +14,19 @@
                       :picker-options="pickerOptions"
                       @change='handleFilter'>
       </el-date-picker>
-      <el-select class="filter-item"
-                  v-model="listQuery.warehouse_id"
-                 filterable
-                 @change="handleFilter"
-                 clearable
-                 placeholder="仓库"
-                 :loading="warehouseLoading">
-        <el-option  v-for="item in warehouseOptions"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id">
-        </el-option>
-      </el-select>
+      <!--<el-select class="filter-item"-->
+                  <!--v-model="listQuery.warehouse_id"-->
+                 <!--filterable-->
+                 <!--@change="handleFilter"-->
+                 <!--clearable-->
+                 <!--placeholder="仓库"-->
+                 <!--:loading="warehouseLoading">-->
+        <!--<el-option  v-for="item in warehouseOptions"-->
+                    <!--:key="item.id"-->
+                    <!--:label="item.name"-->
+                    <!--:value="item.id">-->
+        <!--</el-option>-->
+      <!--</el-select>-->
       <!--<el-select  class="filter-item"-->
                   <!--style="width:200px;"-->
                   <!--@change='handleFilter'-->
@@ -87,19 +87,19 @@
 
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
         <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="80px" style='width: 80%; margin-left:10%;'>
-          <el-form-item label="仓库" prop="warehouse_id">
-            <el-select v-model="temp.warehouse_id"
-                       style="width: 100%"
-                       filterable
-                       clearable
-                       placeholder="选择仓库">
-              <el-option  v-for="item in warehouseOptions"
-                          :key="item.id"
-                          :label="item.name"
-                          :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
+          <!--<el-form-item label="仓库" prop="warehouse_id">-->
+            <!--<el-select v-model="temp.warehouse_id"-->
+                       <!--style="width: 100%"-->
+                       <!--filterable-->
+                       <!--clearable-->
+                       <!--placeholder="选择仓库">-->
+              <!--<el-option  v-for="item in warehouseOptions"-->
+                          <!--:key="item.id"-->
+                          <!--:label="item.name"-->
+                          <!--:value="item.id">-->
+              <!--</el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
           <el-form-item label="商品">
             <el-select v-model="temp.product_goods_id"
                        style="width: 100%"
@@ -179,7 +179,7 @@
             parseTime(new Date(new Date().getTime() - 1000 * 3600 * 24 * 7), '{y}-{m}-{d}'),
             parseTime(new Date(), '{y}-{m}-{d}')
           ],
-          warehouse_id: undefined,
+          // warehouse_id: undefined,
           page: 1,
           page_size: 20,
           sort: '-id'
@@ -196,7 +196,7 @@
         },
         rules: {
           product_goods_id: [{ required: true, message: '选择商品', trigger: 'change' }],
-          warehouse_id: [{ required: true, message: '选择仓库', trigger: 'change' }],
+          // warehouse_id: [{ required: true, message: '选择仓库', trigger: 'change' }],
           number: [{ required: true, message: '填写数量', trigger: 'change' }]
         },
         pickerOptions: {
@@ -247,7 +247,7 @@
         this.importGoodsOptions = []
       },
       resetTemp() {
-        this.temp =  {
+        this.temp = {
           warehouse_id: undefined,
           product_goods_id: undefined,
           number: undefined

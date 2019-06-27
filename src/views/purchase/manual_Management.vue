@@ -39,18 +39,18 @@
                     :value="item.id">
         </el-option>
       </el-select>
-      <el-select  class="filter-item"
-                  style="width:200px"
-                  @change='handleFilter'
-                  v-model="listQuery.warehouse_id"
-                  clearable
-                  placeholder="仓库">
-        <el-option  v-for="item in warehouseOptions"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id">
-        </el-option>
-      </el-select>
+      <!--<el-select  class="filter-item"-->
+                  <!--style="width:200px"-->
+                  <!--@change='handleFilter'-->
+                  <!--v-model="listQuery.warehouse_id"-->
+                  <!--clearable-->
+                  <!--placeholder="仓库">-->
+        <!--<el-option  v-for="item in warehouseOptions"-->
+                    <!--:key="item.id"-->
+                    <!--:label="item.name"-->
+                    <!--:value="item.id">-->
+        <!--</el-option>-->
+      <!--</el-select>-->
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">搜索</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加</el-button>
 
@@ -111,19 +111,19 @@
 
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
         <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="120px" style='width: 80%; margin-left:10%;'>
-          <el-form-item label="仓库" prop="warehouse_id">
-            <el-select  style="width:100%"
-                        @change="handleWarehouse"
-                        v-model="temp.warehouse_id"
-                        clearable
-                        placeholder="仓库">
-              <el-option  v-for="item in warehouseOptions"
-                          :key="item.id"
-                          :label="item.name"
-                          :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
+          <!--<el-form-item label="仓库" prop="warehouse_id">-->
+            <!--<el-select  style="width:100%"-->
+                        <!--@change="handleWarehouse"-->
+                        <!--v-model="temp.warehouse_id"-->
+                        <!--clearable-->
+                        <!--placeholder="仓库">-->
+              <!--<el-option  v-for="item in warehouseOptions"-->
+                          <!--:key="item.id"-->
+                          <!--:label="item.name"-->
+                          <!--:value="item.id">-->
+              <!--</el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
           <el-form-item label="商品" prop="product_goods_storage_id">
             <el-select v-model="temp.product_goods_storage_id"
                        style="width: 100%"
@@ -256,7 +256,7 @@
           is_input: undefined
         },
         rules: {
-          warehouse_id: [{ required: true, message: '选择仓库', trigger: 'change' }],
+          // warehouse_id: [{ required: true, message: '选择仓库', trigger: 'change' }],
           product_goods_storage_id: [{ required: true, message: '选择商品', trigger: 'change' }],
           number: [
             { validator: validate, trigger: 'change' }
@@ -307,10 +307,10 @@
         })
       },
       getWarehouseProductGoodsStorageList(query) {
-        if (!this.temp.warehouse_id) {
-          this.$message.error('先选择仓库')
-          return false
-        }
+        // if (!this.temp.warehouse_id) {
+        //   this.$message.error('先选择仓库')
+        //   return false
+        // }
         if (query !== '') {
           this.productLoading = true
           getWarehouseProductGoodsStorageList({ warehouse_id: this.temp.warehouse_id }).then(response => {

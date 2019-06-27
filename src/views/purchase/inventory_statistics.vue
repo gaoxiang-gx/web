@@ -40,18 +40,18 @@
                     :value="item.id">
         </el-option>
       </el-select>
-      <el-select  class="filter-item"
-                  style="width:180px"
-                  @change='handleWarehouse'
-                  v-model="listQuery.warehouse_id"
-                  clearable
-                  placeholder="仓库">
-        <el-option  v-for="item in warehouseOptions"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id">
-        </el-option>
-      </el-select>
+      <!--<el-select  class="filter-item"-->
+                  <!--style="width:180px"-->
+                  <!--@change='handleWarehouse'-->
+                  <!--v-model="listQuery.warehouse_id"-->
+                  <!--clearable-->
+                  <!--placeholder="仓库">-->
+        <!--<el-option  v-for="item in warehouseOptions"-->
+                    <!--:key="item.id"-->
+                    <!--:label="item.name"-->
+                    <!--:value="item.id">-->
+        <!--</el-option>-->
+      <!--</el-select>-->
       <el-select  class="filter-item"
                   style="width:180px"
                   @change='handleFilter'
@@ -165,7 +165,7 @@
         productLoading: false,
         listQuery: {
           product_goods_id: undefined,
-          warehouse_id: undefined,
+          // warehouse_id: undefined,
           operate_type: undefined,
           date_range: [
             parseTime(new Date(new Date().getTime() - 1000 * 3600 * 24 * 7), '{y}-{m}-{d}'),

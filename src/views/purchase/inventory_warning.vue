@@ -6,18 +6,18 @@
         <!--<el-option v-for="item in statusOptions" :key="item.key" :label="item.label" :value="item.key">-->
         <!--</el-option>-->
       <!--</el-select>-->
-      <el-select class="filter-item"
-                 v-model="listQuery.warehouse_id"
-                 filterable
-                 @change="handleFilter"
-                 clearable
-                 placeholder="仓库">
-        <el-option  v-for="item in warehouseOptions"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id">
-        </el-option>
-      </el-select>
+      <!--<el-select class="filter-item"-->
+                 <!--v-model="listQuery.warehouse_id"-->
+                 <!--filterable-->
+                 <!--@change="handleFilter"-->
+                 <!--clearable-->
+                 <!--placeholder="仓库">-->
+        <!--<el-option  v-for="item in warehouseOptions"-->
+                    <!--:key="item.id"-->
+                    <!--:label="item.name"-->
+                    <!--:value="item.id">-->
+        <!--</el-option>-->
+      <!--</el-select>-->
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary"
                  icon="el-icon-search">搜索
       </el-button>
@@ -105,7 +105,7 @@
         productOptions: [],
         productLoading: false,
         listQuery: {
-          warehouse_id: undefined,
+          // warehouse_id: undefined,
           page: 1,
           page_size: 20,
           sort: '-id',
