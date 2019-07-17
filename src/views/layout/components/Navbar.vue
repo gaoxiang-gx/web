@@ -8,10 +8,10 @@
       <!--<breadcrumb></breadcrumb>-->
       <router-link to="/dashboard" class="system-name">{{project_name}}</router-link>
       <el-submenu index="1" class="avatar-container">
-        <img slot="title" style="cursor: pointer" class="user-img" :src="avatar+'?imageView2/1/w/80/h/80'">
+        <img slot="title" style="cursor: pointer" class="user-img" :src="avatar">
         <div class="user-dropdown">
           <div class="user-dropdown-top">
-            <router-link to="/user_center/user_center/user_info">
+            <router-link class="link" to="/user_center/user_center/user_info">
               <img class="user-dropdown-user-img" :src="avatar">
               <span class="link-hover">{{$store.state.user.name}}</span>
             </router-link>
@@ -286,15 +286,19 @@ export default {
       padding: 0 0 10px 0;
       height: 50px;
       border-bottom: 1px solid #ffffff1a;
+      .link {
+        display: flex;
+        align-items: center;
+      }
       .user-dropdown-user-img {
         width: 42px;
         height: 42px;
         border-radius: 50%;
       }
       span {
-        margin-left: 4px;
-        vertical-align: top;
-        line-height: 50px;
+        box-sizing: border-box;
+        padding: 0 4px;
+        font-size: 12px;
       }
     }
     .user-dropdown-item {

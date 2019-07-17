@@ -2006,7 +2006,7 @@
           LODOP.SET_PRINT_STYLEA(0, 'LineSpacing', -4)
           LODOP.SET_PRINT_STYLEA(0, 'LetterSpacing', -1)
 
-          LODOP.ADD_PRINT_BARCODE('69mm', '7mm', '90mm', '18mm', '128C', mailno)
+          LODOP.ADD_PRINT_BARCODE('69mm', '7mm', '90mm', '18mm', '128Auto', mailno)
 
           LODOP.ADD_PRINT_TEXT(342, 8, 61, 23, now_date)
           LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
@@ -2047,7 +2047,7 @@
 
           LODOP.ADD_PRINT_BARCODE(348, 315, '18mm', '18mm', 'QRCode', destcode + '-' + mailno)
 
-          LODOP.ADD_PRINT_BARCODE(417, 155, '50mm', '8mm', '128C', mailno)
+          LODOP.ADD_PRINT_BARCODE(417, 155, '50mm', '8mm', '128Auto', mailno)
 
           LODOP.ADD_PRINT_TEXT(460, 10, 15, 36, '')
           // 收
