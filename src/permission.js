@@ -56,6 +56,10 @@ router.beforeEach((to, from, next) => {
       next()
     })
   }
+  if (!getAccountToken() && !getUserToken() && process.env.NODE_ENV == "development") {
+    next({ path: '/login'})
+    return
+  }
   if (!getAccountToken() && !getUserToken()) {
     window.location.href = process.env.HOME_URL
   }

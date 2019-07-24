@@ -258,3 +258,4 @@ export function updateWarehouseLogisticsExtra(param) {
     data: param
   })
 }
+

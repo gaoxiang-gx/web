@@ -18,7 +18,7 @@
         </el-table-column>
         <el-table-column align="center" label="物流" min-width="100">
           <template slot-scope="scope">
-            <el-tag type="primary">{{logisticsTypeOptions[logisticsTypeOptions.findIndex( d => d.id == scope.row.order_logistics_type_id)].name}}</el-tag>
+            <el-tag type="primary">{{logisticsTypeOptions.find( d => d.id == scope.row.order_logistics_type_id).name}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column align="center" label="名称" min-width="300">
@@ -42,18 +42,18 @@
 
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
         <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="150px" style='width: 80%;margin-left: 10%'>
-          <el-form-item label="仓库" prop="order_logistics_type_id">
+          <el-form-item label="仓库" prop="warehouse_id">
             <el-select
-              v-model="temp.order_logistics_type_id"
+              v-model="temp.warehouse_id"
               filterable
               style="width: 100%"
               clearable
               :disabled="disabled_order_logistics_type_id"
               remote
-              placeholder="请选择物流公司"
-              :remote-method="queryLogisticsTypeList"
-              :loading="logisticsTypeLoading">
-              <el-option v-for="item in logisticsTypeOptions"
+              placeholder="请选择仓库"
+              :remote-method="queryWarehouseList"
+              :loading="warehouseLoading">
+              <el-option v-for="item in warehouseOptions"
                          :key="item.id"
                          :label="item.name"
                          :value="item.id">
@@ -78,13 +78,13 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="额外信息名称" prop="name">
+          <el-form-item label="额外信息名称" prop="description">
             <el-input v-model="temp.description"></el-input>
           </el-form-item>
-          <el-form-item v-if="this.temp.order_logistics_type_id === 1" label="月结账号" prop="configs.sf_monthly_account">
+          <el-form-item v-if="temp.order_logistics_type_id === 1" label="月结账号" prop="configs.sf_monthly_account">
             <el-input v-model="temp.configs.sf_monthly_account"></el-input>
           </el-form-item>
-          <el-form-item v-if="this.temp.order_logistics_type_id === 1 || this.temp.order_logistics_type_id === 6" label="发货产品名称" prop="configs.delivery_product_name">
+          <el-form-item v-if="temp.order_logistics_type_id === 1 || temp.order_logistics_type_id === 6" label="发货产品名称" prop="configs.delivery_product_name">
             <el-input v-model="temp.configs.delivery_product_name"></el-input>
           </el-form-item>
         </el-form>
@@ -100,7 +100,7 @@
 
 <script>
   import waves from '@/directive/waves'
-  import { updateWarehouseLogisticsExtra, getWarehouseLogisticsExtraList, createProductDeliverExtra } from '@/api/product'
+  import { updateWarehouseLogisticsExtra, getWarehouseLogisticsExtraList, createWarehouseExtra, getWarehouseList } from '@/api/product'
   import { getOrdersLogisticsTypeList } from '@/api/orders'
   export default {
     components: { },
@@ -125,6 +125,8 @@
         dialogFormVisible: false,
         logisticsTypeOptions: [],
         logisticsTypeLoading: false,
+        warehouseOptions: [],
+        warehouseLoading: false,
         productOptions: [],
         productLoading: false,
         listQuery: {
@@ -142,15 +144,17 @@
         ],
         temp: {
           description: undefined,
+          warehouse_id: undefined,
           order_logistics_type_id: undefined,
           configs: {
-            sf_monthly_account: undefined,
-            delivery_product_name: undefined
+            sf_monthly_account: null,
+            delivery_product_name: null
           }
         },
         rules: {
-          description: [{ required: true, message: '填写名称', trigger: 'change' }],
+          description: [{ required: true, message: '填写额外信息', trigger: 'change' }],
           order_logistics_type_id: [{ required: true, message: '选择物流', trigger: 'change' }],
+          warehouse_id: [{ required: true, message: '选择仓库', trigger: 'change' }],
           configs: {
             sf_monthly_account: [{ required: true, message: '填写月结账户', trigger: 'change' }],
             delivery_product_name: [{ required: true, message: '填写发货产品名称', trigger: 'change' }]
@@ -185,25 +189,10 @@
         }
       }
     },
-    watch: {
-      dialogFormVisible(val) {
-        if (!val) {
-          this.$refs['dataForm'].resetFields()
-          this.disabled_order_logistics_type_id = false
-          this.temp = {
-            description: undefined,
-            order_logistics_type_id: undefined,
-            configs: {
-              sf_monthly_account: undefined,
-              delivery_product_name: undefined
-            }
-          }
-        }
-      }
-    },
     created() {
       this.getList()
-      this.queryLogisticsTypeList()
+      this.queryLogisticsTypeList(' ')
+      this.queryWarehouseList(' ')
     },
     methods: {
       handleFilter() {
@@ -219,6 +208,15 @@
           })
         }
       },
+      queryWarehouseList(query) {
+        if (query !== '') {
+          this.warehouseLoading = true
+          getWarehouseList({ logistics_name: query }).then(response => {
+            this.warehouseOptions = response.data.data
+            this.warehouseLoading = false
+          })
+        }
+      },
       getList() {
         this.listLoading = true
         getWarehouseLogisticsExtraList(this.listQuery).then(response => {
@@ -230,14 +228,28 @@
       handleCreate() {
         this.dialogStatus = 'create'
         this.dialogFormVisible = true
+        this.resetTemp()
         this.$nextTick(() => {
           this.$refs['dataForm'].clearValidate()
         })
       },
+      resetTemp() {
+        this.disabled_order_logistics_type_id = false
+        this.temp = {
+          description: undefined,
+          warehouse_id: undefined,
+          order_logistics_type_id: undefined,
+          configs: {
+            sf_monthly_account: null,
+            delivery_product_name: null
+          }
+        }
+      },
       createData() {
+        console.log(1)
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            createProductDeliverExtra(this.temp).then(res => {
+            createWarehouseExtra(this.temp).then(() => {
               this.$notify({
                 title: '成功',
                 message: '创建成功',
@@ -251,11 +263,13 @@
         })
       },
       handleUpdate(row) {
+        console.log(row)
         this.disabled_order_logistics_type_id = true
         this.temp_id = row.id
         this.dialogStatus = 'update'
         this.dialogFormVisible = true
         this.temp.description = row.description
+        this.temp.warehouse_id = row.warehouse_id
         this.temp.order_logistics_type_id = row.order_logistics_type_id
         this.temp.configs.delivery_product_name = row.configs.delivery_product_name
         this.temp.configs.sf_monthly_account = row.configs.sf_monthly_account
@@ -266,8 +280,8 @@
       updateData() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            const tempparm = Object.assign({ id: this.temp_id }, this.temp)
-            updateWarehouseLogisticsExtra(tempparm).then(res => {
+            const temp = Object.assign({ id: this.temp_id }, this.temp)
+            updateWarehouseLogisticsExtra(temp).then(res => {
               this.$notify({
                 title: '成功',
                 message: '修改成功',
