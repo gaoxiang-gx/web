@@ -49,6 +49,9 @@
               账户设置
             </router-link>
             <div class="user-dropdown-bottom">
+              <span class="link-hover" @click="selectAccount">切换账号</span>
+            </div>
+            <div class="user-dropdown-bottom">
               <span @click="logout" class="logout">退出登录</span>
             </div>
           </div>
@@ -78,6 +81,7 @@
 import { mapGetters } from 'vuex'
 import { getUnreadNoticeData } from '@/api/user'
 import { setTheme } from '@/utils/auth'
+import { removeAccountToken } from '@/utils/auth'
 import Breadcrumb from '@/components/Breadcrumb'
 import themePicker from '@/components/themePicker'
 import Hamburger from '@/components/Hamburger'
@@ -128,6 +132,10 @@ export default {
       this.$store.dispatch('FedLogOut').then(() => {
         location.reload() // 为了重新实例化vue-router对象 避免bug
       })
+    },
+    selectAccount() {
+      removeAccountToken()
+      location.reload() // 为了重新实例化vue-router对象 避免bug
     },
     handleChangeTheme() {
       this.themeDialogVisible = true

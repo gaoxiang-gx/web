@@ -60,11 +60,18 @@
             <el-form-item label="寄件邮编" prop="delivery_post_code">
               <el-input v-model="temp.delivery_post_code"></el-input>
             </el-form-item>
+
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="发货地址（详细）" prop="delivery_address">
               <el-input v-model="temp.delivery_address"></el-input>
             </el-form-item>
-          </el-col>
-          <el-col :span="12">
+            <el-form-item label="发货人姓名" prop="sender_name">
+              <el-input v-model="temp.sender_name"></el-input>
+            </el-form-item>
+            <el-form-item label="发货人电话" prop="sender_phone">
+              <el-input v-model="temp.sender_phone"></el-input>
+            </el-form-item>
             <el-form-item label="发货产品" prop="product_ids">
               <el-select v-model="temp.product_ids"
                          filterable
@@ -82,6 +89,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
+
             <el-form-item label="物流公司" prop="order_logistics_type_id">
               <el-select v-model="temp.order_logistics_type_ids"
                          filterable
@@ -199,6 +207,8 @@
         ],
         temp: {
           name: undefined,
+          sender_phone: undefined,
+          sender_name: undefined,
           delivery_province: undefined,
           delivery_city: undefined,
           delivery_district: undefined,
@@ -212,6 +222,8 @@
         },
         rules: {
           name: [{ required: true, message: '填写名称', trigger: 'change' }],
+          sender_name: [{ required: true, message: '填写发货人姓名', trigger: 'change' }],
+          sender_phone: [{ required: true, message: '填写发货人电话', trigger: 'change' }],
           delivery_province: [{ required: true, message: '填写省份', trigger: 'change' }],
           delivery_city: [{ required: true, message: '填写城市', trigger: 'change' }],
           delivery_district: [{ required: true, message: '填写区县', trigger: 'change' }],
@@ -270,7 +282,6 @@
         })
       },
       createData() {
-        console.log(this.temp)
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             if (this.temp.product_deliver_extra_sf !== undefined) {
@@ -298,6 +309,8 @@
         this.dialogStatus = 'update'
         this.dialogFormVisible = true
         this.temp.name = row.name
+        this.temp.sender_name = row.sender_name
+        this.temp.sender_phone = row.sender_phone
         this.temp.delivery_province = row.delivery_province
         this.temp.delivery_city = row.delivery_city
         this.temp.delivery_district = row.delivery_district
@@ -385,6 +398,8 @@
           this.$refs['dataForm'].resetFields()
           this.temp = {
             name: undefined,
+            sender_phone: undefined,
+            sender_name: undefined,
             delivery_province: undefined,
             delivery_city: undefined,
             delivery_district: undefined,
@@ -409,8 +424,5 @@
   }
 </script>
 <style scoped>
-  .el-form >>> .el-form-item {
-    margin-bottom: 5px;
-  }
 
 </style>
