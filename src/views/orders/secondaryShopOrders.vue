@@ -2511,6 +2511,11 @@
           LODOP.SET_PRINT_STYLEA(0, 'FontSize', 13)
           LODOP.SET_PRINT_STYLEA(0, 'Alignment', 2)
           LODOP.SET_PRINT_STYLEA(0, 'Bold', 1)
+          LODOP.ADD_PRINT_TEXT('100mm', '50mm', '50mm', '10mm', '烟台卧龙工业园区营业部')
+          LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+          LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+          LODOP.SET_PRINT_STYLEA(0, 'Alignment', 2)
+          LODOP.SET_PRINT_STYLEA(0, 'Bold', 1)
 
           LODOP.ADD_PRINT_BARCODE('112mm', '55mm', '50mm', '8mm', '128B', mailno)
 
