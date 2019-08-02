@@ -1568,8 +1568,7 @@
                 type: 'success',
                 duration: 2000
               })
-              const index = this.list.findIndex(d => d.id === this.temp.id)
-              this.list[index].orders_logistics = response.data
+              this.getList()
             })
           }
         })
