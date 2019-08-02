@@ -17,13 +17,16 @@ import Layout from '../views/layout/Layout'
   }
  **/
 export const constantRouterMap = [
-  { path: '/login', component: _import('login/index'), hidden: true },
+  { path: '/login',
+    component: _import('login/index'),
+    meta: {hidden: true}
+  },
   {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
     name: 'Dashboard',
-    hidden: true,
+    meta: {hidden: true},
     children: [{
       path: 'dashboard',
       component: _import('dashboard/index')
@@ -33,7 +36,7 @@ export const constantRouterMap = [
     path: '/select_account',
     component: _import('user/select_account'),
     name: 'selectAccount',
-    hidden: true
+    meta: {hidden: true}
   }
   // {
   //   path: '*', hidden: true, component: _import('404'), name: '404',
@@ -51,13 +54,13 @@ export const asyncRouterMap = [
         path: 'orders',
         name: 'ordersManage',
         component: _import('orders/orders'),
-        meta: { title: '订单管理', icon: 'ordersManage'}
+        meta: { title: '订单管理'}
       },
       {
         path: 'secondaryShopOrders',
         name: 'secondaryShopOrders',
         component: _import('orders/secondaryShopOrders'),
-        meta: { title: '二类电商订单', icon: 'ordersManage'}
+        meta: { title: '二类电商订单'}
       }
     ]
   },
@@ -84,13 +87,13 @@ export const asyncRouterMap = [
         path: 'inventory_warning',
         name: 'inventoryWarning',
         component: _import('purchase/inventory_warning'),
-        meta: { title: '商品库存', icon: 'warn'}
+        meta: { title: '商品库存'}
       },
       {
         path: 'inventory_statistics',
         name: 'inventoryStatistics',
         component: _import('purchase/inventory_statistics'),
-        meta: { title: '商品出入库明细', icon: 'inventoryStatistics'}
+        meta: { title: '商品出入库明细'}
       },
       // {
       //   path: 'inventory_expend',
@@ -102,14 +105,14 @@ export const asyncRouterMap = [
         path: 'inventory_management',
         name: 'inventoryManagement',
         component: _import('purchase/inventory_management'),
-        meta: { title: '盘库管理', icon: 'inventoryManagement' }
+        meta: { title: '盘库管理'}
       },
       {
         path: '/purchase_management',
         name: 'purchaseManagement',
         redirect: 'noredirect',
         component: _import('purchase/purchase_management/index'),
-        meta: { title: '订货管理', icon: 'purchaseManagement' },
+        meta: { title: '订货管理', icon: 'dot' },
         children: [
           {
             path: 'purchase_management',
@@ -129,7 +132,7 @@ export const asyncRouterMap = [
         path: 'manual_Management',
         name: 'manual_Management',
         component: _import('purchase/manual_Management'),
-        meta: { title: '人工出入库', icon: 'manual_Management' }
+        meta: { title: '人工出入库'}
       }
     ]
   },
@@ -144,13 +147,14 @@ export const asyncRouterMap = [
         path: 'afterManageList',
         name: 'afterManageList',
         component: _import('afterManage/afterManageList'),
-        meta: { title: '售后列表', icon: 'ordersManage'}
-      },{
+        meta: { title: '售后列表'}
+      },
+      {
         path: 'afterDetails',
         name: 'afterDetails',
         hidden: true,
         component: _import('afterManage/afterDetails'),
-        meta: { title: '售后详情', icon: 'ordersManage'}
+        meta: { title: '售后详情'}
       }
     ]
   },
@@ -165,19 +169,19 @@ export const asyncRouterMap = [
         path: 'user_group',
         name: 'userGroupManagement',
         component: _import('user/user_group'),
-        meta: { title: '小组管理', icon: 'userGroupManagement' }
+        meta: { title: '小组管理' }
       },
       {
         path: 'user',
         name: 'userManage',
         component: _import('user/user'),
-        meta: { title: '用户管理', icon: 'MemberManagement' }
+        meta: { title: '用户管理' }
       },
       {
         path: 'role',
         name: 'rolesManagement',
         component: _import('user/user_role'),
-        meta: { title: '权限管理', icon: 'rolesManagement' }
+        meta: { title: '权限管理' }
       }
     ]
   },
@@ -193,7 +197,7 @@ export const asyncRouterMap = [
         name: 'systemSetting',
         redirect: 'noredirect',
         component: _import('system/setting/index'),
-        meta: { title: '系统设置', icon: 'systemSetting' },
+        meta: { title: '系统设置', icon: 'dot' },
         children: [
           {
             path: 'deliver_address_setting',
@@ -252,13 +256,13 @@ export const asyncRouterMap = [
         path: 'user_center/user_info',
         name: 'infoSetting',
         component: _import('user_center/user_info/user_info'),
-        meta: { title: '个人信息设置', icon: 'infoSetting' }
+        meta: { title: '个人信息设置' }
       },
       {
         path: 'user_center/action_history',
         name: 'actionHistory',
         component: _import('user_center/action_history/action_history'),
-        meta: { title: '操作记录', icon: 'form' }
+        meta: { title: '操作记录' }
       },
       // {
       //   path: 'user_center/message_notification',

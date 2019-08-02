@@ -1,54 +1,77 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-      <el-select @change='handleFilter' clearable style="width: 120px" class="filter-item" v-model="listQuery.status"
-                 placeholder="订单状态">
-        <el-option v-for="item in statusOptions" :key="item.key" :label="item.label" :value="item.key">
-        </el-option>
-      </el-select>
-      <el-date-picker
-        class="filter-item"
-        v-model="listQuery.date_range"
-        type="daterange"
-        format="yyyy-MM-dd"
-        value-format="yyyy-MM-dd"
-        align="right"
-        unlink-panels
-        range-separator="~"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        :picker-options="pickerOptions2"
-        @change='handleFilter'>
-      </el-date-picker>
-      <el-input @keyup.enter.native="handleFilter" style="width: 250px;" class="filter-item" placeholder="订单号"
-                v-model="listQuery.orders_unique_id">
-      </el-input>
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="物流单号"
-                v-model="listQuery.orders_logistics_number">
-      </el-input>
+      <div class="filter-item">
+        <div class="filter-label">日期</div>
+        <el-date-picker
+          size="small"
+          style="width: 260px"
+          v-model="listQuery.date_range"
+          type="daterange"
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd"
+          align="right"
+          unlink-panels
+          range-separator="~"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :picker-options="pickerOptions2"
+          @change='handleFilter'>
+        </el-date-picker>
+      </div>
+      <div class="filter-item">
+        <div class="filter-label">状态</div>
+        <el-select @change='handleFilter' size="small" clearable style="width: 90px" v-model="listQuery.status"
+                   placeholder="选择">
+          <el-option v-for="item in statusOptions" :key="item.key" :label="item.label" :value="item.key">
+          </el-option>
+        </el-select>
+      </div>
+      <div class="filter-item">
+        <div class="filter-label">收件人姓名</div>
+        <el-input @keyup.enter.native="handleFilter" style="width: 100px;" size="small" placeholder=""
+                  v-model="listQuery.weixin_fans_address_receive_name">
+        </el-input>
+      </div>
+      <div class="filter-item">
+        <div class="filter-label">收件人电话</div>
+        <el-input @keyup.enter.native="handleFilter" style="width: 160px;" size="small" placeholder=""
+                  v-model="listQuery.weixin_fans_address_phone">
+        </el-input>
+      </div>
+      <div class="filter-item">
+        <div class="filter-label">订单号</div>
+        <el-input @keyup.enter.native="handleFilter" style="width: 220px;" size="small" placeholder=""
+                  v-model="listQuery.orders_unique_id">
+        </el-input>
+      </div>
+      <div class="filter-item">
+        <div class="filter-label">物流单号</div>
+        <el-input @keyup.enter.native="handleFilter" style="width: 220px;" size="small" placeholder=""
+                  v-model="listQuery.orders_logistics_number">
+        </el-input>
+      </div>
+      <div class="filter-item">
+        <div class="filter-label">备注信息</div>
+        <el-input @keyup.enter.native="handleFilter" style="width: 200px;" size="small" placeholder=""
+                  v-model="listQuery.remark">
+        </el-input>
+      </div>
       <!--<el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="产品名称"-->
                 <!--v-model="listQuery.product_name">-->
       <!--</el-input>-->
       <!--<el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="推广渠道" v-model="listQuery.channel_name">-->
       <!--</el-input>-->
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="收件人电话"
-                v-model="listQuery.weixin_fans_address_phone">
-      </el-input>
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="收件人姓名"
-                v-model="listQuery.weixin_fans_address_receive_name">
-      </el-input>
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="备注信息"
-                v-model="listQuery.remark">
-      </el-input>
-      <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <!--<el-button class="filter-item" type="primary" v-waves icon="el-icon-edit" @click="handleCreate">添加</el-button>-->
-      <el-button class="filter-item" type="primary" v-waves icon="el-icon-download" style="float: right" @click="downExcel">导出</el-button>
-      <el-button class="filter-item" type="primary" v-waves icon="el-icon-refresh" style="float:right;" @click="refreshOrdersList">刷新</el-button>
-      <div>
-        <p style="float:right;padding-right:20px;font-size:22px;">
-          <span>今日订单：<span style="color:red;">{{today_orders}}</span></span>
-          <span>待发货：<span style="color:red;">{{need_delivery}}</span></span>
-        </p>
+      <div class="filter-row">
+        <div class="filter-float">
+          <div style="margin-right: 20px">
+              <span>今日订单：<span style="color:red;">{{today_orders}}</span></span>
+              <span>待发货：<span style="color:red;">{{need_delivery}}</span></span>
+          </div>
+          <el-button class="filter-item" size="small" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
+          <el-button class="filter-item" size="small" type="primary" v-waves icon="el-icon-download" @click="downExcel">导出</el-button>
+          <el-button class="filter-item" size="small" type="primary" v-waves icon="el-icon-refresh" @click="refreshOrdersList">刷新</el-button>
+        </div>
       </div>
     </div>
 
@@ -133,7 +156,7 @@
                 </p>
                 <p class="my-form-p">
                   <span class="label-span">物流单号：</span>
-                  <span class="link-type">{{scope.row.orders_logistics.logistics_number}}</span>
+                  <span >{{scope.row.orders_logistics.logistics_number}}</span>
                 </p>
                 <el-button size="mini" type="primary" icon="el-icon-edit" @click="printOrders(scope.row)">打印订单
                 </el-button>
@@ -148,6 +171,11 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column width="90" align="center" label="状态">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.status | orderStatusFilter">{{scope.row.status|orderStatusTranslator}}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="订单号" width="150px">
         <template slot-scope="scope">
           <span >{{scope.row.orders_unique_id}}</span>
@@ -155,25 +183,36 @@
           <el-tag @click="checkPre(scope.row)" type="warning" v-show="scope.row.if_repurchase > 1" style="cursor: pointer" >复</el-tag>
         </template>
       </el-table-column>
-      <el-table-column min-width="100px" align="center" label="订单状态">
+      <!--<el-table-column min-width="100px" align="center" label="订单金额">-->
+        <!--<template slot-scope="scope">-->
+          <!--<span>￥{{scope.row.actual_pay}}</span>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
+      <el-table-column min-width="130px" align="center" label="收件人电话">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | orderStatusFilter">{{scope.row.status|orderStatusTranslator}}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="100px" align="center" label="订单金额">
-        <template slot-scope="scope">
-          <span>￥{{scope.row.actual_pay}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="130px" align="center" label="收货人">
-        <template slot-scope="scope">
-          <span v-if="scope.row.orders_receiver_info">{{scope.row.orders_receiver_info.receive_name}}</span><br>
+          <!--<span v-if="scope.row.orders_receiver_info">{{scope.row.orders_receiver_info.receive_name}}</span>/-->
           <span v-if="scope.row.orders_receiver_info">{{scope.row.orders_receiver_info.phone}}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="160px" align="center" label="发货仓">
+      <!--<el-table-column min-width="200px" align="center" label="发货仓">-->
+        <!--<template slot-scope="scope">-->
+          <!--<span>{{scope.row.warehouse.name}}</span>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
+      <el-table-column width="100" align="center" label="物流方式">
         <template slot-scope="scope">
-          <span>{{scope.row.warehouse.name}}</span>
+          <div v-if="scope.row.orders_logistics">
+            <span v-if="scope.row.orders_logistics.orders_logistics_type.name">
+              {{scope.row.orders_logistics.orders_logistics_type.name}}
+            </span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column min-width="150px" align="center" label="物流单号">
+        <template slot-scope="scope">
+          <div v-if="scope.row.orders_logistics">
+            <span >{{scope.row.orders_logistics.logistics_number}}</span>
+          </div>
         </template>
       </el-table-column>
       <el-table-column min-width="160px" align="center" label="创建时间">
@@ -186,12 +225,12 @@
           <!--<el-button v-if="scope.row.status===1" type="primary" size="small" @click="handleUpdate(scope.row)">编辑</el-button>-->
           <!--<el-button v-if="scope.row.status===1" :loading="btnLoading" size="small" type="success" @click="handleCheckOrders(scope.row)">确认订单</el-button>-->
           <!--<el-button v-if="scope.row.status===2" size="small" type="info" @click="handleModifyStatus(scope.row,1)">未确认</el-button>-->
-          <el-button v-if="scope.row.status === 2 || scope.row.status === 4" size="small" type="success" @click="handleDeliverOrders(scope.row,0)">确认发货</el-button>
-          <el-button v-if="scope.row.status === 2" size="small" type="warning" @click="handleDeliverOrders(scope.row,1)">已断货</el-button>
+          <el-button v-if="scope.row.status === 2 || scope.row.status === 4" size="mini" type="success" @click="handleDeliverOrders(scope.row,0)">确认发货</el-button>
+          <el-button v-if="scope.row.status === 2" size="mini" type="warning" @click="handleDeliverOrders(scope.row,1)">已断货</el-button>
           <!--<el-button v-if="scope.row.status===3" size="small" type="success" @click="handleHandleOrders(scope.row,1)">确认签收</el-button>-->
           <!--<el-button v-if="scope.row.status===3" size="small" type="warning" @click="handleHandleOrders(scope.row,0)">已拒收</el-button>-->
           <!--<el-button v-if="scope.row.status===5" size="small" type="success" @click="handleResultOrders(scope.row)">已完成</el-button>-->
-          <el-button v-if="scope.row.status === 3" size="small" type="danger" @click="handleDestoryOrders(scope.row)">废弃</el-button>
+          <el-button v-if="scope.row.status === 3" size="mini" type="danger" @click="handleDestoryOrders(scope.row)">废弃</el-button>
           <!--<el-button v-if="scope.row.status===1" size="small" type="danger" @click="handleDeleteOrder(scope.row,9)">删除</el-button>-->
         </template>
       </el-table-column>
@@ -468,7 +507,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="额外信息" prop="product_deliver_extra_id"
-                      v-if="innerTemp3.orders_logistics_type.code === '1001' || innerTemp3.orders_logistics_type.code === '1006'">
+                      v-if="innerTemp3.orders_logistics_type.code === '1001' || innerTemp3.orders_logistics_type.code === '1006' || innerTemp3.orders_logistics_type.code === '1009'">
           <el-select v-model="innerTemp3.product_deliver_extra_id"
                      @change="resetLogisticsNumber2"
                      @focus="getWarehouseLogisticsExtraList(' ')"
@@ -486,7 +525,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="物流单号" prop="logistics_number">
-          <el-input :disabled="innerTemp3.orders_logistics_type.code === '1001'"
+          <el-input :disabled="innerTemp3.orders_logistics_type.code === '1001' || innerTemp3.orders_logistics_type.code === '1009'"
                     v-model="innerTemp3.logistics_number"></el-input>
         </el-form-item>
         <el-form-item label="地区编码" prop="dest_code" v-if="innerTemp3.dest_code !== '' && innerTemp3.orders_logistics_type.code !== '' ">
@@ -498,13 +537,13 @@
         <el-button v-if="dialogStatus=='update'" type="primary" @click="createInnerData3">确 定</el-button>
       </div>
     </el-dialog>
+
     <el-dialog :title="innerTableTitle4" :visible.sync="innerTableVisible4" width="90%">
       <div class="filter-container" align="right">
         <el-button align="right" class="filter-item" style="margin-left: 10px;" @click="handleInnerCreate4"
                    type="primary" icon="el-icon-edit">添加
         </el-button>
       </div>
-
       <el-table @cell-click="handleAddressRowClick" :key='innerTableKey4' :data="innerList4"
                 v-loading="innerListLoading4" element-loading-text="给我一点时间" border fit highlight-current-row
                 style="width: 100%">
@@ -790,6 +829,7 @@
     getOrdersSFLogisticsNumber,
     getOrdersLogsList,
     getOrdersYTOLogisticsNumber,
+    getOrdersDepponLogisticsNumber,
     getOrdersAreaList,
     resultOrders,
     destroyOrders,
@@ -1285,12 +1325,12 @@
           0: 'info',
           1: 'info',
           2: 'warning',
-          3: '',
+          3: 'success',
           4: 'danger',
-          5: '',
+          5: 'success',
           6: 'danger',
           7: 'success',
-          8: '',
+          8: 'danger',
           9: 'danger'
         }
         return statusMap[status]
@@ -1462,6 +1502,26 @@
               message: '已取消'
             })
           })
+        } else if (this.innerTemp3.orders_logistics_type.code === '1009') {
+          this.$confirm('选择德邦将不可以修改订单内容， 确定选择？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            const tempdata = {}
+            tempdata.orders_id = this.temp.id
+            tempdata.warehouse_extra_id	 = this.innerTemp3.product_deliver_extra_id
+            getOrdersDepponLogisticsNumber(tempdata).then(response => {
+              this.innerTemp3.logistics_number = response.data.logistics_number
+              this.innerTemp3.dest_code = response.data.dest_code
+              this.innerTemp3.dest_extra_code = response.data.dest_extra_code
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消'
+            })
+          })
         }
       },
       resetLogisticsNumber() {
@@ -1551,10 +1611,10 @@
           })
           return
         }
-        if (row.orders_unique_id === undefined || row.orders_unique_id === '' || row.orders_unique_id === null) {
+        if (row.orders_logistics === undefined || row.orders_logistics === '' || row.orders_logistics === null) {
           this.$message({
             type: 'error',
-            message: '系统错误, 订单号不能为空'
+            message: '填写物流信息'
           })
           return
         }
@@ -2199,6 +2259,163 @@
           LODOP.SET_PRINT_STYLEA('All', 'Bold', 0)
           LODOP.SET_PRINT_STYLEA('2', 'FontSize', 11)
           LODOP.SET_PRINT_STYLEA('12', 'FontSize', 24)
+          LODOP.PREVIEW()
+        } else if (logistics_code === '1009') {
+          console.log('德邦')
+          LODOP.SET_PRINT_PAGESIZE(1, '100mm', '180mm', '')
+          LODOP.SET_SHOW_MODE('BKIMG_WIDTH', '100mm')
+          LODOP.SET_SHOW_MODE('BKIMG_HEIGHT', '180mm')
+
+          LODOP.ADD_PRINT_LINE('2mm', '36mm', '2mm', '98mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('14mm', '2mm', '14mm', '98mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('2mm', '36mm', '14mm', '36mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('2mm', '48mm', '14mm', '48mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('2mm', '60mm', '14mm', '60mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('2mm', '80mm', '14mm', '80mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('14mm', '2mm', '108mm', '2mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('2mm', '98mm', '108mm', '98mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('29mm', '2mm', '29mm', '98mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('45mm', '2mm', '45mm', '98mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('57mm', '2mm', '57mm', '98mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('80mm', '2mm', '80mm', '98mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('100mm', '2mm', '100mm', '98mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('108mm', '2mm', '108mm', '98mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('80mm', '76mm', '100mm', '76mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('100mm', '50mm', '108mm', '50mm', 0, 1)
+
+          LODOP.ADD_PRINT_LINE('112mm', '50mm', '112mm', '98mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('120mm', '2mm', '120mm', '98mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('129mm', '2mm', '129mm', '98mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('138mm', '2mm', '138mm', '98mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('112mm', '50mm', '120mm', '50mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('120mm', '2mm', '138mm', '2mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('112mm', '98mm', '138mm', '98mm', 0, 1)
+
+          LODOP.ADD_PRINT_LINE('142mm', '2mm', '142mm', '98mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('178mm', '2mm', '178mm', '98mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('142mm', '2mm', '178mm', '2mm', 0, 1)
+          LODOP.ADD_PRINT_LINE('142mm', '98mm', '178mm', '98mm', 0, 1)
+          if (money > 0) {
+          // if (true) {
+            LODOP.ADD_PRINT_TEXT('6mm', '36mm', '12mm', '12mm', '到付')
+            LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+            LODOP.SET_PRINT_STYLEA(0, 'FontSize', 12)
+            LODOP.SET_PRINT_STYLEA(0, 'Alignment', 2)
+            LODOP.SET_PRINT_STYLEA(0, 'Bold', 1)
+
+            LODOP.ADD_PRINT_TEXT('4mm', '60mm', '20mm', '8mm', '代收货款')
+            LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+            LODOP.SET_PRINT_STYLEA(0, 'FontSize', 11)
+            LODOP.SET_PRINT_STYLEA(0, 'Alignment', 2)
+            LODOP.SET_PRINT_STYLEA(0, 'Bold', 1)
+            LODOP.SET_PRINT_STYLEA(0, 'LetterSpacing', -1)
+
+            LODOP.ADD_PRINT_TEXT('10mm', '60mm', '20mm', '8mm', '¥' + money + '元')
+            LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+            LODOP.SET_PRINT_STYLEA(0, 'FontSize', 11)
+            LODOP.SET_PRINT_STYLEA(0, 'Alignment', 2)
+            LODOP.SET_PRINT_STYLEA(0, 'Bold', 1)
+          }
+          LODOP.ADD_PRINT_TEXT('16mm', '2mm', '96mm', '15mm', destcode)
+          LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+          LODOP.SET_PRINT_STYLEA(0, 'FontSize', 20)
+          LODOP.SET_PRINT_STYLEA(0, 'Alignment', 2)
+          LODOP.SET_PRINT_STYLEA(0, 'Bold', 1)
+          //收货信息
+          LODOP.ADD_PRINT_TEXT('34mm', '2mm', '12mm', '12mm', '收')
+          LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+          LODOP.SET_PRINT_STYLEA(0, 'FontSize', 16)
+          LODOP.SET_PRINT_STYLEA(0, 'Alignment', 2)
+          LODOP.SET_PRINT_STYLEA(0, 'Bold', 1)
+          LODOP.ADD_PRINT_TEXT('30mm', '15mm', '30mm', '12mm', sjname)
+          LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+          LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+          LODOP.SET_PRINT_STYLEA(0, 'Alignment', 1)
+          LODOP.SET_PRINT_STYLEA(0, 'Bold', 1)
+          LODOP.ADD_PRINT_TEXT('30mm', '40mm', '40mm', '12mm', sjtel)
+          LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+          LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+          LODOP.SET_PRINT_STYLEA(0, 'Alignment', 1)
+          LODOP.SET_PRINT_STYLEA(0, 'Bold', 1)
+          LODOP.ADD_PRINT_TEXT('35mm', '15mm', '75mm', '18mm', sjaddress)
+          LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+          LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+          LODOP.SET_PRINT_STYLEA(0, 'Alignment', 1)
+          LODOP.SET_PRINT_STYLEA(0, 'Bold', 1)
+
+          // 寄件人
+          LODOP.ADD_PRINT_TEXT('48mm', '2mm', '12mm', '12mm', '寄')
+          LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+          LODOP.SET_PRINT_STYLEA(0, 'FontSize', 16)
+          LODOP.SET_PRINT_STYLEA(0, 'Alignment', 2)
+          LODOP.SET_PRINT_STYLEA(0, 'Bold', 1)
+          LODOP.ADD_PRINT_TEXT('48mm', '15mm', '30mm', '12mm', jjname)
+          LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+          LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+          LODOP.SET_PRINT_STYLEA(0, 'Alignment', 1)
+          LODOP.ADD_PRINT_TEXT('48mm', '40mm', '40mm', '12mm', jjtel)
+          LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+          LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+          LODOP.SET_PRINT_STYLEA(0, 'Alignment', 1)
+          LODOP.ADD_PRINT_TEXT('52mm', '15mm', '75mm', '18mm', jjaddress)
+          LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+          LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+          LODOP.SET_PRINT_STYLEA(0, 'Alignment', 1)
+          LODOP.ADD_PRINT_BARCODE('60mm', '13mm', '80mm', '16mm', '128B', mailno)
+          LODOP.ADD_PRINT_TEXT('83mm', '4mm', '72mm', '20mm', sign_need_read)
+          LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+          LODOP.SET_PRINT_STYLEA(0, 'FontSize', 7)
+          LODOP.SET_PRINT_STYLEA(0, 'Alignment', 1)
+          LODOP.SET_PRINT_STYLEA(0, 'LineSpacing', -2)
+          LODOP.SET_PRINT_STYLEA(0, 'LetterSpacing', -1)
+          LODOP.ADD_PRINT_TEXT('96mm', '65mm', '20mm', '8mm', '签收栏')
+          LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+          LODOP.SET_PRINT_STYLEA(0, 'FontSize', 8)
+          LODOP.SET_PRINT_STYLEA(0, 'Alignment', 1)
+          LODOP.ADD_PRINT_TEXT('88mm', '78mm', '20mm', '20mm', '已验视')
+          LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+          LODOP.SET_PRINT_STYLEA(0, 'FontSize', 13)
+          LODOP.SET_PRINT_STYLEA(0, 'Alignment', 2)
+          LODOP.SET_PRINT_STYLEA(0, 'Bold', 1)
+
+          LODOP.ADD_PRINT_BARCODE('112mm', '55mm', '50mm', '8mm', '128B', mailno)
+
+          LODOP.ADD_PRINT_TEXT('123mm', '2mm', '10mm', '10mm', '收')
+          LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+          LODOP.SET_PRINT_STYLEA(0, 'FontSize', 14)
+          LODOP.SET_PRINT_STYLEA(0, 'Alignment', 2)
+          LODOP.SET_PRINT_STYLEA(0, 'Bold', 1)
+          LODOP.ADD_PRINT_TEXT('121mm', '15mm', '20mm', '8mm', sjname)
+          LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+          LODOP.SET_PRINT_STYLEA(0, 'FontSize', 8)
+          LODOP.SET_PRINT_STYLEA(0, 'Alignment', 1)
+          LODOP.ADD_PRINT_TEXT('121mm', '40mm', '40mm', '8mm', sjtel)
+          LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+          LODOP.SET_PRINT_STYLEA(0, 'FontSize', 8)
+          LODOP.SET_PRINT_STYLEA(0, 'Alignment', 1)
+          LODOP.ADD_PRINT_TEXT('124mm', '15mm', '80mm', '16mm', sjaddress)
+          LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+          LODOP.SET_PRINT_STYLEA(0, 'FontSize', 8)
+          LODOP.SET_PRINT_STYLEA(0, 'Alignment', 1)
+
+          LODOP.ADD_PRINT_TEXT('133mm', '2mm', '10mm', '10mm', '寄')
+          LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+          LODOP.SET_PRINT_STYLEA(0, 'FontSize', 14)
+          LODOP.SET_PRINT_STYLEA(0, 'Alignment', 2)
+          LODOP.SET_PRINT_STYLEA(0, 'Bold', 1)
+          LODOP.ADD_PRINT_TEXT('131mm', '15mm', '20mm', '8mm', jjname)
+          LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+          LODOP.SET_PRINT_STYLEA(0, 'FontSize', 8)
+          LODOP.SET_PRINT_STYLEA(0, 'Alignment', 1)
+          LODOP.ADD_PRINT_TEXT('131mm', '40mm', '40mm', '8mm', jjtel)
+          LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+          LODOP.SET_PRINT_STYLEA(0, 'FontSize', 8)
+          LODOP.SET_PRINT_STYLEA(0, 'Alignment', 1)
+          LODOP.ADD_PRINT_TEXT('134mm', '15mm', '80mm', '16mm', jjaddress)
+          LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+          LODOP.SET_PRINT_STYLEA(0, 'FontSize', 8)
+          LODOP.SET_PRINT_STYLEA(0, 'Alignment', 1)
+
           LODOP.PREVIEW()
         } else {
           // LODOP.ADD_PRINT_TEXTA('a', 190, 117, 100, 30, sjname) // a
@@ -2957,6 +3174,7 @@
         }
       },
       handleInnerUpdate3(row) {
+        console.log(row)
         this.logisticsTypeOptions = []
         this.temp = Object.assign({}, row)
         this.dialogStatus = 'update'

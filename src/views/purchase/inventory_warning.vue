@@ -18,9 +18,11 @@
                     <!--:value="item.id">-->
         <!--</el-option>-->
       <!--</el-select>-->
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary"
-                 icon="el-icon-search">搜索
-      </el-button>
+      <div class="filter-float">
+        <el-button class="filter-item" size="small" @click="handleFilter" type="primary"
+                   icon="el-icon-search">搜索
+        </el-button>
+      </div>
     </div>
     <el-table :key='tableKey'
               :data="list"

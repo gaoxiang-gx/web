@@ -54,133 +54,134 @@
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">搜索</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加</el-button>
 
-      <el-table :key='tableKey'
-                :data="list"
-                v-loading="listLoading"
-                element-loading-text="给我一点时间"
-                border
-                fit
-                highlight-current-row
-                style="width: 100%"
-                stripe>
-        <el-table-column align="center" label="商品名称" min-width="150" >
-          <template slot-scope="scope">
-            <span>{{scope.row.goods_name}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="出入库" min-width="100">
-          <template slot-scope="scope">
-            <el-tag :type="scope.row.number < 0? 'danger': 'success'">{{scope.row.number < 0? '出库': '入库'}}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="操作类型" min-width="100">
-          <template slot-scope="scope">
-            <el-tag :type="scope.row.operate_type | handleTypeClass">{{scope.row.operate_type | handleType}}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="数量" min-width="150" >
-          <template slot-scope="scope">
-            <span>{{scope.row.number}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="备注" min-width="150" >
-          <template slot-scope="scope">
-            <span>{{scope.row.info}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="操作人" min-width="150" >
-          <template slot-scope="scope">
-            <span>{{scope.row.operator_account_name}}</span><br>
-            <span>{{scope.row.datetime}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="操作" min-width="150" >
-          <template slot-scope="scope">
-            <!--<el-button size="mini" @click="handleUpdate(scope.row)" type="primary">编辑</el-button>-->
-            <el-button size="mini" @click="handleDelete(scope.row)" type="danger">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
 
-      <div v-show="!listLoading" class="pagination-container">
-        <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
-                       :page-sizes="[10,20,30, 50]" :page-size="listQuery.page_size" layout="total, sizes, prev, pager, next, jumper" :total="total">
-        </el-pagination>
-      </div>
-
-
-      <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
-        <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="120px" style='width: 80%; margin-left:10%;'>
-          <!--<el-form-item label="仓库" prop="warehouse_id">-->
-            <!--<el-select  style="width:100%"-->
-                        <!--@change="handleWarehouse"-->
-                        <!--v-model="temp.warehouse_id"-->
-                        <!--clearable-->
-                        <!--placeholder="仓库">-->
-              <!--<el-option  v-for="item in warehouseOptions"-->
-                          <!--:key="item.id"-->
-                          <!--:label="item.name"-->
-                          <!--:value="item.id">-->
-              <!--</el-option>-->
-            <!--</el-select>-->
-          <!--</el-form-item>-->
-          <el-form-item label="商品" prop="product_goods_storage_id">
-            <el-select v-model="temp.product_goods_storage_id"
-                       style="width: 100%"
-                       filterable
-                       clearable
-                       remote
-                       placeholder="请选择商品"
-                       :remote-method="getWarehouseProductGoodsStorageList"
-                       :loading="productLoading">
-              <el-option  v-for="item in productOptions"
-                          :key="item.id"
-                          :label="item.product_goods.goods_name"
-                          :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="商品数量" prop="number">
-            <el-input-number v-model.number="temp.number" style="width: 100%"></el-input-number>
-          </el-form-item>
-          <el-form-item label="出入库" prop="is_input">
-            <el-select  style="width: 100%"
-                        clearable
-                        v-model="temp.is_input"
-                        placeholder="出入库">
-              <el-option  v-for="item in stateOptions"
-                          :key="item.id"
-                          :label="item.label"
-                          :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="操作类型" prop="operate_type">
-            <el-select  style="width: 100%"
-                        clearable
-                        v-model="temp.operate_type"
-                        placeholder="操作状态">
-              <el-option  v-for="item in stateOptions2"
-                          :key="item.id"
-                          :label="item.label"
-                          :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="备注" >
-            <el-input v-model="temp.info"
-                      style="width: 100%"
-                      type="textarea">
-            </el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button v-if="dialogStatus === 'create'" type="primary" @click="createData">确 定</el-button>
-          <el-button v-else type="primary" @click="updateData">确 定</el-button>
-        </div>
-      </el-dialog>
     </div>
+    <el-table :key='tableKey'
+              :data="list"
+              v-loading="listLoading"
+              element-loading-text="给我一点时间"
+              border
+              fit
+              highlight-current-row
+              style="width: 100%"
+              stripe>
+      <el-table-column align="center" label="商品名称" min-width="150" >
+        <template slot-scope="scope">
+          <span>{{scope.row.goods_name}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="出入库" min-width="100">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.number < 0? 'danger': 'success'">{{scope.row.number < 0? '出库': '入库'}}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="操作类型" min-width="100">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.operate_type | handleTypeClass">{{scope.row.operate_type | handleType}}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="数量" min-width="150" >
+        <template slot-scope="scope">
+          <span>{{scope.row.number}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="备注" min-width="150" >
+        <template slot-scope="scope">
+          <span>{{scope.row.info}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="操作人" min-width="150" >
+        <template slot-scope="scope">
+          <span>{{scope.row.operator_account_name}}</span><br>
+          <span>{{scope.row.datetime}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="操作" min-width="150" >
+        <template slot-scope="scope">
+          <!--<el-button size="mini" @click="handleUpdate(scope.row)" type="primary">编辑</el-button>-->
+          <el-button size="mini" @click="handleDelete(scope.row)" type="danger">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <div v-show="!listLoading" class="pagination-container">
+      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
+                     :page-sizes="[10,20,30, 50]" :page-size="listQuery.page_size" layout="total, sizes, prev, pager, next, jumper" :total="total">
+      </el-pagination>
+    </div>
+
+
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
+      <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="120px" style='width: 80%; margin-left:10%;'>
+        <!--<el-form-item label="仓库" prop="warehouse_id">-->
+        <!--<el-select  style="width:100%"-->
+        <!--@change="handleWarehouse"-->
+        <!--v-model="temp.warehouse_id"-->
+        <!--clearable-->
+        <!--placeholder="仓库">-->
+        <!--<el-option  v-for="item in warehouseOptions"-->
+        <!--:key="item.id"-->
+        <!--:label="item.name"-->
+        <!--:value="item.id">-->
+        <!--</el-option>-->
+        <!--</el-select>-->
+        <!--</el-form-item>-->
+        <el-form-item label="商品" prop="product_goods_storage_id">
+          <el-select v-model="temp.product_goods_storage_id"
+                     style="width: 100%"
+                     filterable
+                     clearable
+                     remote
+                     placeholder="请选择商品"
+                     :remote-method="getWarehouseProductGoodsStorageList"
+                     :loading="productLoading">
+            <el-option  v-for="item in productOptions"
+                        :key="item.id"
+                        :label="item.product_goods.goods_name"
+                        :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="商品数量" prop="number">
+          <el-input-number v-model.number="temp.number" style="width: 100%"></el-input-number>
+        </el-form-item>
+        <el-form-item label="出入库" prop="is_input">
+          <el-select  style="width: 100%"
+                      clearable
+                      v-model="temp.is_input"
+                      placeholder="出入库">
+            <el-option  v-for="item in stateOptions"
+                        :key="item.id"
+                        :label="item.label"
+                        :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="操作类型" prop="operate_type">
+          <el-select  style="width: 100%"
+                      clearable
+                      v-model="temp.operate_type"
+                      placeholder="操作状态">
+            <el-option  v-for="item in stateOptions2"
+                        :key="item.id"
+                        :label="item.label"
+                        :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="备注" >
+          <el-input v-model="temp.info"
+                    style="width: 100%"
+                    type="textarea">
+          </el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button v-if="dialogStatus === 'create'" type="primary" @click="createData">确 定</el-button>
+        <el-button v-else type="primary" @click="updateData">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 

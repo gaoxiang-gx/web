@@ -25,7 +25,8 @@ export default {
 </script>
 <style>
   .app-main {
-    padding-top:50px;
     position: relative;
+    min-height: calc(100vh - 74px);
+    /*background-color: #f8f8f8;*/
   }
 </style>

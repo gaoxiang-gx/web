@@ -1,6 +1,6 @@
 <template>
-  <div class="hamburger-container" >
-    <div class="svg-warpper" @click="toggleClick" >
+  <div class="hamburger-container" @click="toggleClick">
+    <div class="hamburger-box">
       <svg-icon style="margin: 0" icon-class="sidebar-show" class="svg_icon hamburger" :class="{'sidebar-is-active':isActive}"/>
     </div>
   </div>
@@ -22,50 +22,47 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+  @import "../../styles/variables.scss";
+
   .hamburger-container {
-    height: 48px;
-    width: 16px;
-    line-height: 16px;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $sidebar-bg;
+    &:before{
+      content: '';
+      width: 0;
+      height: 0;
+      bottom: -4px;
+      left: 0;
+      border-left: 8px solid $sidebar-bg;
+      border-top: 2px solid $sidebar-bg;
+      border-right: 8px solid transparent;
+      border-bottom: 2px solid transparent;
+      position: absolute;
+    }
+    &:after{
+      content: '';
+      width: 0;
+      height: 0;
+      top: -4px;
+      left: 0;
+      border-left: 8px solid $sidebar-bg;
+      border-top: 2px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 2px solid $sidebar-bg;
+      position: absolute;
+    }
   }
-  .svg-warpper {
-    position: absolute;
-    left: 0;
-    top: 16px;
-    width: 16px;
-    height: 16px;
-    background: #8a8a8a;
+  .hamburger {
+    font-size: 14px;
+    display: inline-block;
+    transform: rotate(0deg);
+    transform-origin: 50% 50%;
   }
-  .svg-warpper:before {
-    content: '';
-    width: 0;
-    height: 0;
-    top: -16px;
-    left: 0;
-    border: 8px solid transparent;
-    border-bottom-color: #8a8a8a;
-    border-left-color: #8a8a8a;
-    position: absolute;
+  .sidebar-is-active {
+      transform: rotate(180deg);
   }
-  .svg-warpper:after {
-    content: '';
-    width: 0;
-    height: 0;
-    left: 0;
-    bottom: -16px;
-    position: absolute;
-    border: 8px solid;
-    border-color: #8a8a8a transparent transparent #8a8a8a;
-  }
-.hamburger {
-  font-size: 14px;
-  display: inline-block;
-  cursor: pointer;
-  transform: rotate(0deg);
-  transform-origin: 50% 50%;
-}
-.sidebar-is-active {
-    transform: rotate(180deg);
-}
 </style>

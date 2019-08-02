@@ -1,68 +1,70 @@
 <template>
   <div class="navbar-warpper">
-    <el-menu class="navbar"
-             text-color="#fff"
-             background-color="#252a2f"
-             mode="horizontal">
+    <div class="navbar">
+      <!--<div class="home">-->
+        <!--<svg-icon class="svg_icon" :icon-class="gateway_code + '_dashboard'" />-->
+      <!--</div>-->
+      <div class="gateway-name">
+        <router-link to="/">
+          <el-button type="text" class="name">{{project_name}}</el-button>
+        </router-link>
+      </div>
       <!--<hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>-->
       <!--<breadcrumb></breadcrumb>-->
-      <router-link to="/dashboard" class="system-name">{{project_name}}</router-link>
-      <el-submenu index="1" class="avatar-container">
-        <img slot="title" style="cursor: pointer" class="user-img" :src="avatar">
-        <div class="user-dropdown">
-          <div class="user-dropdown-top">
-            <router-link class="link" to="/user_center/user_center/user_info">
-              <img class="user-dropdown-user-img" :src="avatar">
-              <span class="link-hover">{{$store.state.user.name}}</span>
-            </router-link>
+      <theme-picker @change="pickTheme"></theme-picker>
+      <el-menu class="menu-box" text-color="#fff" background-color="#3f4650" mode="horizontal">
+        <el-submenu index="1" class="messageNotification">
+          <div slot="title">
+            <el-badge :value="(system_notice + important_notice)" :hidden="(system_notice + important_notice) === 0 ? true : false"  class="item">
+              <i class="el-icon-message"></i>
+            </el-badge>
           </div>
-          <router-link to="/user_center/user_center/integral_query" class="link-hover">
-            <div class="user-dropdown-item">
+          <div class="message-menu">
+            <a url="" class="message-a">
+              <span class="link-hover">重要通知</span>
+              <span class="message-icon" v-show="important_notice!=0">{{important_notice}}</span>
+            </a>
+            <a url="" class="message-a">
+              <span class="link-hover">系统消息</span>
+              <span class="message-icon" v-show="system_notice!=0">{{system_notice}}</span>
+            </a>
+          </div>
+        </el-submenu>
+
+        <el-submenu index="2" class="avatar-container">
+          <img slot="title" style="cursor: pointer" class="user-img" :src="avatar">
+          <div class="message-menu">
+            <div class="user-dropdown-top">
+              <router-link class="user-dropdown-top-a" to="/user_center/user_center/user_info">
+                <img class="user-dropdown-user-img" :src="avatar">
+                <span class="link-hover user-dropdown-user-name">{{$store.state.user.name}}</span>
+              </router-link>
+            </div>
+            <router-link to="/user_center/user_center/integral_query" class="link-hover user-dropdown-item">
               <svg-icon icon-class="accumulate_points" class="svg_icon"/>
               积分:<span></span>
-            </div>
-          </router-link>
-          <router-link to="/user_center/user_center/user_info" class="link-hover">
-            <div class="user-dropdown-item">
+            </router-link>
+            <router-link to="/user_center/user_center/user_info" class="link-hover user-dropdown-item">
               <svg-icon icon-class="account_setting" class="svg_icon"/>
               账户设置
+            </router-link>
+            <div class="user-dropdown-bottom">
+              <span @click="logout" class="logout">退出登录</span>
             </div>
-          </router-link>
-          <div class="user-dropdown-bottom">
-            <span class="link-hover" @click="selectAccount">切换账号</span>
           </div>
-          <div class="user-dropdown-bottom">
-            <span class="link-hover" @click="logout">退出登录</span>
-          </div>
-        </div>
-      </el-submenu>
+        </el-submenu>
+      </el-menu>
+      <!--<div class="logout-box">-->
+        <!--<svg-icon class="svg_icon" icon-class="exit" />-->
+      <!--</div>-->
+    </div>
 
-      <el-submenu index="0" class="messageNotification">
-        <div slot="title">
-          <el-badge :value="(system_notice + important_notice)" :hidden="(system_notice + important_notice) === 0 ? true : false"  class="item">
-            <i class="el-icon-message" style="font-size: 30px;margin-top: -40px;color: white"></i>
-          </el-badge>
-        </div>
-        <div class="message-menu">
-          <a url="" class="message-a">
-            <span class="link-hover">重要通知</span>
-            <div class="message-icon" v-show="important_notice!=0">{{important_notice}}</div>
-          </a>
-          <a url="" class="message-a">
-            <span class="link-hover">系统消息</span>
-            <div class="message-icon" v-show="system_notice!=0">{{system_notice}}</div>
-          </a>
-        </div>
-      </el-submenu>
-
-    </el-menu>
-    <el-dialog
-      title="提示"
-      style="font-size: 20px"
-      :visible.sync="centerDialogVisible"
-      width="30%"
-      class="el-title"
-      center>
+    <el-dialog title="提示"
+                style="font-size: 20px"
+                :visible.sync="centerDialogVisible"
+                width="30%"
+                class="el-title"
+                center>
       <p style="text-align: center;font-size: 25px">你有新的未读消息</p>
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
@@ -75,16 +77,18 @@
 <script>
 import { mapGetters } from 'vuex'
 import { getUnreadNoticeData } from '@/api/user'
+import { setTheme } from '@/utils/auth'
 import Breadcrumb from '@/components/Breadcrumb'
+import themePicker from '@/components/themePicker'
 import Hamburger from '@/components/Hamburger'
-import { removeAccountToken } from '@/utils/auth'
-
-import bus from '@/views/layout/bus'
 import CountUp from 'countup.js'
 export default {
   data() {
     return {
+      gateway_code: process.env.PRO_CODE,
       project_name: process.env.PRO_NAME,
+      showIcon: false,
+      showName: false,
       performance: 0,
       oldPerformance: 0,
       curperformance: 0,
@@ -92,33 +96,31 @@ export default {
       system_notice: 0,
       important_notice: 0,
       centerDialogVisible: false,
+      themeDialogVisible: false,
       original_important_notice: 0,
       numAnim: null
     }
   },
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    themePicker
   },
   computed: {
     ...mapGetters([
       'sidebar',
       'avatar'
-    ])
+    ]),
+    opened() {
+      return this.$store.state.app.sidebar.opened
+    }
   },
   mounted() {
-
   },
   created() {
-    this.refreshMessage()
     // this.getCount()
   },
   methods: {
-    refreshMessage() {
-      setInterval(() => {
-        // this.getCount()
-      }, 60000)
-    },
     toggleSideBar() {
       this.$store.dispatch('ToggleSideBar')
     },
@@ -127,78 +129,142 @@ export default {
         location.reload() // 为了重新实例化vue-router对象 避免bug
       })
     },
-    selectAccount() {
-      removeAccountToken()
-      location.reload() // 为了重新实例化vue-router对象 避免bug
+    handleChangeTheme() {
+      this.themeDialogVisible = true
+    },
+    pickTheme(color) {
+      setTheme(color)
+      this.$store.commit('SET_THEME',color)
     },
     getCount() {
       getUnreadNoticeData({}).then(response => {
         this.system_notice = response.data.system_notice
         this.important_notice = response.data.important_notice
-        // alert(this.important_notice)
         if (this.$store.state.user.important_notice < this.important_notice) {
           this.centerDialogVisible = true
           this.$store.state.user.important_notice = this.important_notice
         }
-        // this.count = response.data.system_notice + response.data.important_notice
       })
     }
   }
 }
 </script>
 
-<style scoped lang="scss">
-  .system-name {
-    font-size: 16px;
-    color: white;
-    height: 50px;
-    line-height: 50px;
-    text-indent: 36px;
-    margin-left: 10px;
-  }
-  .navbar {
-    height: 50px;
-    line-height: 50px;
-    float: right;
-    border: 0px;
-    border-radius: 0px !important;
-    position: fixed;
-    z-index: 999;
-    width: 100%;
+<style lang="scss" scoped>
+  @import "../../../styles/variables.scss";
 
+  .navbar-warpper {
+    width: 100%;
+    height: 40px;
+    position: relative;
+    .navbar {
+      width: 100%;
+      height: 40px;
+      box-sizing: border-box;
+      position: fixed;
+      background-color: $nav-bg;
+      top: 0;
+      left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 1002;
+      /*.project-opened {*/
+         /*width: 80px;*/
+       /*}*/
+      .home {
+        width: 40px;
+        height: 100%;
+      }
+      .gateway-name {
+        padding-left: 40px;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        .name {
+          color: $color-white;
+          user-select:none;
+          font-size: 16px;
+          letter-spacing: 2px;
+          white-space: nowrap;
+        }
+      }
+      .menu-box {
+        height: 100%;
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+        border: none;
+        margin-left: 20px;
+        background: transparent;
+        /deep/ .el-submenu__icon-arrow {
+          display: none;
+        }
+        /deep/ .el-submenu{
+          margin: 0 10px;
+        }
+        /deep/ .el-submenu__title{
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+          line-height: 100%;
+          padding: 0;
+          margin: 0;
+          &:hover {
+            background-color: $nav-bg!important;
+          }
+        }
+        .svg_icon {
+          color: $color-gray;
+          &:hover {
+            color: $color-white;
+          }
+        }
+      }
+      .logout-box {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        svg {
+          color: white;
+          cursor: pointer;
+          font-size: 22px;
+        }
+      }
+      .realtime-container{
+        text-align: right;
+        cursor: default;
+        .el-dropdown-link-i {
+          color: #E6A23c!important;
+          font-size: 28px;
+        }
+      }
+    }
+  }
   .screenfull {
     position: absolute;
     right: 90px;
     top: 16px;
     color: red;
   }
-  .realtime-container{
-    cursor: default;
-    height: 50px;
-    display: inline-block;
-    position: absolute;
-    right: 140px;
-  }
-  .avatar-container {
-    display: inline-block;
-    position: absolute;
-    height: 50px;
-    top: 0;
-    right: 0px;
-    /deep/ .el-submenu__title {
-      padding: 0 10px;
-      height: 50px;
-      .el-submenu__icon-arrow{
-        display: none;
-      }
+
+  .messageNotification {
+    i {
+      font-size: 20px;
+      color: $color-gray;
       &:hover {
-        background-color: #191d21!important;
+        color: $color-white;
       }
     }
+  }
+  .avatar-container {
     .user-img {
-      margin-top: -11px;
-      width: 38px;
-      height: 38px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
     }
     .el-icon-caret-bottom {
@@ -212,109 +278,88 @@ export default {
       position: relative;
     }
   }
-  .messageNotification {
-    height: 50px;
-    position: absolute;
-    right: 60px;
-    top: 0;
-    /deep/ .el-submenu__icon-arrow {
-      display: none;
-    }
-    /deep/ .el-submenu__title {
-      height: 50px;
-    }
-    &:hover {
-      background-color: #191d21!important;
-    }
-    .el-badge {
-      height: 30px;
-      .el-icon-message{
-
-      }
-    }
+  .el-icon-star-on {
+    color: #ffe600;
   }
-}
-.el-icon-star-on {
-  color: #ffe600;
-}
-.el-title{
-  .el-dialog__title{
-    line-height: 24px;
-    font-size: 33px !important;
-    color: #303133;
-  }
-}
-  .message-menu {
-    width: 150px;
-    color: white;
-    .message-a {
-      font-size: 14px;
-      width: 100%;
-      height: 20px;
-      position: relative;
-      display: inline-block;
-      text-align: center;
-      height: 24px;
+  .el-title{
+    .el-dialog__title{
       line-height: 24px;
+      font-size: 33px !important;
+      color: #303133;
     }
-    .message-a:hover {
-      background-color: #192129;
+  }
+  .message-menu {
+    min-height: 60px;
+    padding: 10px;
+    margin: 0;
+    font-size: $text-sm;
+    background-color: $nav-bg;
+    color: white;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    .message-a {
+      display: flex;
+      justify-content: space-between;
+      width: 100px;
+      margin: 10px 0;
     }
     .message-icon {
-      position: absolute;
       background:#f56c6c;
       border: 1px solid white;
       width: 20px;
       color: #fff;
       height: 20px;
-      top: 0;
-      right: 10px;
       border-radius: 50%;
       line-height: 20px;
       text-align: center;
     }
-  }
-  .user-dropdown {
-    margin-top: 0px;
-    width: 200px;
-    border: 0px;
-    color: #fff;
-    font-size: 14px;
-    height: auto;
-    padding: 10px;
     .user-dropdown-top {
+      width: 100%;
+      font-size: $text-sm;
       padding: 0 0 10px 0;
-      height: 50px;
-      border-bottom: 1px solid #ffffff1a;
-      .link {
+      border-bottom: 1px solid #9e9e9e;
+      .user-dropdown-top-a {
         display: flex;
+        flex-flow: row nowrap;
         align-items: center;
+        justify-content: space-between;
       }
       .user-dropdown-user-img {
-        width: 42px;
-        height: 42px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
       }
-      span {
-        box-sizing: border-box;
+      .user-dropdown-user-name {
         padding: 0 4px;
-        font-size: 12px;
+        max-width: 140px;
+        flex: 1;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space:nowrap;
       }
     }
     .user-dropdown-item {
-      height: 32px;
-      line-height: 32px;
+      width: 100%;
+      margin: 10px 0;
     }
     .user-dropdown-bottom {
+      width: 100%;
       text-align: center;
-      font-size: 14px;
       padding-top: 10px;
-      border-top: 1px solid #ffffff1a;
+      border-top: 1px solid #9e9e9e;
+      .logout {
+        cursor: pointer;
+        &:hover {
+          transition: all .3s;
+          color: red;
+        }
+      }
     }
   }
-  .el-menu--popup-bottom-start {
-    margin-top: 0;
-  }
+
 
 </style>
 

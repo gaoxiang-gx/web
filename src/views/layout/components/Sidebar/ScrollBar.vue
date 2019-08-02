@@ -10,7 +10,7 @@
 <script>
   import { mapGetters } from 'vuex'
   import Hamburger from '@/components/Hamburger'
-  const delta = 15
+  const delta = 70
 
 export default {
   name: 'scrollBar',
@@ -58,21 +58,24 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-@import '../../styles/variables.scss';
+@import '../../../../styles/variables.scss';
 
 .scroll-container {
   position: relative;
   width: 100%;
   height: 100%;
-  background-color: $menuBg;
+  background-color: $sidebar-bg;
   .scroll-wrapper {
     position: absolute;
-     width: 100%!important;
+    width: 100%!important;
   }
-}
-.hamburger-container {
-  position: absolute;
-  right: -16px;
-  top: 300px;
+  .hamburger-container {
+    position: absolute;
+    right: -16px;
+    top: 50%;
+    width: 16px;
+    height: 48px;
+    margin-top: -24px;
+  }
 }
 </style>

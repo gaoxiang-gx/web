@@ -70,57 +70,56 @@
         </el-option>
       </el-select>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">搜索</el-button>
+    </div>
 
-      <el-table :key='tableKey'
-                :data="list"
-                v-loading="listLoading"
-                element-loading-text="给我一点时间"
-                border
-                fit
-                highlight-current-row
-                style="width: 100%"
-                stripe>
-        <el-table-column align="center" label="仓库" min-width="150" >
-          <template slot-scope="scope">
-            <span>{{scope.row.warehouse_name}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="商品名称" min-width="150" >
-          <template slot-scope="scope">
-            <span>{{scope.row.goods_name}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="出入库" min-width="100">
-          <template slot-scope="scope">
-            <el-tag v-if="scope.row.number > 0" type="success">入库</el-tag>
-            <el-tag v-else type="danger">出库</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="操作类型" min-width="150" >
-          <template slot-scope="scope">
-            <el-tag :type="scope.row.operate_type | handleTypeClass">{{scope.row.operate_type | handleType}}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="数量" min-width="150" >
-          <template slot-scope="scope">
-            <span v-if="scope.row.number > 0" style="color: #67c23a;font-size: 20px;font-weight: 600;">{{scope.row.number}}</span>
-            <span v-else style="color: #f56c6c;font-size: 20px;font-weight: 600;">{{scope.row.number}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="操作人" min-width="150" >
-          <template slot-scope="scope">
-            <span>{{scope.row.operator_account_name}}</span><br>
-            <span>{{scope.row.datetime}}</span>
-          </template>
-        </el-table-column>
-      </el-table>
+    <el-table :key='tableKey'
+              :data="list"
+              v-loading="listLoading"
+              element-loading-text="给我一点时间"
+              border
+              fit
+              highlight-current-row
+              style="width: 100%"
+              stripe>
+      <el-table-column align="center" label="仓库" min-width="150" >
+        <template slot-scope="scope">
+          <span>{{scope.row.warehouse_name}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="商品名称" min-width="150" >
+        <template slot-scope="scope">
+          <span>{{scope.row.goods_name}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="出入库" min-width="100">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.number > 0" type="success">入库</el-tag>
+          <el-tag v-else type="danger">出库</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="操作类型" min-width="150" >
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.operate_type | handleTypeClass">{{scope.row.operate_type | handleType}}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="数量" min-width="150" >
+        <template slot-scope="scope">
+          <span v-if="scope.row.number > 0" style="color: #67c23a;font-size: 20px;font-weight: 600;">{{scope.row.number}}</span>
+          <span v-else style="color: #f56c6c;font-size: 20px;font-weight: 600;">{{scope.row.number}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="操作人" min-width="150" >
+        <template slot-scope="scope">
+          <span>{{scope.row.operator_account_name}}</span><br>
+          <span>{{scope.row.datetime}}</span>
+        </template>
+      </el-table-column>
+    </el-table>
 
-      <div v-show="!listLoading" class="pagination-container">
-        <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
-                       :page-sizes="[10,20,30,50]" :page-size="listQuery.page_size" layout="total, sizes, prev, pager, next, jumper" :total="total">
-        </el-pagination>
-      </div>
-
+    <div v-show="!listLoading" class="pagination-container">
+      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
+                     :page-sizes="[10,20,30,50]" :page-size="listQuery.page_size" layout="total, sizes, prev, pager, next, jumper" :total="total">
+      </el-pagination>
     </div>
   </div>
 </template>

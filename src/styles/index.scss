@@ -180,16 +180,49 @@ code {
   cursor: pointer;
   &:hover {
     transition: .3s;
-    color: #00c1de;
+    color: $color-white;
   }
 }
 
 .filter-container {
-  padding-bottom: 10px;
+  background: #edf2f9;
+  border-radius: 6px;
+  padding: 10px 10px 0;
+  margin-bottom: 20px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: flex-start;
+  .filter-row {
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: flex-start;
+  }
   .filter-item {
-    //display: inline-block;
-    vertical-align: middle;
     margin-bottom: 10px;
+    margin-right: 10px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: flex-start;
+  }
+  .filter-float {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .filter-label {
+    min-width: 50px;
+    font-size: 14px;
+    margin-right: 6px;
+    text-align: center;
+    color: #747474;
   }
 }
 
@@ -201,11 +234,11 @@ code {
 .multiselect--active {
   z-index: 1000 !important;
 }
-
+.el-menu--popup {
+  min-width: 0;
+}
 .el-menu--popup-bottom-start {
-  margin-top: 0px;
+  margin-top: 4px;
+  padding: 0;
 }
-.el-menu--horizontal .el-menu--popup {
-  min-width: 50px;
-  background-color: #191d21!important;
-}
+

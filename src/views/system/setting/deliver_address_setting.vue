@@ -1,144 +1,147 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-      <el-button class="filter-item" @click="handleCreate" type="primary" icon="el-icon-edit">创建发货库</el-button>
-      <el-table :key='tableKey'
-                :data="list"
-                v-loading="listLoading"
-                element-loading-text="给我一点时间"
-                border
-                fit
-                highlight-current-row
-                style="width: 100%"
-                stripe>
-        <el-table-column align="center" label="ID" width="60">
-          <template slot-scope="scope">
-            <span>{{scope.row.id}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="发货信息模板名称" min-width="300">
-          <template slot-scope="scope">
-            <span>{{scope.row.name}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="操作" min-width="150">
-          <template slot-scope="scope">
-            <el-button size="mini" @click="handleUpdate(scope.row)" type="primary">编辑</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <div v-show="!listLoading" class="pagination-container">
-        <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                       :current-page.sync="listQuery.page"
-                       :page-sizes="[10,20,30]" :page-size="listQuery.page_size"
-                       layout="total, sizes, prev, pager, next, jumper" :total="total">
-        </el-pagination>
+      <div class="filter-float">
+        <el-button class="filter-item" size="small" @click="handleCreate" type="primary" icon="el-icon-edit">创建发货库</el-button>
       </div>
-
-      <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="80%">
-        <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="150px"
-                 style='width: 100%;'>
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item label="库名称" prop="name">
-                <el-input v-model="temp.name"></el-input>
-              </el-form-item>
-              <el-form-item label="寄件地（省）" prop="delivery_province">
-                <el-input v-model="temp.delivery_province"></el-input>
-              </el-form-item>
-              <el-form-item label="寄件地（市）" prop="delivery_city">
-                <el-input v-model="temp.delivery_city"></el-input>
-              </el-form-item>
-              <el-form-item label="寄件地（区）" prop="delivery_district">
-                <el-input v-model="temp.delivery_district"></el-input>
-              </el-form-item>
-              <el-form-item label="寄件邮编" prop="delivery_post_code">
-                <el-input v-model="temp.delivery_post_code"></el-input>
-              </el-form-item>
-              <el-form-item label="发货地址（详细）" prop="delivery_address">
-                <el-input v-model="temp.delivery_address"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="发货产品" prop="product_ids">
-                <el-select v-model="temp.product_ids"
-                           filterable
-                           style="width: 100%"
-                           clearable
-                           multiple
-                           remote
-                           placeholder="请选择产品"
-                           :remote-method="getProductList"
-                           :loading="productLoading">
-                  <el-option v-for="item in productOptions"
-                             :key="item.id"
-                             :label="item.product_name"
-                             :value="item.id">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="物流公司" prop="order_logistics_type_id">
-                <el-select v-model="temp.order_logistics_type_ids"
-                           filterable
-                           style="width: 100%"
-                           clearable
-                           multiple
-                           remote
-                           placeholder="请选择物流公司"
-                           :remote-method="queryLogisticsTypeList"
-                           :loading="logisticsTypeLoading">
-                  <el-option v-for="item in logisticsTypeOptions"
-                             :key="item.id"
-                             :label="item.name"
-                             :value="item.id">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="顺丰额外信息" prop="product_deliver_extra_sf"
-                            v-show="temp.order_logistics_type_ids.indexOf(1) > -1">
-                <el-select v-model="temp.product_deliver_extra_sf"
-                           filterable
-                           style="width: 100%"
-                           clearable
-                           remote
-                           placeholder="请选择额外信息"
-                           :remote-method="getProductDeliverExtrasf"
-                           :loading="logisticsTypeLoading_sf">
-                  <el-option v-for="item in logisticsTypeOptions_sf"
-                             :key="item.id"
-                             :label="item.description"
-                             :value="item.id">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="圆通额外信息" prop="product_deliver_extra_yt"
-                            v-show="temp.order_logistics_type_ids.indexOf(6) > -1">
-                <el-select v-model="temp.product_deliver_extra_yt"
-                           filterable
-                           style="width: 100%"
-                           clearable
-                           remote
-                           placeholder="请选择额外信息"
-                           :remote-method="getProductDeliverExtrayt"
-                           :loading="logisticsTypeLoading_yt">
-                  <el-option v-for="item in logisticsTypeOptions_yt"
-                             :key="item.id"
-                             :label="item.description"
-                             :value="item.id">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button v-if="dialogStatus === 'create'" type="primary" @click="createData">确 定</el-button>
-          <el-button v-else type="primary" @click="updateData">确 定</el-button>
-        </div>
-      </el-dialog>
     </div>
+
+    <el-table :key='tableKey'
+              :data="list"
+              v-loading="listLoading"
+              element-loading-text="给我一点时间"
+              border
+              fit
+              highlight-current-row
+              style="width: 100%"
+              stripe>
+      <el-table-column align="center" label="ID" width="60">
+        <template slot-scope="scope">
+          <span>{{scope.row.id}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="发货信息模板名称" min-width="300">
+        <template slot-scope="scope">
+          <span>{{scope.row.name}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="操作" min-width="150">
+        <template slot-scope="scope">
+          <el-button size="mini" @click="handleUpdate(scope.row)" type="primary">编辑</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <div v-show="!listLoading" class="pagination-container">
+      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                     :current-page.sync="listQuery.page"
+                     :page-sizes="[10,20,30]" :page-size="listQuery.page_size"
+                     layout="total, sizes, prev, pager, next, jumper" :total="total">
+      </el-pagination>
+    </div>
+
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="80%">
+      <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="150px"
+               style='width: 100%;'>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="库名称" prop="name">
+              <el-input v-model="temp.name"></el-input>
+            </el-form-item>
+            <el-form-item label="寄件地（省）" prop="delivery_province">
+              <el-input v-model="temp.delivery_province"></el-input>
+            </el-form-item>
+            <el-form-item label="寄件地（市）" prop="delivery_city">
+              <el-input v-model="temp.delivery_city"></el-input>
+            </el-form-item>
+            <el-form-item label="寄件地（区）" prop="delivery_district">
+              <el-input v-model="temp.delivery_district"></el-input>
+            </el-form-item>
+            <el-form-item label="寄件邮编" prop="delivery_post_code">
+              <el-input v-model="temp.delivery_post_code"></el-input>
+            </el-form-item>
+            <el-form-item label="发货地址（详细）" prop="delivery_address">
+              <el-input v-model="temp.delivery_address"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="发货产品" prop="product_ids">
+              <el-select v-model="temp.product_ids"
+                         filterable
+                         style="width: 100%"
+                         clearable
+                         multiple
+                         remote
+                         placeholder="请选择产品"
+                         :remote-method="getProductList"
+                         :loading="productLoading">
+                <el-option v-for="item in productOptions"
+                           :key="item.id"
+                           :label="item.product_name"
+                           :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="物流公司" prop="order_logistics_type_id">
+              <el-select v-model="temp.order_logistics_type_ids"
+                         filterable
+                         style="width: 100%"
+                         clearable
+                         multiple
+                         remote
+                         placeholder="请选择物流公司"
+                         :remote-method="queryLogisticsTypeList"
+                         :loading="logisticsTypeLoading">
+                <el-option v-for="item in logisticsTypeOptions"
+                           :key="item.id"
+                           :label="item.name"
+                           :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="顺丰额外信息" prop="product_deliver_extra_sf"
+                          v-show="temp.order_logistics_type_ids.indexOf(1) > -1">
+              <el-select v-model="temp.product_deliver_extra_sf"
+                         filterable
+                         style="width: 100%"
+                         clearable
+                         remote
+                         placeholder="请选择额外信息"
+                         :remote-method="getProductDeliverExtrasf"
+                         :loading="logisticsTypeLoading_sf">
+                <el-option v-for="item in logisticsTypeOptions_sf"
+                           :key="item.id"
+                           :label="item.description"
+                           :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="圆通额外信息" prop="product_deliver_extra_yt"
+                          v-show="temp.order_logistics_type_ids.indexOf(6) > -1">
+              <el-select v-model="temp.product_deliver_extra_yt"
+                         filterable
+                         style="width: 100%"
+                         clearable
+                         remote
+                         placeholder="请选择额外信息"
+                         :remote-method="getProductDeliverExtrayt"
+                         :loading="logisticsTypeLoading_yt">
+                <el-option v-for="item in logisticsTypeOptions_yt"
+                           :key="item.id"
+                           :label="item.description"
+                           :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button v-if="dialogStatus === 'create'" type="primary" @click="createData">确 定</el-button>
+        <el-button v-else type="primary" @click="updateData">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 

@@ -1,12 +1,11 @@
 <template>
-  <div class="tags-view-container">
+  <div class="tags-view-container" v-if="visitedViews.length > 0">
     <scroll-pane class='tags-view-wrapper' ref='scrollPane'>
-      <router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)" :to="tag.path" :key="tag.path" @contextmenu.prevent.native="openMenu(tag,$event)">
+      <router-link ref='tag' class="tags-view-item" :style="{backgroundColor: isActive(tag)? $store.getters.theme : '#fff',borderColor: isActive(tag)? $store.getters.theme : '#d8dce5'}" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)" :to="tag.path" :key="tag.path" @contextmenu.prevent.native="openMenu(tag,$event)">
         <!--{{generateTitle(tag.title)}}-->
         {{tag.title}}
         <span class='el-icon-close' @click.prevent.stop='closeSelectedTag(tag)'></span>
       </router-link>
-
     </scroll-pane>
     <ul class='contextmenu' v-show="visible" :style="{left:left+'px',top:top+'px'}">
       <li @click="closeSelectedTag(selectedTag)">关闭</li>
@@ -26,11 +25,15 @@ export default {
       visible: false,
       top: 0,
       left: 0,
-      selectedTag: {}
+      selectedTag: {},
+      styleObj: {
+        backgroundColor: this.$store.getters.theme
+      }
     }
   },
   computed: {
     visitedViews() {
+      console.log(this.$store.state.tagsView.visitedViews)
       return this.$store.state.tagsView.visitedViews
     }
   },
@@ -63,7 +66,8 @@ export default {
     },
     addViewTags() {
       const route = this.generateRoute()
-      if (!route) {
+      // console.log(route)
+      if (!route  || route.meta.hidden) {
         return false
       }
       this.$store.dispatch('addVisitedViews', route)
@@ -114,11 +118,19 @@ export default {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
-.tags-view-container {
+<style lang="scss" scoped>
+  @import "../../../styles/variables.scss";
+
+  .tags-view-container {
+    position: relative;
+    height: 34px;
+    z-index:900;
   .tags-view-wrapper {
     background: #fff;
-    height: 30px;
+    width: 100%;
+    top: 40px;
+    position: fixed;
+    height: 34px;
     border-bottom: 1px solid #d8dce5;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
     .tags-view-item {
@@ -131,16 +143,14 @@ export default {
       color: #495060;
       background: #fff;
       padding: 0 8px;
-      font-size: 14px;
+      font-size: 13px;
       margin-left: 3px;
       margin-top: 4px;
       &:first-of-type {
         margin-left: 15px;
       }
       &.active {
-        background-color: #42b983;
         color: #fff;
-        border-color: #42b983;
         &::before {
           content: '';
           background: #fff;
@@ -174,10 +184,6 @@ export default {
       }
     }
   }
-  position: fixed;
-  width: 100%;
-  top: 50px;
-  z-index:900;
 }
 /*.tags-view-container .tags-view-wrapper .tags-view-item.active[data-v-57b800e8] {*/
   /*background-color: #409EFF;*/

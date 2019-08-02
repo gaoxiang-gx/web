@@ -1,100 +1,103 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-      <el-button class="filter-item" @click="handleCreate" type="primary" icon="el-icon-edit">添加物流额外信息</el-button>
-      <el-table :key='tableKey'
-                :data="list"
-                v-loading="listLoading"
-                element-loading-text="给我一点时间"
-                border
-                fit
-                highlight-current-row
-                style="width: 100%"
-                stripe>
-        <el-table-column align="center" label="ID" width="60" >
-          <template slot-scope="scope">
-            <span>{{scope.row.id}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="物流" min-width="100">
-          <template slot-scope="scope">
-            <el-tag type="primary">{{logisticsTypeOptions.find( d => d.id == scope.row.order_logistics_type_id).name}}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="名称" min-width="300">
-          <template slot-scope="scope">
-            <span>{{scope.row.description}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="操作" min-width="200" >
-          <template slot-scope="scope">
-            <el-button size="mini" @click="handleUpdate(scope.row)" type="primary">编辑</el-button>
-            <!--<el-button @click="handleDelete" type="danger">删除</el-button>-->
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <div v-show="!listLoading" class="pagination-container">
-        <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
-                       :page-sizes="[10,20,30]" :page-size="listQuery.page_size" layout="total, sizes, prev, pager, next, jumper" :total="total">
-        </el-pagination>
+      <div class="filter-float">
+        <el-button class="filter-item" size="small" @click="handleCreate" type="primary" icon="el-icon-edit">添加物流额外信息</el-button>
       </div>
-
-      <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
-        <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="150px" style='width: 80%;margin-left: 10%'>
-          <el-form-item label="仓库" prop="warehouse_id">
-            <el-select
-              v-model="temp.warehouse_id"
-              filterable
-              style="width: 100%"
-              clearable
-              :disabled="disabled_order_logistics_type_id"
-              remote
-              placeholder="请选择仓库"
-              :remote-method="queryWarehouseList"
-              :loading="warehouseLoading">
-              <el-option v-for="item in warehouseOptions"
-                         :key="item.id"
-                         :label="item.name"
-                         :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="物流公司" prop="order_logistics_type_id">
-            <el-select
-              v-model="temp.order_logistics_type_id"
-              filterable
-              style="width: 100%"
-              clearable
-              :disabled="disabled_order_logistics_type_id"
-              remote
-              placeholder="请选择物流公司"
-              :remote-method="queryLogisticsTypeList"
-              :loading="logisticsTypeLoading">
-              <el-option v-for="item in logisticsTypeOptions"
-                         :key="item.id"
-                         :label="item.name"
-                         :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="额外信息名称" prop="description">
-            <el-input v-model="temp.description"></el-input>
-          </el-form-item>
-          <el-form-item v-if="temp.order_logistics_type_id === 1" label="月结账号" prop="configs.sf_monthly_account">
-            <el-input v-model="temp.configs.sf_monthly_account"></el-input>
-          </el-form-item>
-          <el-form-item v-if="temp.order_logistics_type_id === 1 || temp.order_logistics_type_id === 6" label="发货产品名称" prop="configs.delivery_product_name">
-            <el-input v-model="temp.configs.delivery_product_name"></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button v-if="dialogStatus === 'create'" type="primary" @click="createData">确 定</el-button>
-          <el-button v-else type="primary" @click="updateData">确 定</el-button>
-        </div>
-      </el-dialog>
     </div>
+
+    <el-table :key='tableKey'
+              :data="list"
+              v-loading="listLoading"
+              element-loading-text="给我一点时间"
+              border
+              fit
+              highlight-current-row
+              style="width: 100%"
+              stripe>
+      <el-table-column align="center" label="ID" width="60" >
+        <template slot-scope="scope">
+          <span>{{scope.row.id}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="物流" min-width="300">
+        <template slot-scope="scope">
+          <span type="primary">{{logisticsTypeOptions.find( d => d.id == scope.row.order_logistics_type_id).name}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="名称" min-width="300">
+        <template slot-scope="scope">
+          <span>{{scope.row.description}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="操作" width="200">
+        <template slot-scope="scope">
+          <el-button size="mini" @click="handleUpdate(scope.row)" type="primary">编辑</el-button>
+          <!--<el-button @click="handleDelete" type="danger">删除</el-button>-->
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <div v-show="!listLoading" class="pagination-container">
+      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
+                     :page-sizes="[10,20,30]" :page-size="listQuery.page_size" layout="total, sizes, prev, pager, next, jumper" :total="total">
+      </el-pagination>
+    </div>
+
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
+      <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="150px" style='width: 80%;margin-left: 10%'>
+        <el-form-item label="仓库" prop="warehouse_id">
+          <el-select
+            v-model="temp.warehouse_id"
+            filterable
+            style="width: 100%"
+            clearable
+            :disabled="disabled_order_logistics_type_id"
+            remote
+            placeholder="请选择仓库"
+            :remote-method="queryWarehouseList"
+            :loading="warehouseLoading">
+            <el-option v-for="item in warehouseOptions"
+                       :key="item.id"
+                       :label="item.name"
+                       :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="物流公司" prop="order_logistics_type_id">
+          <el-select
+            v-model="temp.order_logistics_type_id"
+            filterable
+            style="width: 100%"
+            clearable
+            :disabled="disabled_order_logistics_type_id"
+            remote
+            placeholder="请选择物流公司"
+            :remote-method="queryLogisticsTypeList"
+            :loading="logisticsTypeLoading">
+            <el-option v-for="item in logisticsTypeOptions"
+                       :key="item.id"
+                       :label="item.name"
+                       :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="额外信息名称" prop="description">
+          <el-input v-model="temp.description"></el-input>
+        </el-form-item>
+        <el-form-item v-if="temp.order_logistics_type_id === 1" label="月结账号" prop="configs.sf_monthly_account">
+          <el-input v-model="temp.configs.sf_monthly_account"></el-input>
+        </el-form-item>
+        <el-form-item v-if="temp.order_logistics_type_id === 1 || temp.order_logistics_type_id === 6" label="发货产品名称" prop="configs.delivery_product_name">
+          <el-input v-model="temp.configs.delivery_product_name"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button v-if="dialogStatus === 'create'" type="primary" @click="createData">确 定</el-button>
+        <el-button v-else type="primary" @click="updateData">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 

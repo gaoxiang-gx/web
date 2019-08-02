@@ -250,3 +250,32 @@ export function getDailyLogisticsOrdersCountStatistics(param) {
     data: param
   })
 }
+export function getSecondaryShopOrdersList(param) {
+  return request({
+    url: '/api/orders/getSecondaryShopOrdersList',
+    method: 'post',
+    data: param
+  })
+}
+export function deliverSecondaryShopOrders(param) {
+  return request({
+    url: '/api/orders/deliverSecondaryShopOrders',
+    method: 'post',
+    data: param
+  })
+}
+export function cancelSecondaryShopOrders(param) {
+  return request({
+    url: '/api/orders/cancelSecondaryShopOrders',
+    method: 'post',
+    data: param
+  })
+}
+export function getOrdersDepponLogisticsNumber(param) {
+  return request({
+    url: '/api/orders/getOrdersDepponLogisticsNumber',
+    method: 'post',
+    data: param
+  })
+}
+

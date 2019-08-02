@@ -1,20 +1,12 @@
 <template>
   <div class="sidebar-warrper" @mouseenter="mouseEnter">
     <div class="sidebar">
-      <!--<div class="sidebar-all-warpper">-->
-        <!--<div class="sidebar-all">-->
-          <!--<div class="svg-icon-warpper">-->
-            <!--<svg-icon icon-class="appstore add" class="svg_icon"/>-->
-          <!--</div>-->
-          <!--<span>产品与服务</span>-->
-        <!--</div>-->
-      <!--</div>-->
       <div class="sidebar-item" v-for="item in $store.state.user.getaways" :key="item.type_code">
-        <a :href="item.api_url">
-          <div class="svg-icon-warpper">
-            <svg-icon icon-class="example-sidebar" class="svg_icon"/>
-          </div>
-          <span>{{item.type_name}}</span>
+        <a :href="item.api_url" class="sidebar-item-a" :class="item.type_code == gateway_code? 'current': ''">
+          <div class="stamp-div" v-if="item.type_code == gateway_code"></div>
+          <svg-icon :icon-class="item.type_code + '_dashboard'" class="svg_icon"/>
+          <!--<svg-icon icon-class="example-sidebar" class="svg_icon"/>-->
+          <span class="gateway-name">{{item.type_name}}</span>
         </a>
       </div>
     </div>
@@ -25,6 +17,7 @@
 export default {
   data() {
     return {
+      gateway_code: process.env.PRO_CODE,
     }
   },
   methods: {
@@ -35,93 +28,64 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @import "../../../styles/variables.scss";
+
   .sidebar-warrper {
-    border-top: 1px solid #3b4044;
-    z-index: 1001;
-    position: fixed;
-    height: auto;
-    top: 50px;
-    left: 0;
+    /*border-top: 2px solid #a9a9a9;*/
   }
-  .svg-icon-warpper {
-    width: 36px;
-    display: block;
-    position: absolute;
-    font-size: 16px;
-    color: #bbb;
-    top: 0;
-    left: 0;
-  }
-.sidebar {
-  width: 36px;
-  height: 100vh;
-  background: #252a2f;
-  transition: .5s;
-  &:hover {
-    width: 216px;
-  }
-  .sidebar-item {
-    width: 100%;
-    overflow: hidden;
-    text-align: center;
-    white-space: nowrap;
-    cursor: pointer;
-    a {
-      color: white;
-    }
+
+  .sidebar {
+    width: 40px;
+    height: 100vh;
+    background-color: $home-sidebar-bg;
+    transition: width .5s;
     &:hover {
-      background: #192129;
+      width: 220px;
     }
-    &:hover .svg-icon-warpper{
-      color: white;
-    }
-    &:hover span{
-      color: #00c1de;
-    }
-  }
-  .sidebar-all-warpper {
-    width: 100%;
-    height: 40px;
-    padding: 4px 0;
-    border-bottom: 1px solid #ffffff1a;
-    border-top: 1px solid #ffffff1a;
-    &:hover .sidebar-list {
-      width: 700px;
-    }
-    &:hover .sidebar-all {
-      background: #00c1de;
-    }
-    .sidebar-all {
+    .sidebar-item {
       width: 100%;
-      overflow: hidden;
       height: 40px;
+      overflow: hidden;
+      text-align: center;
+      white-space: nowrap;
       cursor: pointer;
-      position: relative;
+      .current {
+        background-color: $sidebar-bg !important;
+        color: white!important;
+      }
+      .sidebar-item-a {
+        color: $color-gray;
+        width: 220px;
+        display: flex;
+        position: relative;
+        justify-content: space-between;
+        align-items: center;
+        .stamp-div {
+          position: absolute;
+          width: 4px;
+          height: 36px;
+          top: 2px;
+          left: 0;
+          background: $color-theme;
+        }
+        .svg_icon {
+          width: 20px;
+          height: 20px;
+          margin: 10px;
+        }
+        .gateway-name {
+          width: 170px;
+          font-size: $text-df;
+          padding-left: 10px;
+          text-align: left;
+        }
+      }
+      &:hover .svg_icon{
+        color: white;
+      }
+      &:hover .gateway-name{
+        color: white;
+      }
     }
   }
-  .sidebar-list {
-    width: 0px;
-    height: 300px;
-    background: red;
-    position: absolute;
-    left: 100%;
-    top: -1px;
-    transition: .8s;
-  }
-  >div {
-    width: 230px;
-    height: 50px;
-    line-height: 50px;
-    font-size: 18px;
-    color: #fff;
-    position: relative;
-  }
-  span {
-    width: 180px;
-    display: block;
-    text-align: left;
-    font-size: 14px;
-    margin-left: 36px;
-  }
-}
 </style>

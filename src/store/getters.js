@@ -10,7 +10,8 @@ const getters = {
   user_account_group_id: state => state.user.user_account_group_id,
   permission_routers: state => state.permission.routers,
   addRouters: state => state.permission.addRouters,
-  important_notice: state => state.user.important_notice
+  important_notice: state => state.user.important_notice,
+  theme: state => state.settings.theme
   // achievement: state => state.user.achievement
 }
 export default getters

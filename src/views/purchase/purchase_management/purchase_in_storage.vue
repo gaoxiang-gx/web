@@ -1,19 +1,25 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-      <el-date-picker class="filter-item"
-                      v-model="listQuery.date_range"
-                      type="daterange"
-                      format="yyyy-MM-dd"
-                      value-format="yyyy-MM-dd"
-                      align="right"
-                      unlink-panels
-                      range-separator="~"
-                      start-placeholder="开始日期"
-                      end-placeholder="结束日期"
-                      :picker-options="pickerOptions"
-                      @change='handleFilter'>
-      </el-date-picker>
+      <div class="filter-item">
+        <div class="filter-label">日期</div>
+        <el-date-picker size="small" v-model="listQuery.date_range"
+                        type="daterange"
+                        format="yyyy-MM-dd"
+                        value-format="yyyy-MM-dd"
+                        align="right"
+                        unlink-panels
+                        range-separator="~"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        :picker-options="pickerOptions"
+                        @change='handleFilter'>
+        </el-date-picker>
+      </div>
+      <div class="filter-float">
+        <el-button class="filter-item" size="small" @click="handleFilter" type="primary" icon="el-icon-search">搜索</el-button>
+        <el-button class="filter-item" size="small" @click="handleCreate" type="primary" icon="el-icon-edit">入库</el-button>
+      </div>
       <!--<el-select class="filter-item"-->
                   <!--v-model="listQuery.warehouse_id"-->
                  <!--filterable-->
@@ -39,95 +45,94 @@
                     <!--:value="item.id">-->
         <!--</el-option>-->
       <!--</el-select>-->
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">搜索</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">入库</el-button>
-      <el-table :key='tableKey'
-                :data="list"
-                v-loading="listLoading"
-                element-loading-text="给我一点时间"
-                border
-                fit
-                highlight-current-row
-                style="width: 100%"
-                stripe>
-        <el-table-column align="center" label="仓库" min-width="150" >
-          <template slot-scope="scope">
-            <span >{{scope.row.warehouse_name}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="商品" min-width="150" >
-          <template slot-scope="scope">
-            <span >{{scope.row.goods_name}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="数量" min-width="150" >
-          <template slot-scope="scope">
-            <span>{{scope.row.number}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="操作人" min-width="150" >
-          <template slot-scope="scope">
-            <span>{{scope.row.operator_account_name}}</span><br/>
-            <span>{{scope.row.datetime}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="操作" min-width="150" >
-          <template slot-scope="scope">
-            <!--<el-button size="mini" @click="handleUpdate(scope.row)" type="primary">编辑</el-button>-->
-            <el-button size="mini" @click="handleDelete(scope.row)" type="danger">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <div v-show="!listLoading" class="pagination-container">
-        <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
-                       :page-sizes="[10,20,30, 50]" :page-size="listQuery.page_size" layout="total, sizes, prev, pager, next, jumper" :total="total">
-        </el-pagination>
-      </div>
-
-      <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
-        <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="80px" style='width: 80%; margin-left:10%;'>
-          <!--<el-form-item label="仓库" prop="warehouse_id">-->
-            <!--<el-select v-model="temp.warehouse_id"-->
-                       <!--style="width: 100%"-->
-                       <!--filterable-->
-                       <!--clearable-->
-                       <!--placeholder="选择仓库">-->
-              <!--<el-option  v-for="item in warehouseOptions"-->
-                          <!--:key="item.id"-->
-                          <!--:label="item.name"-->
-                          <!--:value="item.id">-->
-              <!--</el-option>-->
-            <!--</el-select>-->
-          <!--</el-form-item>-->
-          <el-form-item label="商品">
-            <el-select v-model="temp.product_goods_id"
-                       style="width: 100%"
-                       @focus="getProductGoodsCommonBaseList(' ')"
-                       filterable
-                       clearable
-                       remote
-                       placeholder="选择商品"
-                       :remote-method="getProductGoodsCommonBaseList"
-                       :loading="commonBaseLoading">
-              <el-option  v-for="item in commonBaseOptions"
-                          :key="item.id"
-                          :label="item.goods_name"
-                          :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="商品数量" prop="number">
-            <el-input-number v-model.number="temp.number" style="width: 50%"></el-input-number>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button v-if="dialogStatus === 'create'" type="primary" @click="createData">确 定</el-button>
-          <!--<el-button v-else type="primary" @click="updateData">确 定</el-button>-->
-        </div>
-      </el-dialog>
     </div>
+
+    <el-table :key='tableKey'
+              :data="list"
+              v-loading="listLoading"
+              element-loading-text="给我一点时间"
+              border
+              fit
+              highlight-current-row
+              style="width: 100%"
+              stripe>
+      <el-table-column align="center" label="仓库" min-width="150" >
+        <template slot-scope="scope">
+          <span >{{scope.row.warehouse_name}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="商品" min-width="150" >
+        <template slot-scope="scope">
+          <span >{{scope.row.goods_name}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="数量" min-width="150" >
+        <template slot-scope="scope">
+          <span>{{scope.row.number}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="操作人" min-width="150" >
+        <template slot-scope="scope">
+          <span>{{scope.row.operator_account_name}}</span><br/>
+          <span>{{scope.row.datetime}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="操作" min-width="150" >
+        <template slot-scope="scope">
+          <!--<el-button size="mini" @click="handleUpdate(scope.row)" type="primary">编辑</el-button>-->
+          <el-button size="mini" @click="handleDelete(scope.row)" type="danger">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <div v-show="!listLoading" class="pagination-container">
+      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
+                     :page-sizes="[10,20,30, 50]" :page-size="listQuery.page_size" layout="total, sizes, prev, pager, next, jumper" :total="total">
+      </el-pagination>
+    </div>
+
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
+      <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="80px" style='width: 80%; margin-left:10%;'>
+        <!--<el-form-item label="仓库" prop="warehouse_id">-->
+        <!--<el-select v-model="temp.warehouse_id"-->
+        <!--style="width: 100%"-->
+        <!--filterable-->
+        <!--clearable-->
+        <!--placeholder="选择仓库">-->
+        <!--<el-option  v-for="item in warehouseOptions"-->
+        <!--:key="item.id"-->
+        <!--:label="item.name"-->
+        <!--:value="item.id">-->
+        <!--</el-option>-->
+        <!--</el-select>-->
+        <!--</el-form-item>-->
+        <el-form-item label="商品">
+          <el-select v-model="temp.product_goods_id"
+                     style="width: 100%"
+                     @focus="getProductGoodsCommonBaseList(' ')"
+                     filterable
+                     clearable
+                     remote
+                     placeholder="选择商品"
+                     :remote-method="getProductGoodsCommonBaseList"
+                     :loading="commonBaseLoading">
+            <el-option  v-for="item in commonBaseOptions"
+                        :key="item.id"
+                        :label="item.goods_name"
+                        :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="商品数量" prop="number">
+          <el-input-number v-model.number="temp.number" style="width: 50%"></el-input-number>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button v-if="dialogStatus === 'create'" type="primary" @click="createData">确 定</el-button>
+        <!--<el-button v-else type="primary" @click="updateData">确 定</el-button>-->
+      </div>
+    </el-dialog>
   </div>
 </template>
 
