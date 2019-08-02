@@ -304,7 +304,6 @@
         })
       },
       handleUpdate(row) {
-        console.log(row)
         this.temp_id = row.id
         this.dialogStatus = 'update'
         this.dialogFormVisible = true
