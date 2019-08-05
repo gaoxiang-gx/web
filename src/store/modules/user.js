@@ -102,7 +102,7 @@ const user = {
         resolve()
       })
     },
-    // 获取子系统权限
+    // 获取子系统orders_secondary_receiver_info
     GetUserAccountTypeList({ commit, state }) {
       return new Promise((resolve, reject) => {
         getUserAccountTypeList().then(response => {

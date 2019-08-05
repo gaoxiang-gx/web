@@ -8,7 +8,7 @@
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
       <el-button class="filter-item" type="primary" @click="handleCreate">创建接口</el-button>
     </div>
-    <el-table :stripe="true"
+    <el-table stripe
               :data="list"
               v-loading="listLoading"
               element-loading-text="给我一点时间"
@@ -104,7 +104,7 @@
     name: 'PortSetting',
     data() {
       const validateAuth = (rule, value, callback) => {
-        const myreg = /^[a-zA-Z]*\/[a-zA-Z]*\/[a-zA-Z]*$/
+        const myreg = /^[a-zA-Z_]*\/[a-zA-Z_]*\/[a-zA-Z_]*$/
         if (!myreg.test(this.temp.auth_code)) {
           callback(new Error('请输入正确格式'))
         } else {
