@@ -53,7 +53,11 @@ router.beforeEach((to, from, next) => {
         next({ path: '/select_account' })
       }
     }).then(() => {
-      next()
+      if (store.getters.roles.length === 0) {
+        getUserInfo(to, from, next)
+      } else {
+        next()
+      }
     })
   }
   if (!getAccountToken() && !getUserToken() && process.env.NODE_ENV == "development") {
