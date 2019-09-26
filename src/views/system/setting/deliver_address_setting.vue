@@ -20,9 +20,19 @@
           <span>{{scope.row.id}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="发货信息模板名称" min-width="300">
+      <el-table-column align="center" label="仓库名" min-width="300">
         <template slot-scope="scope">
           <span>{{scope.row.name}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="所属库管部门" min-width="300">
+        <template slot-scope="scope">
+          <span>{{scope.row.warehouse_group.group_name}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="所属财务部门" min-width="300">
+        <template slot-scope="scope">
+          <span>{{scope.row.finance_group.group_name}}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" min-width="150">
@@ -72,75 +82,85 @@
             <el-form-item label="发货人电话" prop="sender_phone">
               <el-input v-model="temp.sender_phone"></el-input>
             </el-form-item>
-            <el-form-item label="发货产品" prop="product_ids">
-              <el-select v-model="temp.product_ids"
-                         filterable
-                         style="width: 100%"
-                         clearable
-                         multiple
-                         remote
-                         placeholder="请选择产品"
-                         :remote-method="getProductList"
-                         :loading="productLoading">
-                <el-option v-for="item in productOptions"
-                           :key="item.id"
-                           :label="item.product_name"
-                           :value="item.id">
-                </el-option>
-              </el-select>
+            <el-form-item label="财务部门" prop="finance_group">
+              <multiselect v-model="temp.finance_group" :options="financeGroupOptions" @search-change="queryFinanceGroupList"
+                           placeholder="搜索财务部门" selectLabel="选择" deselectLabel="删除" track-by="group_name" :internalSearch="false" label="group_name">
+              </multiselect>
             </el-form-item>
+            <el-form-item label="库管部门" prop="warehouse_group">
+              <multiselect v-model="temp.warehouse_group" :options="warehouseGroupOptions" @search-change="queryWarehouseGroupList"
+                           placeholder="搜索库管部门" selectLabel="选择" deselectLabel="删除" track-by="group_name" :internalSearch="false" label="group_name">
+              </multiselect>
+            </el-form-item>
+            <!--<el-form-item label="发货产品" prop="product_ids">-->
+              <!--<el-select v-model="temp.product_ids"-->
+                         <!--filterable-->
+                         <!--style="width: 100%"-->
+                         <!--clearable-->
+                         <!--multiple-->
+                         <!--remote-->
+                         <!--placeholder="请选择产品"-->
+                         <!--:remote-method="getProductList"-->
+                         <!--:loading="productLoading">-->
+                <!--<el-option v-for="item in productOptions"-->
+                           <!--:key="item.id"-->
+                           <!--:label="item.product_name"-->
+                           <!--:value="item.id">-->
+                <!--</el-option>-->
+              <!--</el-select>-->
+            <!--</el-form-item>-->
 
-            <el-form-item label="物流公司" prop="order_logistics_type_id">
-              <el-select v-model="temp.order_logistics_type_ids"
-                         filterable
-                         style="width: 100%"
-                         clearable
-                         multiple
-                         remote
-                         placeholder="请选择物流公司"
-                         :remote-method="queryLogisticsTypeList"
-                         :loading="logisticsTypeLoading">
-                <el-option v-for="item in logisticsTypeOptions"
-                           :key="item.id"
-                           :label="item.name"
-                           :value="item.id">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="顺丰额外信息" prop="product_deliver_extra_sf"
-                          v-show="temp.order_logistics_type_ids.indexOf(1) > -1">
-              <el-select v-model="temp.product_deliver_extra_sf"
-                         filterable
-                         style="width: 100%"
-                         clearable
-                         remote
-                         placeholder="请选择额外信息"
-                         :remote-method="getProductDeliverExtrasf"
-                         :loading="logisticsTypeLoading_sf">
-                <el-option v-for="item in logisticsTypeOptions_sf"
-                           :key="item.id"
-                           :label="item.description"
-                           :value="item.id">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="圆通额外信息" prop="product_deliver_extra_yt"
-                          v-show="temp.order_logistics_type_ids.indexOf(6) > -1">
-              <el-select v-model="temp.product_deliver_extra_yt"
-                         filterable
-                         style="width: 100%"
-                         clearable
-                         remote
-                         placeholder="请选择额外信息"
-                         :remote-method="getProductDeliverExtrayt"
-                         :loading="logisticsTypeLoading_yt">
-                <el-option v-for="item in logisticsTypeOptions_yt"
-                           :key="item.id"
-                           :label="item.description"
-                           :value="item.id">
-                </el-option>
-              </el-select>
-            </el-form-item>
+            <!--<el-form-item label="物流公司" prop="order_logistics_type_id">-->
+              <!--<el-select v-model="temp.order_logistics_type_ids"-->
+                         <!--filterable-->
+                         <!--style="width: 100%"-->
+                         <!--clearable-->
+                         <!--multiple-->
+                         <!--remote-->
+                         <!--placeholder="请选择物流公司"-->
+                         <!--:remote-method="queryLogisticsTypeList"-->
+                         <!--:loading="logisticsTypeLoading">-->
+                <!--<el-option v-for="item in logisticsTypeOptions"-->
+                           <!--:key="item.id"-->
+                           <!--:label="item.name"-->
+                           <!--:value="item.id">-->
+                <!--</el-option>-->
+              <!--</el-select>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="顺丰额外信息" prop="product_deliver_extra_sf"-->
+                          <!--v-show="temp.order_logistics_type_ids.indexOf(1) > -1">-->
+              <!--<el-select v-model="temp.product_deliver_extra_sf"-->
+                         <!--filterable-->
+                         <!--style="width: 100%"-->
+                         <!--clearable-->
+                         <!--remote-->
+                         <!--placeholder="请选择额外信息"-->
+                         <!--:remote-method="getProductDeliverExtrasf"-->
+                         <!--:loading="logisticsTypeLoading_sf">-->
+                <!--<el-option v-for="item in logisticsTypeOptions_sf"-->
+                           <!--:key="item.id"-->
+                           <!--:label="item.description"-->
+                           <!--:value="item.id">-->
+                <!--</el-option>-->
+              <!--</el-select>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="圆通额外信息" prop="product_deliver_extra_yt"-->
+                          <!--v-show="temp.order_logistics_type_ids.indexOf(6) > -1">-->
+              <!--<el-select v-model="temp.product_deliver_extra_yt"-->
+                         <!--filterable-->
+                         <!--style="width: 100%"-->
+                         <!--clearable-->
+                         <!--remote-->
+                         <!--placeholder="请选择额外信息"-->
+                         <!--:remote-method="getProductDeliverExtrayt"-->
+                         <!--:loading="logisticsTypeLoading_yt">-->
+                <!--<el-option v-for="item in logisticsTypeOptions_yt"-->
+                           <!--:key="item.id"-->
+                           <!--:label="item.description"-->
+                           <!--:value="item.id">-->
+                <!--</el-option>-->
+              <!--</el-select>-->
+            <!--</el-form-item>-->
           </el-col>
         </el-row>
       </el-form>
@@ -162,10 +182,13 @@
     getProductList,
     getWarehouseLogisticsExtraList
   } from '@/api/product'
+  import { getFinanceGroupList } from '@/api/financial'
+  import { getWarehouseGroupList } from '@/api/warehouse'
   import { getOrdersLogisticsTypeList } from '@/api/orders'
+  import Multiselect from 'vue-multiselect'
 
   export default {
-    components: {},
+    components: { Multiselect },
     name: 'deliverAddressSetting',
     directives: {
       waves
@@ -214,11 +237,14 @@
           delivery_district: undefined,
           delivery_address: undefined,
           delivery_post_code: undefined,
-          product_deliver_extra_ids: [],
-          product_ids: [],
-          order_logistics_type_ids: [],
-          product_deliver_extra_sf: undefined,
-          product_deliver_extra_yt: undefined
+          finance_group: {
+            id: undefined,
+            group_name: ''
+          },
+          warehouse_group: {
+            id: undefined,
+            group_name: ''
+          }
         },
         rules: {
           name: [{ required: true, message: '填写名称', trigger: 'change' }],
@@ -227,10 +253,7 @@
           delivery_province: [{ required: true, message: '填写省份', trigger: 'change' }],
           delivery_city: [{ required: true, message: '填写城市', trigger: 'change' }],
           delivery_district: [{ required: true, message: '填写区县', trigger: 'change' }],
-          delivery_post_code: [{ required: true, message: '填写邮编', trigger: 'change' }],
-          delivery_product_name: [{ required: true, message: '填写发货产品名称', trigger: 'change' }],
-          delivery_address: [{ required: true, message: '填写详细发货地址', trigger: 'change' }],
-          sf_monthly_account: [{ required: true, message: '顺丰月结账户', trigger: 'change' }]
+          delivery_post_code: [{ required: true, message: '填写邮编', trigger: 'change' }]
         },
         pickerOptions: {
           shortcuts: [{
@@ -258,10 +281,30 @@
               picker.$emit('pick', [start, end])
             }
           }]
-        }
+        },
+        financeGroupOptions: [],
+        warehouseGroupOptions: []
       }
     },
     methods: {
+      queryWarehouseGroupList(query) {
+        getWarehouseGroupList().then(response => {
+          if (!response.data) return
+          this.warehouseGroupOptions = response.data.map(v => ({
+            id: v.id,
+            group_name: v.group_name
+          }))
+        })
+      },
+      queryFinanceGroupList(query) {
+        getFinanceGroupList().then(response => {
+          if (!response.data) return
+          this.financeGroupOptions = response.data.map(v => ({
+            id: v.id,
+            group_name: v.group_name
+          }))
+        })
+      },
       handleFilter() {
         this.listQuery.page = 1
         this.getList()
@@ -284,11 +327,11 @@
       createData() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            if (this.temp.product_deliver_extra_sf !== undefined) {
-              this.temp.product_deliver_extra_ids.push(this.temp.product_deliver_extra_sf)
+            if (this.temp.finance_group !== undefined) {
+              this.temp.finance_group_id = this.temp.finance_group.id
             }
-            if (this.temp.product_deliver_extra_yt !== undefined) {
-              this.temp.product_deliver_extra_ids.push(this.temp.product_deliver_extra_yt)
+            if (this.temp.warehouse_group !== undefined) {
+              this.temp.warehouse_group_id = this.temp.warehouse_group.id
             }
             createWarehouse(this.temp).then(res => {
               this.$notify({
@@ -315,26 +358,22 @@
         this.temp.delivery_district = row.delivery_district
         this.temp.delivery_post_code = row.delivery_post_code
         this.temp.delivery_address = row.delivery_address
-        row.product.forEach(d => this.temp.product_ids.push(d.id))
-        row.order_logistics_type.forEach(d => this.temp.order_logistics_type_ids.push(d.id))
-        if (row.product_deliver_extra.find(d => d.order_logistics_type_id === 1)) {
-          this.temp.product_deliver_extra_sf = row.product_deliver_extra.find(d => d.order_logistics_type_id === 1).id
-        }
-        if (row.product_deliver_extra.find(d => d.order_logistics_type_id === 6)) {
-          this.temp.product_deliver_extra_yt = row.product_deliver_extra.find(d => d.order_logistics_type_id === 6).id
-        }
-        this.$nextTick(() => {
-          this.$refs['dataForm'].clearValidate()
-        })
+        this.temp.finance_group = row.finance_group
+        this.temp.warehouse_group = row.warehouse_group
+        this.financeGroupOptions = []
+        this.warehouseGroupOptions = []
+        // this.$nextTick(() => {
+        //   this.$refs['dataForm'].clearValidate()
+        // })
       },
       updateData() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            if (this.temp.product_deliver_extra_sf !== undefined) {
-              this.temp.product_deliver_extra_ids.push(this.temp.product_deliver_extra_sf)
+            if (this.temp.finance_group !== undefined) {
+              this.temp.finance_group_id = this.temp.finance_group.id
             }
-            if (this.temp.product_deliver_extra_yt !== undefined) {
-              this.temp.product_deliver_extra_ids.push(this.temp.product_deliver_extra_yt)
+            if (this.temp.warehouse_group !== undefined) {
+              this.temp.warehouse_group_id = this.temp.warehouse_group.id
             }
             const tempparm = Object.assign({ id: this.temp_id }, this.temp)
             updateWarehouse(tempparm).then(res => {

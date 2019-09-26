@@ -779,7 +779,6 @@
       this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
     },
     activated() {
-      this.getPermissionByMenuList()
       window.scrollTo(0, this.scrollTop)
     }
   }

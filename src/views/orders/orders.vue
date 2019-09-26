@@ -888,7 +888,7 @@
         tableKey: 0,
         tableKey2: 0,
         tableKey3: 1,
-        list: null,
+        list: [],
         list1: null,
         total: null,
         total1: null,

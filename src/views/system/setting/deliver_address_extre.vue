@@ -20,6 +20,11 @@
           <span>{{scope.row.id}}</span>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="仓库" min-width="300">
+        <template slot-scope="scope">
+          <span type="primary">{{scope.row.warehouse.name}}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="物流" min-width="300">
         <template slot-scope="scope">
           <span type="primary">{{logisticsTypeOptions.find( d => d.id == scope.row.order_logistics_type_id).name}}</span>

@@ -108,6 +108,12 @@ export const asyncRouterMap = [
         meta: { title: '盘库管理'}
       },
       {
+        path: 'manual_Management',
+        name: 'manual_Management',
+        component: _import('purchase/manual_Management'),
+        meta: { title: '人工出入库'}
+      },
+      {
         path: '/purchase_management',
         name: 'purchaseManagement',
         redirect: 'noredirect',
@@ -127,12 +133,6 @@ export const asyncRouterMap = [
             meta: { title: '订货入库管理' }
           }
         ]
-      },
-      {
-        path: 'manual_Management',
-        name: 'manual_Management',
-        component: _import('purchase/manual_Management'),
-        meta: { title: '人工出入库'}
       }
     ]
   },

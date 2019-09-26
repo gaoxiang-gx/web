@@ -226,10 +226,6 @@
         })
       },
       getWarehouseProductGoodsStorageList(query) {
-        if (! this.listQuery.warehouse_id) {
-          this.$message.error('先选择仓库')
-          return false
-        }
         if (query !== '') {
           this.productGoodsLoading = true
           getWarehouseProductGoodsStorageList({ warehouse_id: this.listQuery.warehouse_id, goods_name: query }).then(response => {

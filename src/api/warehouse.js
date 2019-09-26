@@ -37,5 +37,11 @@ export function getProductGoodsStorageList(param) {
     data: param
   })
 }
-
+export function getWarehouseGroupList(param) {
+  return request({
+    url: 'api/warehouse/getWarehouseGroupList ',
+    method: 'post',
+    data: param
+  })
+}
 
