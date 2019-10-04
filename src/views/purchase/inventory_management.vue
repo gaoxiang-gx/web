@@ -64,6 +64,11 @@
               highlight-current-row
               style="width: 100%"
               stripe>
+      <el-table-column align="center" label="仓库" min-width="150" >
+        <template slot-scope="scope">
+          <span>{{scope.row.warehouse.warehouse_name}}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="商品名称" min-width="150" >
         <template slot-scope="scope">
           <span>{{scope.row.goods_name}}</span>

@@ -93,19 +93,20 @@
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
       <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="80px" style='width: 80%; margin-left:10%;'>
-        <!--<el-form-item label="仓库" prop="warehouse_id">-->
-        <!--<el-select v-model="temp.warehouse_id"-->
-        <!--style="width: 100%"-->
-        <!--filterable-->
-        <!--clearable-->
-        <!--placeholder="选择仓库">-->
-        <!--<el-option  v-for="item in warehouseOptions"-->
-        <!--:key="item.id"-->
-        <!--:label="item.name"-->
-        <!--:value="item.id">-->
-        <!--</el-option>-->
-        <!--</el-select>-->
-        <!--</el-form-item>-->
+        <el-form-item label="仓库" prop="warehouse_id">
+          <el-select v-model="temp.warehouse_id"
+                     @change="resetProductGoods"
+          style="width: 100%"
+          filterable
+          clearable
+          placeholder="选择仓库">
+          <el-option  v-for="item in warehouseOptions"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id">
+          </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="商品">
           <el-select v-model="temp.product_goods_id"
                      style="width: 100%"
@@ -263,10 +264,14 @@
           this.warehouseOptions = response.data.data
         })
       },
+      resetProductGoods() {
+        this.commonBaseOptions = []
+        this.temp.product_goods_id = undefined
+      },
       getProductGoodsCommonBaseList(query) {
         if (query !== '') {
           this.commonBaseLoading = true
-          getProductGoodsList({ goods_name: query}).then(response => {
+          getProductGoodsList({ goods_name: query, warehouse_id: this.temp.warehouse_id }).then(response => {
             this.commonBaseOptions = response.data.data
             this.commonBaseLoading = false
           })

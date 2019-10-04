@@ -68,10 +68,9 @@
               <span>今日订单：<span style="color:red;">{{today_orders}}</span></span>
               <span>待发货：<span style="color:red;">{{need_delivery}}</span></span>
           </div>
-          <el-button class="filter-item" size="small" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
-          <el-button class="filter-item" size="small" type="primary" v-waves icon="el-icon-download" @click="downExcel">导出待发货订单</el-button>
+          <el-button class="filter-item" size="small" type="primary" v-waves icon="el-icon-download" @click="downExcel">导出订单</el-button>
           <el-button class="filter-item" size="small" type="primary" v-waves icon="el-icon-upload" @click="handleOpenInner8">导入物流单号</el-button>
-          <el-button class="filter-item" size="small" type="primary" v-waves icon="el-icon-refresh" @click="refreshOrdersList">刷新</el-button>
+          <el-button class="filter-item" size="small" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
         </div>
       </div>
     </div>
@@ -2702,6 +2701,7 @@
       handleFilter() {
         this.listQuery.page = 1
         this.getList()
+        this.getOrdersCountInfo()
       },
       handleSizeChange(val) {
         this.listQuery.page_size = val
@@ -3784,15 +3784,32 @@
           date_range2.value = this.listQuery.date_range[1]
           form.appendChild(date_range)
           form.appendChild(date_range2)
+
+          const sdate = new Date(date_range.value)
+          const now = new Date(date_range2.value)
+          const days = now.getTime() - sdate.getTime()
+          const day = parseInt(days / (1000 * 60 * 60 * 24))
+          if (day > 31) {
+            this.$message({
+              type: 'info',
+              message: '最多只能导出30天数据'
+            })
+            return
+          }
         } else {
-          const date_range = document.createElement('input')
-          const date_range2 = document.createElement('input')
-          date_range.name = 'date_range[0]'
-          date_range.value = parseTime(new Date(), '{y}-{m}-{d}')
-          date_range2.name = 'date_range[1]'
-          date_range2.value = parseTime(new Date(), '{y}-{m}-{d}')
-          form.appendChild(date_range)
-          form.appendChild(date_range2)
+          this.$message({
+            type: 'info',
+            message: '请选择时间区间'
+          })
+          return
+          // const date_range = document.createElement('input')
+          // const date_range2 = document.createElement('input')
+          // date_range.name = 'date_range[0]'
+          // date_range.value = parseTime(new Date(), '{y}-{m}-{d}')
+          // date_range2.name = 'date_range[1]'
+          // date_range2.value = parseTime(new Date(), '{y}-{m}-{d}')
+          // form.appendChild(date_range)
+          // form.appendChild(date_range2)
           // console.log(parseTime(new Date(), '{y}-{m}-{d}'))
         }
         orders_status.name = 'status'
