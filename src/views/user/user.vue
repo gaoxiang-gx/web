@@ -13,11 +13,11 @@
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加用户</el-button>
     </div>
 
-    <el-table :span-method="objectSpanMethod" :stripe="true" :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row
+    <el-table :stripe="true" :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row
               style="width: 100%">
       <el-table-column align="center" label=ID width="50px">
         <template slot-scope="scope">
-          <span>{{scope.row.user.id}}</span>
+          <span>{{scope.row.id}}</span>
         </template>
       </el-table-column>
       <el-table-column min-width="100px" align="center" label="状态" width="70px">
@@ -524,30 +524,7 @@
         this.listLoading = true
         this.list = []
         getUserList(this.listQuery).then(response => {
-          const tempData = response.data.data
-          for (const v of tempData) {
-            for (const vv of v.user_account) {
-              const cellData = {}
-              cellData.user = {
-                id: v.id,
-                phone: v.phone
-              }
-              cellData.id = vv.id
-              cellData.nickname = vv.nickname
-              cellData.status = vv.status
-              cellData.updated_at = vv.updated_at
-              cellData.user_account_type = vv.user_account_type
-              cellData.user_account_type_id = vv.user_account_type_id
-              cellData.user_account_group = vv.user_account_group
-              cellData.user_account_group_id = vv.user_account_group_id
-              cellData.user_account_role = vv.user_account_role
-              cellData.user_account_role_id = vv.user_account_role_id
-              cellData.user_account_department = vv.user_account_department
-              cellData.user_account_department_id = vv.user_account_department_id === 0 ? undefined : vv.user_account_department_id
-              this.list.push(cellData)
-            }
-          }
-          this.countRowSpan()
+          this.list = response.data.data
           this.total = response.data.total
           this.listLoading = false
         })

@@ -90,12 +90,49 @@
         <el-form-item label="额外信息名称" prop="description">
           <el-input v-model="temp.description"></el-input>
         </el-form-item>
+        <el-form-item label="发货产品名称" prop="configs.delivery_product_name">
+          <el-input v-model="temp.configs.delivery_product_name"></el-input>
+        </el-form-item>
+        <!--顺丰配置-->
         <el-form-item v-if="temp.order_logistics_type_id === 1" label="月结账号" prop="configs.sf_monthly_account">
           <el-input v-model="temp.configs.sf_monthly_account"></el-input>
         </el-form-item>
-        <el-form-item v-if="temp.order_logistics_type_id === 1 || temp.order_logistics_type_id === 6" label="发货产品名称" prop="configs.delivery_product_name">
-          <el-input v-model="temp.configs.delivery_product_name"></el-input>
+        <el-form-item v-if="temp.order_logistics_type_id === 1" label="CHECK_HEADER" prop="configs.check_header">
+          <el-input v-model="temp.configs.check_header"></el-input>
         </el-form-item>
+        <el-form-item v-if="temp.order_logistics_type_id === 1" label="CHECK_BODY" prop="configs.check_body">
+          <el-input v-model="temp.configs.check_body"></el-input>
+        </el-form-item>
+        <!--圆通配置-->
+        <el-form-item v-if="temp.order_logistics_type_id === 6" label="PARTNER_ID" prop="configs.partner_id">
+          <el-input v-model="temp.configs.partner_id"></el-input>
+        </el-form-item>
+        <el-form-item v-if="temp.order_logistics_type_id === 6" label="CLIENT_ID" prop="configs.client_id">
+          <el-input v-model="temp.configs.client_id"></el-input>
+        </el-form-item>
+        <el-form-item v-if="temp.order_logistics_type_id === 6" label="API_URL" prop="configs.api_url">
+          <el-input v-model="temp.configs.api_url"></el-input>
+        </el-form-item>
+        <!--德邦配置-->
+        <el-form-item v-if="temp.order_logistics_type_id === 9" label="sign" prop="configs.sign">
+          <el-input v-model="temp.configs.sign"></el-input>
+        </el-form-item>
+        <el-form-item v-if="temp.order_logistics_type_id === 9" label="company_code" prop="configs.company_code">
+          <el-input v-model="temp.configs.company_code"></el-input>
+        </el-form-item>
+        <el-form-item v-if="temp.order_logistics_type_id === 9" label="customer_code" prop="configs.customer_code">
+          <el-input v-model="temp.configs.customer_code"></el-input>
+        </el-form-item>
+        <el-form-item v-if="temp.order_logistics_type_id === 9" label="app_key" prop="configs.app_key">
+          <el-input v-model="temp.configs.app_key"></el-input>
+        </el-form-item>
+        <el-form-item v-if="temp.order_logistics_type_id === 9" label="receive_loan_account" prop="configs.receive_loan_account">
+          <el-input v-model="temp.configs.receive_loan_account"></el-input>
+        </el-form-item>
+        <el-form-item v-if="temp.order_logistics_type_id === 9" label="receive_account_name" prop="configs.receive_account_name">
+          <el-input v-model="temp.configs.receive_account_name"></el-input>
+        </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -155,8 +192,19 @@
           warehouse_id: undefined,
           order_logistics_type_id: undefined,
           configs: {
-            sf_monthly_account: null,
-            delivery_product_name: null
+            sf_monthly_account: undefined,
+            delivery_product_name: undefined,
+            check_header: undefined,
+            check_body: undefined,
+            partner_id: undefined,
+            client_id: undefined,
+            api_url: undefined,
+            sign: undefined,
+            company_code: undefined,
+            customer_code: undefined,
+            app_key: undefined,
+            receive_loan_account: undefined,
+            receive_account_name: undefined
           }
         },
         rules: {
@@ -276,11 +324,12 @@
         this.temp_id = row.id
         this.dialogStatus = 'update'
         this.dialogFormVisible = true
-        this.temp.description = row.description
-        this.temp.warehouse_id = row.warehouse_id
-        this.temp.order_logistics_type_id = row.order_logistics_type_id
-        this.temp.configs.delivery_product_name = row.configs.delivery_product_name
-        this.temp.configs.sf_monthly_account = row.configs.sf_monthly_account
+        // this.temp.description = row.description
+        // this.temp.warehouse_id = row.warehouse_id
+        // this.temp.order_logistics_type_id = row.order_logistics_type_id
+        // this.temp.configs.delivery_product_name = row.configs.delivery_product_name
+        // this.temp.configs.sf_monthly_account = row.configs.sf_monthly_account
+        this.temp = Object.assign({}, row)
         this.$nextTick(() => {
           this.$refs['dataForm'].clearValidate()
         })

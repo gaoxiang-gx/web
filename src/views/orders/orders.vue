@@ -69,7 +69,8 @@
               <span>待发货：<span style="color:red;">{{need_delivery}}</span></span>
           </div>
           <el-button class="filter-item" size="small" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
-          <el-button class="filter-item" size="small" type="primary" v-waves icon="el-icon-download" @click="downExcel">导出</el-button>
+          <el-button class="filter-item" size="small" type="primary" v-waves icon="el-icon-download" @click="downExcel">导出待发货订单</el-button>
+          <el-button class="filter-item" size="small" type="primary" v-waves icon="el-icon-upload" @click="handleOpenInner8">导入物流单号</el-button>
           <el-button class="filter-item" size="small" type="primary" v-waves icon="el-icon-refresh" @click="refreshOrdersList">刷新</el-button>
         </div>
       </div>
@@ -795,6 +796,54 @@
         </el-pagination>
       </div>
     </el-dialog>
+    <el-dialog :title="innerTableTitle8" :visible.sync="innerTableVisible8">
+      <div class="filter-container">
+        <el-upload
+          :action="baseUrl"
+          :headers="uploadHeaders"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :on-success="handlePictureSuccess"
+          :on-progress="handleOnProgress"
+          name="excel"
+          :show-file-list="true"
+          :limit="1"
+          :on-exceed="handleExceed"
+          :file-list="fileList">
+          <el-button size="small" type="primary">上传物流单号</el-button>
+        </el-upload>
+      </div>
+      <el-table
+        v-if="innerList8 !== null"
+        :key='innerTableKey8'
+        :data="innerList8"
+        v-loading="innerListLoading8"
+        element-loading-text="给我一点时间"
+        border fit highlight-current-row
+        style="width: 100%">
+        <el-table-column min-width="100px" align="center" label="所属订单号">
+          <template slot-scope="scope">
+            <span class="link-type">{{scope.row.orders_unique_id}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column min-width="220px" align="center" label="物流信息">
+          <template slot-scope="scope">
+            <el-tag>{{scope.row.orders_logistics_type_name}}</el-tag>
+            <span>{{scope.row.orders_logistics_number}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column min-width="200px" align="center" label="状态">
+          <template slot-scope="scope">
+            <el-tag :type="scope.row.status | logisticsNumberImportStatusFilter">
+              {{scope.row.status|logisticsNumberImportStatusTranslator}}
+            </el-tag>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div slot="footer" class="dialog-footer" v-if="innerList8 !== null">
+        <el-button :loading="buttonInnerCreate8Loading" :disabled="(innerList8 === null) || (innerList8.length < 1)" type="primary" @click="createInnerData8">确认上传物流单号</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -806,7 +855,6 @@
     getWarehouseList,
     getWarehouseLogisticsExtraList
   } from '@/api/product'
-  import { getSupportGroupList } from '@/api/support_member'
   import { getProductGoodsList } from '@/api/product_goods'
   // import { getSystemGlobalSettingInfo } from '@/api/system_global_setting'
   import {
@@ -839,7 +887,6 @@
   } from '@/api/orders'
   import { getSupportMemberList } from '@/api/support_member'
   import { getProductWeixinList, getProductWeixinFansList } from '@/api/product_weixin'
-  import { getUserAccountGroupList } from '@/api/user_group'
   import {
     getProductWeixinFansAddressList,
     createProductWeixinFansAddress,
@@ -1230,7 +1277,6 @@
           { key: 2, display_name: '附属产品' },
           { key: 3, display_name: '赠品' }
         ],
-        userGroupOptions: [],
         supportMemberOptions: [],
         productWeixinOptions: [],
         productWeixinFansOptions: [],
@@ -1286,7 +1332,18 @@
         },
         delivery_address: '',
         delivery_product_name: '',
-        sf_monthly_account: ''
+        sf_monthly_account: '',
+        innerTableTitle8: '上传物流单号Excel',
+        innerTableKey8: 8,
+        innerTableVisible8: false,
+        buttonInnerCreate8Loading: false,
+        baseUrl: process.env.BASE_API + '/api/orders/uploadOrdersLogisticsExcel',
+        uploadHeaders: {
+          'authorization': this.$store.state.user.token
+        },
+        innerListLoading8: false,
+        innerList8: null,
+        fileList: []
       }
     },
     computed: {
@@ -1368,6 +1425,22 @@
         }
         return statusMap[status]
       },
+      logisticsNumberImportStatusFilter(status) {
+        const statusMap = {
+          0: 'info',
+          1: 'success',
+          2: 'danger'
+        }
+        return statusMap[status]
+      },
+      logisticsNumberImportStatusTranslator(status) {
+        const statusMap = {
+          0: '未确认',
+          1: '已导入',
+          2: '导入失败'
+        }
+        return statusMap[status]
+      },
       userTypeStatusTranslator(status) {
         const statusMap = {
           1: '推广',
@@ -1396,6 +1469,25 @@
       this.getregionData()
     },
     methods: {
+      async createInnerData8() {
+        this.buttonInnerCreate8Loading = true
+        for (const v of this.innerList8) {
+          const params = {}
+          params.orders_unique_id = v.orders_unique_id
+          params.logistics_type_id = v.logistics_type_id
+          params.logistics_number = v.orders_logistics_number
+          try {
+            const returnData = await updateOrdersLogistics(params)
+            await deliverOrders({ orders_id: returnData.data.orders_id, is_empty: 0 })
+            v.status = 1
+          } catch (error) {
+            v.status = 2
+          }
+          const index = this.innerList8.indexOf(v)
+          this.innerList8.splice(index, 1, v)
+        }
+        this.buttonInnerCreate8Loading = false
+      },
       getregionData() {
         getOrdersAreaList().then(response => {
           this.regionData = response.data
@@ -3661,7 +3753,7 @@
       downExcel() {
         // console.log(this.listQuery.date_range)
         const form = document.createElement('form')
-        form.action = process.env.BASE_API + '/api/orders/downloadSaleData' + '?token=' + this.$store.state.user.token
+        form.action = process.env.BASE_API + '/api/orders/downloadNeedDeliveredOrders' + '?token=' + this.$store.state.user.token
         form.method = 'post'
         form.style.display = 'none'
         const orders_status = document.createElement('input')
@@ -3743,6 +3835,35 @@
         document.body.appendChild(form)
         form.submit()
         document.body.removeChild(form)
+      },
+      handlePreview(file) {
+        console.log(1)
+      },
+      handleRemove(file, fileList) {
+        console.log(file, fileList)
+      },
+      handleOnProgress(event, file, fileList) {
+        this.innerList1 = []
+        this.innerListLoading1 = true
+      },
+      handleExceed(files, fileList) {
+        this.$message.warning(`当前限制选择1个文件`)
+      },
+      handlePictureSuccess(response, file, fileList) {
+        this.innerListLoading8 = false
+        this.fileList = []
+        this.fileList.push(file)
+        if (response.code === 200) {
+          this.innerList8 = response.data
+        } else {
+          this.$message.error(response.errstr)
+          this.innerList8 = null
+        }
+      },
+      handleOpenInner8() {
+        this.innerList8 = null
+        this.fileList = []
+        this.innerTableVisible8 = true
       }
       // getRemark(remake) {
       //   var remarks;
