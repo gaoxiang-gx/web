@@ -40,39 +40,39 @@ export function getLodop(oOBJECT, oEMBED) {
     }
 
     if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
-      if (navigator.userAgent.indexOf('Chrome') >= 0) {
-        document.documentElement.innerHTML = strHtmChrome + document.documentElement.innerHTML
-      }
-      if (navigator.userAgent.indexOf('Firefox') >= 0) {
-        document.documentElement.innerHTML = strHtmFireFox + document.documentElement.innerHTML
-      }
-      if (is64IE) {
-        document.write(strHtm64_Install)
-      } else if (isIE) {
-        document.write(strHtmInstall)
-      } else {
-        document.documentElement.innerHTML = strHtmInstall + document.documentElement.innerHTML
-      }
+      // if (navigator.userAgent.indexOf('Chrome') >= 0) {
+      //   document.documentElement.innerHTML = strHtmChrome + document.documentElement.innerHTML
+      // }
+      // if (navigator.userAgent.indexOf('Firefox') >= 0) {
+      //   document.documentElement.innerHTML = strHtmFireFox + document.documentElement.innerHTML
+      // }
+      // if (is64IE) {
+      //   document.write(strHtm64_Install)
+      // } else if (isIE) {
+      //   document.write(strHtmInstall)
+      // } else {
+      //   document.documentElement.innerHTML = strHtmInstall + document.documentElement.innerHTML
+      // }
       return LODOP
     } else if (LODOP.VERSION < '6.1.9.6') {
-      if (is64IE) {
-        document.write(strHtm64_Update)
-      } else if (isIE) {
-        document.write(strHtmUpdate)
-      } else {
-        document.documentElement.innerHTML = strHtmUpdate + document.documentElement.innerHTML
-      }
+      // if (is64IE) {
+      //   document.write(strHtm64_Update)
+      // } else if (isIE) {
+      //   document.write(strHtmUpdate)
+      // } else {
+      //   document.documentElement.innerHTML = strHtmUpdate + document.documentElement.innerHTML
+      // }
       return LODOP
     }
 
     LODOP.SET_LICENSES('', '394101451001069811011355115108', '', '')
     return LODOP
   } catch (err) {
-    if (is64IE) {
-      document.documentElement.innerHTML = 'Error:' + strHtm64_Install + document.documentElement.innerHTML
-    } else {
-      document.documentElement.innerHTML = 'Error:' + strHtmInstall + document.documentElement.innerHTML
-    }
+    // if (is64IE) {
+    //   document.documentElement.innerHTML = 'Error:' + strHtm64_Install + document.documentElement.innerHTML
+    // } else {
+    //   document.documentElement.innerHTML = 'Error:' + strHtmInstall + document.documentElement.innerHTML
+    // }
     return LODOP
   }
 }
