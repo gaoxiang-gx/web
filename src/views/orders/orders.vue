@@ -137,7 +137,7 @@
           <el-table-column min-width="200" align="center" label="收货人">
             <template slot-scope="scope">
               <p style="padding:0;margin:0;text-align: left;" slot="reference" class="link-type">{{scope.row.orders_receiver_info.receive_name}}({{scope.row.orders_receiver_info.phone}})</p>
-              <p style="padding:0;margin:0;text-align: left;">{{ scope.row.orders_receiver_info.province_name + ' ' + scope.row.orders_receiver_info.city_name + ' ' + scope.row.orders_receiver_info.district_name + ' ' + scope.row.orders_receiver_info.address }}</p>
+              <p style="padding:0;margin:0;text-align: left;">{{ scope.row.orders_receiver_info.province_name + ' ' + scope.row.orders_receiver_info.city_name + ' ' + (scope.row.orders_receiver_info.district_name !== undefined ? scope.row.orders_receiver_info.district_name : '')  + ' ' + scope.row.orders_receiver_info.address }}</p>
             </template>
           </el-table-column>
           <el-table-column min-width="125" align="center" label="发货仓">
