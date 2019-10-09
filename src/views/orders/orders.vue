@@ -682,6 +682,7 @@
           id: undefined,
           warehouse_id: undefined,
           warehouse_logistics_extra_id: undefined,
+          warehouse_logistics_extra: undefined,
           logistics_type_id: undefined,
           logistics_type_code: '',
           logistics_number: '',
@@ -942,6 +943,7 @@
           this.productDeliverExtraLoading = false
           if ((this.productDeliverExtraOptions instanceof Array) && this.productDeliverExtraOptions.length > 0) {
             this.innerTemp3.warehouse_logistics_extra_id = this.productDeliverExtraOptions[0].id
+            this.innerTemp3.warehouse_logistics_extra = this.productDeliverExtraOptions[0]
             if (this.productDeliverExtraOptions.length > 1) {
               this.needSelectExtra = true
             }
@@ -1310,6 +1312,11 @@
             type: 'success',
             duration: 2000
           })
+          this.temp.orders_logistics.logistics_number = this.innerTemp3.logistics_number
+          this.temp.orders_logistics.orders_logistics_type.code = this.innerTemp3.logistics_type_code
+          this.temp.orders_logistics.dest_code = this.innerTemp3.dest_code
+          this.temp.orders_logistics.dest_extra_code = this.innerTemp3.dest_extra_code
+          this.temp.orders_logistics.product_deliver_extra = this.innerTemp3.warehouse_logistics_extra
           if (ifPrint) {
             this.printOrders(this.temp)
           }
