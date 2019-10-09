@@ -751,6 +751,7 @@
         sum_logistics_type_id: undefined,
         sum_logistics_type_code: undefined,
         sum_warehouse_extra_id: undefined,
+        sum_warehoue_extra: undefined,
         sumDisabled: true
       }
     },
@@ -836,6 +837,7 @@
         this.sum_logistics_type_id = undefined
         this.sum_logistics_type_code = undefined
         this.sum_warehouse_extra_id = undefined
+        this.sum_warehouse_extra = undefined
       },
       handleSumDeliveryOrders() {
         this.resetSumDeliveryParams()
@@ -867,6 +869,7 @@
             this.productDeliverExtraLoading = false
             if ((this.productDeliverExtraOptions instanceof Array) && this.productDeliverExtraOptions.length > 0) {
               this.sum_warehouse_extra_id = this.productDeliverExtraOptions[0].id
+              this.sum_warehouse_extra = this.productDeliverExtraOptions[0]
               if (this.productDeliverExtraOptions.length > 1) {
                 this.needSelectExtra = true
               }
@@ -1231,6 +1234,11 @@
               await updateOrdersLogistics(tempdata)
               // 操作订单发货
               await deliverOrders({ orders_id: v.id, is_empty: 0 })
+              v.orders_logistics.logistics_number = logisticsNumberInfo.data.logistics_number
+              v.orders_logistics.orders_logistics_type.code = this.sum_logistics_type_code
+              v.orders_logistics.dest_code = logisticsNumberInfo.data.dest_code
+              v.orders_logistics.dest_extra_code = logisticsNumberInfo.data.dest_extra_code
+              v.orders_logistics.product_deliver_extra = this.sum_warehouse_extra
               // 打印订单
               if (ifPrint) {
                 sum_print_orders(v)
