@@ -6,29 +6,21 @@ import { Message } from 'element-ui'
 import { getUserToken, getAccountToken } from '@/utils/auth' // 验权
 import { getUserPermissionMenu } from '@/api/login'
 
-
 const whiteList = ['/login', '/404', '/select_account'] // 不重定向白名单
-function mapRoutesName(routes) {
-  const routersCodes = routes.map(route => {
-    return route.menu_code
-  })
-  return routersCodes
-}
-/**
- * 获取用户信息、菜单路由
- */
 function getUserInfo(to, from, next) {
-  store.dispatch('GetUserAccountTypeList')
-  store.dispatch('GetInfo')
-    .then(() => getUserPermissionMenu())
-    .then(res => {
-      const code = mapRoutesName(res.data)
-      store.dispatch('GenerateRoutes', code)
+  // store.dispatch('GetActivity')
+  store.dispatch('GetInfo').then(() => {
+    store.dispatch('GetMenu').then(menuCode => {
+      store.dispatch('GenerateRoutes', menuCode).then(() => { // 生成可访问的路由表
+        router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
+        next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
+      })
     })
-    .then(() => {
-      router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
-      next({...to, replace: true}) // hack方法 确保addRoutes已完成
+  }).then(() => {
+    store.dispatch('GetUserAccountTypeList').then(() => {
+      next()
     })
+  })
 }
 
 router.beforeEach((to, from, next) => {
