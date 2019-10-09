@@ -319,7 +319,7 @@
         // }
         if (query !== '') {
           this.productLoading = true
-          getWarehouseProductGoodsStorageList({ warehouse_id: this.temp.warehouse_id }).then(response => {
+          getWarehouseProductGoodsStorageList({ warehouse_id: this.temp.warehouse_id, goods_name: query }).then(response => {
             this.productOptions = response.data.data
             this.productLoading = false
           })
