@@ -28,9 +28,9 @@ router.beforeEach((to, from, next) => {
   /**
    * 系统独立登陆
    */
+  console.log(to)
   if (whiteList.indexOf(to.path) !== -1) {
     next()
-    return false
   }
   if (getAccountToken()) {
     if (store.getters.roles.length === 0) {
@@ -38,7 +38,6 @@ router.beforeEach((to, from, next) => {
     } else {
       next()
     }
-    return false
   }
   if (!getAccountToken() && getUserToken()) {
     store.dispatch('LoginAccount').then(res => {
@@ -48,16 +47,8 @@ router.beforeEach((to, from, next) => {
         next({ path: '/select_account' })
       }
     }).then(() => {
-      if (store.getters.roles.length === 0) {
-        getUserInfo(to, from, next)
-      } else {
-        next()
-      }
+      next()
     })
-  }
-  if (!getAccountToken() && !getUserToken() && process.env.NODE_ENV == "development") {
-    next({ path: '/login'})
-    return
   }
   if (!getAccountToken() && !getUserToken()) {
     window.location.href = process.env.HOME_URL
