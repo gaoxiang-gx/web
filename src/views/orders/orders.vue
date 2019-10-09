@@ -109,7 +109,7 @@
           <div style="float:right;">
             <el-button size="mini" icon="el-icon-search" @click="handleOpenInner3(orders)">日志查询</el-button>
             <el-button v-if="orders.status === 2 || orders.status === 4" size="mini"type="success" @click="handleInnerUpdate3(orders, 0)" ><span>确认发货</span><br></el-button>
-            <el-button v-if="orders.status === 3"size="mini" type="danger" @click="handleDestoryOrders(orders)" ><span>废弃</span><br></el-button>
+            <el-button v-if="orders.status === 3" size="mini" type="danger" @click="handleDestoryOrders(orders)" ><span>废弃</span><br></el-button>
           </div>
           <div style="clear:both;"></div>
         </div>
@@ -1308,6 +1308,23 @@
             v.is_checked = false
             this.list.splice(index, 1, v)
           }
+          this.temp.orders_logistics.logistics_number = this.innerTemp3.logistics_number
+          if (this.innerTemp3.logistics_type_code !== undefined && this.innerTemp3.logistics_type_code !== null) {
+            this.temp.orders_logistics.orders_logistics_type.code = this.innerTemp3.logistics_type_code
+          }
+          if (this.innerTemp3.dest_code !== undefined && this.innerTemp3.dest_code !== null) {
+            this.temp.orders_logistics.dest_code = this.innerTemp3.dest_code
+          }
+          if (this.innerTemp3.dest_extra_code !== undefined && this.innerTemp3.dest_extra_code !== null) {
+            this.temp.orders_logistics.dest_extra_code = this.innerTemp3.dest_extra_code
+          }
+          if (this.innerTemp3.warehouse_logistics_extra !== undefined && this.innerTemp3.warehouse_logistics_extra !== null) {
+            this.temp.orders_logistics.product_deliver_extra = this.innerTemp3.warehouse_logistics_extra
+          }
+          if (ifPrint) {
+            this.printOrders(this.temp)
+          }
+          this.logisticsDialogLoading = false
           this.innerDialogFormVisible3 = false
           this.$notify({
             title: '成功',
@@ -1315,15 +1332,6 @@
             type: 'success',
             duration: 2000
           })
-          this.temp.orders_logistics.logistics_number = this.innerTemp3.logistics_number
-          this.temp.orders_logistics.orders_logistics_type.code = this.innerTemp3.logistics_type_code
-          this.temp.orders_logistics.dest_code = this.innerTemp3.dest_code
-          this.temp.orders_logistics.dest_extra_code = this.innerTemp3.dest_extra_code
-          this.temp.orders_logistics.product_deliver_extra = this.innerTemp3.warehouse_logistics_extra
-          if (ifPrint) {
-            this.printOrders(this.temp)
-          }
-          this.logisticsDialogLoading = false
         } catch (error) {
           this.logisticsDialogLoading = false
         }
