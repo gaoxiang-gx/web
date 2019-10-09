@@ -31,6 +31,7 @@ router.beforeEach((to, from, next) => {
   console.log(to)
   if (whiteList.indexOf(to.path) !== -1) {
     next()
+    return false
   }
   if (getAccountToken()) {
     if (store.getters.roles.length === 0) {

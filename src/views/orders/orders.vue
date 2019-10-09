@@ -1158,14 +1158,14 @@
         }
       },
       async sumPrint() {
-        // const LODOP = getLodop()
-        // if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
-        //   this.$message({
-        //     type: 'info',
-        //     message: '请先安装lodop控件'
-        //   })
-        //   return
-        // }
+        const LODOP = getLodop()
+        if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
+          this.$message({
+            type: 'info',
+            message: '请先安装lodop控件'
+          })
+          return
+        }
         try {
           this.logisticsDialogLoading = true
           for (const v of this.list) {
@@ -1308,9 +1308,9 @@
             v.is_checked = false
             this.list.splice(index, 1, v)
           }
-          this.temp.orders_logistics.logistics_number = this.innerTemp3.logistics_number
+          this.temp.orders_logistics = { logistics_number: this.innerTemp3.logistics_number }
           if (this.innerTemp3.logistics_type_code !== undefined && this.innerTemp3.logistics_type_code !== null) {
-            this.temp.orders_logistics.orders_logistics_type.code = this.innerTemp3.logistics_type_code
+            this.temp.orders_logistics.orders_logistics_type = { code: this.innerTemp3.logistics_type_code }
           }
           if (this.innerTemp3.dest_code !== undefined && this.innerTemp3.dest_code !== null) {
             this.temp.orders_logistics.dest_code = this.innerTemp3.dest_code
@@ -1333,6 +1333,7 @@
             duration: 2000
           })
         } catch (error) {
+          console.log(error.message)
           this.logisticsDialogLoading = false
         }
       },
