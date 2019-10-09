@@ -90,10 +90,10 @@
             </div>
           </el-col>
           <el-col :span="8"><div class="grid-content bg-purple">商品</div></el-col>
-          <el-col :span="4"><div class="grid-content bg-purple-light">买家</div></el-col>
+          <el-col :span="5"><div class="grid-content bg-purple-light">买家</div></el-col>
           <el-col :span="3"><div class="grid-content bg-purple-light">仓储/物流</div></el-col>
-          <el-col :span="2"><div class="grid-content bg-purple">价格</div></el-col>
-          <el-col :span="4"><div class="grid-content bg-purple-light">状态</div></el-col>
+          <el-col :span="3"><div class="grid-content bg-purple">价格</div></el-col>
+          <el-col :span="2"><div class="grid-content bg-purple-light">状态</div></el-col>
           <el-col :span="2"><div class="grid-content bg-purple">操作</div></el-col>
         </el-row>
       </sticky>
@@ -134,15 +134,10 @@
               </el-table>
             </template>
           </el-table-column>
-          <el-table-column min-width="100" align="center" label="收货人">
+          <el-table-column min-width="200" align="center" label="收货人">
             <template slot-scope="scope">
-              <el-popover trigger="click" placement="top">
-                <p>收货地址: {{ scope.row.orders_receiver_info.province_name + scope.row.orders_receiver_info.city_name + scope.row.orders_receiver_info.district_name + scope.row.orders_receiver_info.address}}</p>
-                <span slot="reference" class="link-type">{{scope.row.orders_receiver_info.receive_name}}</span>
-              </el-popover>
-              <p style="padding:0;margin:0;">
-                {{scope.row.orders_receiver_info.phone}}
-              </p>
+              <p style="padding:0;margin:0;text-align: left;" slot="reference" class="link-type">{{scope.row.orders_receiver_info.receive_name}}({{scope.row.orders_receiver_info.phone}})</p>
+              <p style="padding:0;margin:0;text-align: left;">{{ scope.row.orders_receiver_info.province_name + ' ' + scope.row.orders_receiver_info.city_name + ' ' + scope.row.orders_receiver_info.district_name + ' ' + scope.row.orders_receiver_info.address }}</p>
             </template>
           </el-table-column>
           <el-table-column min-width="125" align="center" label="发货仓">
@@ -176,7 +171,7 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column min-width="100" align="center" label="状态">
+          <el-table-column min-width="50" align="center" label="状态">
             <template slot-scope="scope">
               {{scope.row.status|orderStatusTranslator}}
             </template>
@@ -532,7 +527,7 @@
           label: 'area_name',
           children: 'children'
         },
-        btnLoading: true,
+        btnLoading: false,
         btnDisabled: true,
         productDeliverExtraOptions: [],
         productDeliverExtraLoading: false,
