@@ -103,9 +103,11 @@ export function sum_print_orders(row) {
   }
   const now = new Date()
   const now_date = now.getFullYear() + '/' + (now.getMonth() + 1) + '/' + now.getDate()
+  const now_date_zto = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate()
   const now_seconds = (now.getSeconds() + '').length > 1 ? now.getSeconds() : '0' + now.getSeconds()
   const now_time = now.getHours() + ':' + now.getMinutes() + ':' + now_seconds
   const sign_need_read = '快件送达收件人地址，经收件人或收件人（寄件人）允许的代收人签字，视为送达。您的签字代表您已验收此包裹，并已确认商品信息无误、包装完好、没有划痕、破损等表面质量问题。'
+  const sign_need_read_zto = '您对此单的签收，代表您已验货，确认商品信息无误，包装完好，没有划痕、破损等表面质量问题。'
   let chanpin = ''
   if (row.orders_logistics.product_deliver_extra !== null) {
     chanpin = row.orders_logistics.product_deliver_extra.configs.delivery_product_name//  月结号
@@ -774,7 +776,7 @@ export function sum_print_orders(row) {
     LODOP.SET_PRINT_STYLEA(0, 'FontSize', 20)
     LODOP.SET_PRINT_STYLEA(0, 'Alignment', 2)
     LODOP.SET_PRINT_STYLEA(0, 'Bold', 1)
-    //收货信息
+	//收货信息
     LODOP.ADD_PRINT_TEXT('34mm', '2mm', '12mm', '12mm', '收')
     LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
     LODOP.SET_PRINT_STYLEA(0, 'FontSize', 16)
@@ -873,6 +875,162 @@ export function sum_print_orders(row) {
     LODOP.SET_PRINT_STYLEA(0, 'FontSize', 8)
     LODOP.SET_PRINT_STYLEA(0, 'Alignment', 1)
 
+    LODOP.PRINT()
+  }  else if (logistics_code === '1012') {
+    LODOP.SET_PRINT_PAGESIZE(1, '100mm', '180mm', '')
+    LODOP.SET_SHOW_MODE('BKIMG_WIDTH', '100mm')
+    LODOP.SET_SHOW_MODE('BKIMG_HEIGHT', '180mm')
+    // 画线
+    LODOP.ADD_PRINT_LINE('0mm', '0mm', '0mm', '100mm', 0, 1)
+    LODOP.ADD_PRINT_LINE('0mm', '100mm', '180mm', '100mm', 0, 1)
+    LODOP.ADD_PRINT_LINE('0mm', '0mm', '180mm', '0mm', 0, 1)
+    LODOP.ADD_PRINT_LINE('180mm', '0mm', '180mm', '100mm', 0, 1)
+    LODOP.ADD_PRINT_LINE('9mm', '0mm', '9mm', '100mm', 0, 1)
+    LODOP.ADD_PRINT_LINE('24mm', '0mm', '24mm', '100mm', 0, 1)
+    LODOP.ADD_PRINT_LINE('24mm', '75mm', '34mm', '75mm', 0, 1)
+    LODOP.ADD_PRINT_LINE('34mm', '0mm', '34mm', '100mm', 0, 1)
+    LODOP.ADD_PRINT_LINE('34mm', '9mm', '64mm', '9mm', 0, 1)
+    LODOP.ADD_PRINT_LINE('52mm', '0mm', '52mm', '100mm', 0, 1)
+    LODOP.ADD_PRINT_LINE('64mm', '0mm', '64mm', '100mm', 0, 1)
+    LODOP.ADD_PRINT_LINE('89mm', '0mm', '89mm', '100mm', 0, 1)
+    LODOP.ADD_PRINT_LINE('89mm', '41mm', '107mm', '41mm', 0, 1)
+    LODOP.ADD_PRINT_LINE('107mm', '0mm', '107mm', '100mm', 0, 1)
+    LODOP.ADD_PRINT_LINE('121mm', '0mm', '121mm', '100mm', 0, 1)
+    LODOP.ADD_PRINT_LINE('139mm', '0mm', '139mm', '100mm', 0, 1)
+    LODOP.ADD_PRINT_LINE('151mm', '0mm', '151mm', '100mm', 0, 1)
+    LODOP.ADD_PRINT_LINE('180mm', '0mm', '180mm', '100mm', 0, 1)
+    LODOP.ADD_PRINT_LINE('121mm', '9mm', '180mm', '9mm', 0, 1)
+    //ADD_PRINT_TEXT(Top,Left,Width,Height,strContent)
+    if (money > 0) {
+      LODOP.ADD_PRINT_SHAPE(4, '0mm', '40mm', '60mm', '9mm', 0, 1, '#000000')
+      LODOP.SET_PRINT_STYLE('FontColor', '#ffffff')
+      LODOP.ADD_PRINT_TEXT('3mm', '45mm', '60mm', '6mm', '代收货款' + money + '元')
+      LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+      LODOP.SET_PRINT_STYLEA(0, 'FontSize', 12)
+      LODOP.SET_PRINT_STYLEA(0, 'Bold', 1)
+      LODOP.SET_PRINT_STYLEA(0, 'LetterSpacing', 3)
+
+      LODOP.ADD_PRINT_SHAPE(4, '89mm', '75mm', '25mm', '18mm', 0, 1, '#000000')
+      LODOP.SET_PRINT_STYLE('FontColor', '#ffffff')
+      LODOP.ADD_PRINT_TEXT('92mm', '77mm', '25mm', '14mm', '代收货款' + money + '元')
+      LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+      LODOP.SET_PRINT_STYLEA(0, 'FontSize', 12)
+      LODOP.SET_PRINT_STYLEA(0, 'Bold', 1)
+      LODOP.SET_PRINT_STYLEA(0, 'LetterSpacing', 3)
+
+      LODOP.SET_PRINT_STYLE('FontColor', '#000000')
+
+      LODOP.ADD_PRINT_TEXT('100mm', '60mm', '20mm', '6mm','已验视')
+      LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+      LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+    } else {
+      LODOP.ADD_PRINT_TEXT('3mm', '76mm', '24mm', '6mm', '标准快递')
+      LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+      LODOP.SET_PRINT_STYLEA(0, 'FontSize', 12)
+
+      LODOP.ADD_PRINT_TEXT('100mm', '80mm', '20mm', '6mm','已验视')
+      LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+      LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+    }
+    
+    LODOP.ADD_PRINT_TEXT('10mm', '4mm', '98mm', '15mm', destcode)
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 36)
+
+    LODOP.ADD_PRINT_TEXT('26mm', '4mm', '74mm', '10mm', '集包地')
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 18)
+    LODOP.SET_PRINT_STYLEA(0, 'Bold', 1)
+
+    LODOP.ADD_PRINT_TEXT('28mm', '79mm', '22mm', '7mm', now_date_zto)
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+
+    LODOP.ADD_PRINT_TEXT('38mm', '3mm', '4mm', '16mm', '收件')
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+
+    LODOP.ADD_PRINT_TEXT('54mm', '3mm', '4mm', '10mm', '寄件')
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+
+    LODOP.ADD_PRINT_TEXT('37mm', '12mm', '20mm', '5mm', sjname)
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+
+    LODOP.ADD_PRINT_TEXT('37mm', '32mm', '50mm', '5mm', sjtel)
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+    LODOP.SET_PRINT_STYLEA(0, 'Bold', 1)
+
+    LODOP.ADD_PRINT_TEXT('42mm', '12mm', '86mm', '5mm', sjaddress)
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+
+    LODOP.ADD_PRINT_TEXT('54mm', '12mm', '50mm', '5mm', jjname)
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+
+    LODOP.ADD_PRINT_TEXT('59mm', '12mm', '86mm', '5mm', jjaddress)
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+
+    LODOP.ADD_PRINT_BARCODE('67mm', '5mm', '86mm', '18mm', '128C', mailno)
+
+    LODOP.ADD_PRINT_TEXT('90mm', '2mm', '43mm', '16mm', sign_need_read_zto)
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 8)
+
+    LODOP.ADD_PRINT_TEXT('92mm', '43mm', '20mm', '6mm','签收人')
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+
+    LODOP.ADD_PRINT_TEXT('100mm', '43mm', '20mm', '6mm','时间')
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+
+    LODOP.ADD_PRINT_BARCODE('110mm', '48mm', '50mm', '9mm', '128C', mailno)
+
+    LODOP.ADD_PRINT_TEXT('126mm', '3mm', '4mm', '16mm', '收件')
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+
+    LODOP.ADD_PRINT_TEXT('142mm', '3mm', '4mm', '10mm', '寄件')
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+
+    LODOP.ADD_PRINT_TEXT('158mm', '3mm', '4mm', '10mm', '备 注')
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+
+    LODOP.ADD_PRINT_TEXT('125mm', '12mm', '20mm', '5mm', sjname)
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+
+    LODOP.ADD_PRINT_TEXT('125mm', '32mm', '50mm', '5mm', sjtel)
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+    LODOP.SET_PRINT_STYLEA(0, 'Bold', 1)
+
+    LODOP.ADD_PRINT_TEXT('130mm', '12mm', '86mm', '5mm', sjaddress)
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+
+    LODOP.ADD_PRINT_TEXT('142mm', '12mm', '50mm', '5mm', jjname)
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+
+    LODOP.ADD_PRINT_TEXT('147mm', '12mm', '86mm', '5mm', jjaddress)
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+
+    LODOP.ADD_PRINT_TEXT('147mm', '12mm', '86mm', '5mm', jjaddress)
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
+
+    LODOP.ADD_PRINT_TEXT('155mm', '12mm', '86mm', '5mm', goods_detail)
+    LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
+    LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
     LODOP.PRINT()
   } else {
     LODOP.ADD_PRINT_TEXTA('z', '', 540, 30, '195542') // z
