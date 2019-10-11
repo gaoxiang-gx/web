@@ -132,6 +132,16 @@
         <el-form-item v-if="temp.order_logistics_type_id === 9" label="receive_account_name" prop="configs.receive_account_name">
           <el-input v-model="temp.configs.receive_account_name"></el-input>
         </el-form-item>
+        <!--中通配置-->
+        <el-form-item v-if="temp.order_logistics_type_id === 12" label="company_id" prop="configs.company_id">
+          <el-input v-model="temp.configs.company_id"></el-input>
+        </el-form-item>
+        <el-form-item v-if="temp.order_logistics_type_id === 12" label="key" prop="configs.key">
+          <el-input v-model="temp.configs.key"></el-input>
+        </el-form-item>
+        <el-form-item v-if="temp.order_logistics_type_id === 12" label="partner" prop="configs.partner">
+          <el-input v-model="temp.configs.partner"></el-input>
+        </el-form-item>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -204,7 +214,10 @@
             customer_code: undefined,
             app_key: undefined,
             receive_loan_account: undefined,
-            receive_account_name: undefined
+            receive_account_name: undefined,
+            company_id: undefined,
+            key: undefined,
+            partner: undefined
           }
         },
         rules: {

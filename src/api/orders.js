@@ -158,6 +158,14 @@ export function getOrdersYTOLogisticsNumber(param) {
   })
 }
 
+export function getOrdersZTOLogisticsNumber(param) {
+  return request({
+    url: '/api/orders/getOrdersZTOLogisticsNumber',
+    method: 'post',
+    data: param
+  })
+}
+
 export function downloadNeedCheckOrder(param) {
   return request({
     url: '/api/orders/downloadNeedCheckOrder',

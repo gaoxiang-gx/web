@@ -128,6 +128,7 @@
                   <template slot-scope="scope">
                     <p class="my-form-p">
                       {{scope.row.product_goods.goods_name}} x {{scope.row.number}}
+                      <span v-if="scope.row.product_goods.unit !== '0' && scope.row.product_goods.unit !== null">({{scope.row.product_goods.unit}})</span>
                     </p>
                   </template>
                 </el-table-column>
@@ -307,7 +308,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="额外信息" prop="product_deliver_extra_id"
-                      v-if="(innerTemp3.logistics_type_code === '1001' || innerTemp3.logistics_type_code === '1006' || innerTemp3.logistics_type_code === '1009') && needSelectExtra">
+                      v-if="(innerTemp3.logistics_type_code === '1001' || innerTemp3.logistics_type_code === '1006' || innerTemp3.logistics_type_code === '1009' || innerTemp3.logistics_type_code === '1012') && needSelectExtra">
           <el-select v-model="innerTemp3.warehouse_logistics_extra_id"
                      style="width: 100%"
                      placeholder="请选额外信息"
@@ -319,7 +320,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="物流单号" prop="logistics_number" v-if="(innerTemp3.logistics_type_code !== '1001' && innerTemp3.logistics_type_code !== '1006' && innerTemp3.logistics_type_code !== '1009')">
+        <el-form-item label="物流单号" prop="logistics_number" v-if="(innerTemp3.logistics_type_code !== '1001' && innerTemp3.logistics_type_code !== '1006' && innerTemp3.logistics_type_code !== '1009' && innerTemp3.logistics_type_code !== '1012')">
           <el-input :disabled="innerTemp3.logistics_type_code === '1001' || innerTemp3.logistics_type_code === '1009'"
                     v-model="innerTemp3.logistics_number"></el-input>
         </el-form-item>
@@ -410,7 +411,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="额外信息" prop="product_deliver_extra_id"
-                      v-if="(sum_logistics_type_code === '1001' || sum_logistics_type_code === '1006' || sum_logistics_type_code === '1009') && needSelectExtra">
+                      v-if="(sum_logistics_type_code === '1001' || sum_logistics_type_code === '1006' || sum_logistics_type_code === '1009' || sum_logistics_type_code === '1012') && needSelectExtra">
           <el-select v-model="sum_warehouse_extra_id"
                      style="width: 100%"
                      placeholder="请选额外信息"
@@ -456,6 +457,7 @@
     getOrdersSFLogisticsNumber,
     getOrdersLogsList,
     getOrdersYTOLogisticsNumber,
+    getOrdersZTOLogisticsNumber,
     getOrdersDepponLogisticsNumber,
     destroyOrders,
     deliverOrders
@@ -1208,6 +1210,8 @@
                 logisticsNumberInfo = await getOrdersYTOLogisticsNumber(tempdata)
               } else if (this.sum_logistics_type_code === '1009') {
                 logisticsNumberInfo = await getOrdersDepponLogisticsNumber(tempdata)
+              } else if (this.sum_logistics_type_code === '1012') {
+                logisticsNumberInfo = await getOrdersZTOLogisticsNumber(tempdata)
               } else {
                 this.$message({
                   type: 'info',
@@ -1281,6 +1285,8 @@
             logisticsNumberInfo = await getOrdersYTOLogisticsNumber(tempdata)
           } else if (this.innerTemp3.logistics_type_code === '1009') {
             logisticsNumberInfo = await getOrdersDepponLogisticsNumber(tempdata)
+          } else if (this.innerTemp3.logistics_type_code === '1012') {
+            logisticsNumberInfo = await getOrdersZTOLogisticsNumber(tempdata)
           }
           if (logisticsNumberInfo !== null) {
             this.innerTemp3.logistics_number = logisticsNumberInfo.data.logistics_number
