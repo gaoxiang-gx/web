@@ -48,6 +48,7 @@ router.beforeEach((to, from, next) => {
         next({ path: '/select_account' })
       }
     }).then(() => {
+      getUserInfo(to, from, next)
       next()
     })
   }
