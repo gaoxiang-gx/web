@@ -28,7 +28,6 @@ router.beforeEach((to, from, next) => {
   /**
    * 系统独立登陆
    */
-  console.log(to)
   if (whiteList.indexOf(to.path) !== -1) {
     next()
     return false
@@ -46,7 +45,7 @@ router.beforeEach((to, from, next) => {
         return store.dispatch('LoginAccount', res.data[0].id)
       } else {
         next({ path: '/select_account' })
-        return false
+        Promise.reject()
       }
     }).then(() => {
       getUserInfo(to, from, next)
