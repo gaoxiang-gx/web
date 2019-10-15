@@ -46,6 +46,7 @@ router.beforeEach((to, from, next) => {
         return store.dispatch('LoginAccount', res.data[0].id)
       } else {
         next({ path: '/select_account' })
+        return false
       }
     }).then(() => {
       getUserInfo(to, from, next)

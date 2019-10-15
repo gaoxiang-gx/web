@@ -109,6 +109,7 @@
           <div style="float:right;">
             <el-button size="mini" icon="el-icon-search" @click="handleOpenInner3(orders)">日志查询</el-button>
             <el-button v-if="orders.status === 2 || orders.status === 4" size="mini"type="success" @click="handleInnerUpdate3(orders, 0)" ><span>确认发货</span><br></el-button>
+            <el-button v-if="orders.status === 2" size="mini"type="warning" @click="handleDeliverOrders(orders, 1)" ><span>断货中</span><br></el-button>
             <el-button v-if="orders.status === 3" size="mini" type="danger" @click="handleDestoryOrders(orders)" ><span>废弃</span><br></el-button>
           </div>
           <div style="clear:both;"></div>
