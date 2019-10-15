@@ -40,15 +40,18 @@ router.beforeEach((to, from, next) => {
     }
   }
   if (!getAccountToken() && getUserToken()) {
+    let isSelectAccount = false
     store.dispatch('LoginAccount').then(res => {
       if (res.data.length === 1) {
         return store.dispatch('LoginAccount', res.data[0].id)
       } else {
         next({ path: '/select_account' })
-        Promise.reject()
+        isSelectAccount = true
       }
     }).then(() => {
-      getUserInfo(to, from, next)
+      if (!isSelectAccount) {
+        getUserInfo(to, from, next)
+      }
       next()
     })
   }
