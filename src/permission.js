@@ -28,7 +28,6 @@ router.beforeEach((to, from, next) => {
   /**
    * 系统独立登陆
    */
-  console.log(to)
   if (whiteList.indexOf(to.path) !== -1) {
     next()
     return false
@@ -41,13 +40,18 @@ router.beforeEach((to, from, next) => {
     }
   }
   if (!getAccountToken() && getUserToken()) {
+    let isSelectAccount = false
     store.dispatch('LoginAccount').then(res => {
       if (res.data.length === 1) {
         return store.dispatch('LoginAccount', res.data[0].id)
       } else {
         next({ path: '/select_account' })
+        isSelectAccount = true
       }
     }).then(() => {
+      if (!isSelectAccount) {
+        getUserInfo(to, from, next)
+      }
       next()
     })
   }
