@@ -286,4 +286,11 @@ export function getOrdersDepponLogisticsNumber(param) {
     data: param
   })
 }
+export function updateOrdersLogisticsPrintTimes(param) {
+  return request({
+    url: '/api/orders/updateOrdersLogisticsPrintTimes',
+    method: 'post',
+    data: param
+  })
+}
 

@@ -2,21 +2,35 @@
   <div class="app-container calendar-list-container">
     <div class="filter-container">
       <div class="filter-item">
-        <div class="filter-label">日期</div>
-        <el-date-picker
-          size="small"
-          style="width: 260px"
-          v-model="listQuery.date_range"
-          type="daterange"
-          format="yyyy-MM-dd"
-          value-format="yyyy-MM-dd"
-          align="right"
-          unlink-panels
-          range-separator="~"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :picker-options="pickerOptions2"
-          @change='handleFilter'>
+        <div class="filter-label">订单下单时间</div>
+        <el-date-picker v-model="listQuery.created_at"
+                        type="daterange"
+                        format="yyyy-MM-dd"
+                        value-format="yyyy-MM-dd"
+                        align="right"
+                        size="small"
+                        style="width: 250px"
+                        unlink-panels
+                        range-separator="~"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        :picker-options="pickerOptions2">
+        </el-date-picker>
+      </div>
+      <div class="filter-item">
+        <div class="filter-label">订单发货时间</div>
+        <el-date-picker v-model="listQuery.date_range"
+                        type="daterange"
+                        format="yyyy-MM-dd"
+                        value-format="yyyy-MM-dd"
+                        align="right"
+                        size="small"
+                        style="width: 250px"
+                        unlink-panels
+                        range-separator="~"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        :picker-options="pickerOptions2">
         </el-date-picker>
       </div>
       <div class="filter-item">
@@ -104,7 +118,8 @@
           <div style="float:left;display:table-cell;line-height:30px;">
             <el-checkbox v-model="orders.is_checked" @change="(el) => {handleCheckedOrdersChange(el, orders)}"></el-checkbox>
             <span>订单号： {{orders.orders_unique_id}}</span>
-            <span style="margin-left:10px;">下单时间： {{orders.created_at}}</span>
+            <span style="margin-left:20px;">下单时间： {{orders.created_at}}</span>
+            <span style="margin-left:20px;">发货时间： {{orders.delivered_at}}</span>
           </div>
           <div style="float:right;">
             <el-button size="mini" icon="el-icon-search" @click="handleOpenInner3(orders)">日志查询</el-button>
@@ -173,12 +188,18 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column min-width="50" align="center" label="状态">
+          <el-table-column min-width="80" align="center" label="状态">
             <template slot-scope="scope">
-              {{scope.row.status|orderStatusTranslator}}
+              {{scope.row.status|orderStatusTranslator}}<br>
+              <span v-if="scope.row.orders_logistics !== null && scope.row.orders_logistics.print_times > 0">
+                  <el-tag style="height:20px;line-height:20px;" :type="'danger'">已打印{{scope.row.orders_logistics.print_times}}次</el-tag>
+              </span>
+              <span v-else-if="scope.row.orders_logistics !== null">
+                  <el-tag style="height:20px;line-height:20px;" :type="'success'">待打印</el-tag>
+              </span>
             </template>
           </el-table-column>
-          <el-table-column min-width="100" align="center" label="操作">
+          <el-table-column min-width="90" align="center" label="操作">
             <template slot-scope="scope">
               <span class="link-type" @click="printOrders(scope.row)" >打印订单</span><br>
               <span class="link-type" @click="handleOpenInner2(scope.row)" >添加备注</span>
@@ -436,6 +457,13 @@
         </el-dropdown>
       </div>
     </el-dialog>
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="innerDialogFormVisible10" width="40%">
+      <p>批量任务数量: {{sumTotalTask}}</p>
+      <p>待执行数量: {{sumRemainTask}}</p>
+      <p>成功数量: <span style="color:green;">{{sumSuccessTask}}</span></p>
+      <p>错误数量: <span style="color:red;">{{sumTotalTask}}</span></p>
+      <el-progress :text-inside="true" :stroke-width="24" :percentage="sumTaskPercentage" status="success"></el-progress>
+    </el-dialog>
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="0">
       <defs>
         <filter id="f1">
@@ -461,7 +489,8 @@
     getOrdersZTOLogisticsNumber,
     getOrdersDepponLogisticsNumber,
     destroyOrders,
-    deliverOrders
+    deliverOrders,
+    updateOrdersLogisticsPrintTimes
   } from '@/api/orders'
   import { getWarehouseList } from '@/api/product'
   import { print_orders } from '@/utils/print_orders'
@@ -515,11 +544,12 @@
         chooseId: undefined,
         listQuery: {
           date_range: '',
+          created_at: '',
           page: 1,
           page_size: 20,
           weixin_fans_address_receive_name: '',
           weixin_fans_address_phone: '',
-          sort: '-id',
+          sort: '-delivered_at',
           orders_unique_id: '',
           orders_logistics_number: '',
           status: 2,
@@ -750,10 +780,23 @@
         sum_logistics_type_code: undefined,
         sum_warehouse_extra_id: undefined,
         sum_warehoue_extra: undefined,
-        sumDisabled: true
+        sumDisabled: true,
+        sumTotalTask: 0,
+        sumRemainTask: 0,
+        sumSuccessTask: 0,
+        sumFailedTask: 0,
+        innerDialogFormVisible10: false
       }
     },
     computed: {
+      sumTaskPercentage() {
+        let returnPercentage = 0
+        if (this.sumTotalTask > 0) {
+          returnPercentage = Math.round((this.sumTotalTask - this.sumRemainTask) / this.sumTotalTask * 10000) / 100
+        }
+
+        return returnPercentage
+      },
       ...mapGetters([
         'user_account_id',
         'roles'
@@ -967,6 +1010,7 @@
         })
       },
       printOrders(row) {
+        updateOrdersLogisticsPrintTimes({ orders_id: row.id })
         print_orders(row)
       },
       queryLogisticsTypeList() {
@@ -1173,6 +1217,7 @@
           this.logisticsDialogLoading = true
           for (const v of this.list) {
             if (v.is_checked) {
+              await updateOrdersLogisticsPrintTimes({ orders_id: v.id })
               sum_print_orders(v)
             }
           }
@@ -1183,6 +1228,12 @@
           this.isIndeterminate = false
           this.logisticsDialogLoading = false
         }
+      },
+      resetSumTask() {
+        this.sumTotalTask = 0
+        this.sumRemainTask = 0
+        this.sumSuccessTask = 0
+        this.sumFailedTask = 0
       },
       async sumDeliveryOrdersAndPrint(ifPrint) {
         if (ifPrint) {
@@ -1195,10 +1246,20 @@
             return
           }
         }
-        try {
-          this.logisticsDialogLoading = true
-          for (const v of this.list) {
-            if (v.is_checked) {
+        this.resetSumTask()
+        for (const v of this.list) {
+          if (v.is_checked) {
+            this.sumTotalTask += 1
+            this.sumRemainTask += 1
+          }
+        }
+        this.innerDialogFormVisible9 = false
+        this.innerDialogFormVisible10 = true
+        this.logisticsDialogLoading = true
+
+        for (const v of this.list) {
+          if (v.is_checked) {
+            try {
               // 生成物流单号
               const tempdata = {}
               tempdata.orders_id = v.id
@@ -1225,7 +1286,7 @@
                   type: 'info',
                   message: '获取物流单号信息错误'
                 })
-                break
+                continue
               }
               // 更新订单物流单号
               tempdata.logistics_number = logisticsNumberInfo.data.logistics_number
@@ -1233,7 +1294,7 @@
               tempdata.dest_extra_code = logisticsNumberInfo.data.dest_extra_code
               await updateOrdersLogistics(tempdata)
               // 操作订单发货
-              await deliverOrders({ orders_id: v.id, is_empty: 0 })
+              await deliverOrders({orders_id: v.id, is_empty: 0})
               v.orders_logistics.logistics_number = logisticsNumberInfo.data.logistics_number
               v.orders_logistics.orders_logistics_type.code = this.sum_logistics_type_code
               v.orders_logistics.dest_code = logisticsNumberInfo.data.dest_code
@@ -1241,26 +1302,29 @@
               v.orders_logistics.product_deliver_extra = this.sum_warehouse_extra
               // 打印订单
               if (ifPrint) {
+                await updateOrdersLogisticsPrintTimes({orders_id: v.id})
                 sum_print_orders(v)
               }
+              this.sumSuccessTask += 1
+            } catch (error) {
+              this.sumFailedTask += 1
+            } finally {
+              this.sumRemainTask -= 1
             }
           }
-          const listInfo = await getOrdersList(this.listQuery)
-          this.getOrdersCountInfo()
-          this.list = listInfo.data.data
-          this.total = listInfo.data.total
-          for (const v of this.list) {
-            const index = this.list.indexOf(v)
-            v.is_checked = false
-            this.list.splice(index, 1, v)
-          }
-          this.innerDialogFormVisible9 = false
-        } catch (error) {
+        }
+        this.checkAll = false
+        this.isIndeterminate = false
+        this.logisticsDialogLoading = false
 
-        } finally {
-          this.checkAll = false
-          this.isIndeterminate = false
-          this.logisticsDialogLoading = false
+        const listInfo = await getOrdersList(this.listQuery)
+        this.getOrdersCountInfo()
+        this.list = listInfo.data.data
+        this.total = listInfo.data.total
+        for (const v of this.list) {
+          const index = this.list.indexOf(v)
+          v.is_checked = false
+          this.list.splice(index, 1, v)
         }
       },
       async createInnerData3(empty, ifPrint) {
