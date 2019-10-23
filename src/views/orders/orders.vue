@@ -461,7 +461,7 @@
       <p>批量任务数量: {{sumTotalTask}}</p>
       <p>待执行数量: {{sumRemainTask}}</p>
       <p>成功数量: <span style="color:green;">{{sumSuccessTask}}</span></p>
-      <p>错误数量: <span style="color:red;">{{sumTotalTask}}</span></p>
+      <p>错误数量: <span style="color:red;">{{sumFailedTask}}</span></p>
       <el-progress :text-inside="true" :stroke-width="24" :percentage="sumTaskPercentage" status="success"></el-progress>
     </el-dialog>
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="0">
@@ -1295,6 +1295,8 @@
               await updateOrdersLogistics(tempdata)
               // 操作订单发货
               await deliverOrders({orders_id: v.id, is_empty: 0})
+              v.orders_logistics = {}
+              v.orders_logistics.orders_logistics_type = {}
               v.orders_logistics.logistics_number = logisticsNumberInfo.data.logistics_number
               v.orders_logistics.orders_logistics_type.code = this.sum_logistics_type_code
               v.orders_logistics.dest_code = logisticsNumberInfo.data.dest_code
@@ -1302,11 +1304,12 @@
               v.orders_logistics.product_deliver_extra = this.sum_warehouse_extra
               // 打印订单
               if (ifPrint) {
-                await updateOrdersLogisticsPrintTimes({orders_id: v.id})
+                await updateOrdersLogisticsPrintTimes({ orders_id: v.id })
                 sum_print_orders(v)
               }
               this.sumSuccessTask += 1
             } catch (error) {
+              console.log(error.message)
               this.sumFailedTask += 1
             } finally {
               this.sumRemainTask -= 1
