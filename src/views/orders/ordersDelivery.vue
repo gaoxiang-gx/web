@@ -1,117 +1,33 @@
 <template>
   <div class="app-container calendar-list-container">
+    <el-alert v-if="this.scanStatus === 'success'"
+      title="发货成功"
+      type="success"
+      center
+      description="成功通过扫码发货， 请不要重复扫描同一条形码"
+      show-icon>
+    </el-alert>
+    <el-alert v-if="this.scanStatus === 'error'"
+      title="订单信息错误"
+      type="error"
+      center
+      description="订单状态错误， 不能操作发货， 请人工核对订单是否已发货"
+      show-icon>
+    </el-alert>
+    <el-alert v-if="this.scanStatus === 'warning'"
+              title="查找不到对应订单"
+              type="warning"
+              center
+              description="系统没有此单号对应订单， 请人工核对订单信息是否为此系统订单"
+              show-icon>
+    </el-alert>
     <div class="filter-container">
-      <div class="filter-item">
-        <div class="filter-label">订单下单时间</div>
-        <el-date-picker v-model="listQuery.created_at"
-                        type="daterange"
-                        format="yyyy-MM-dd"
-                        value-format="yyyy-MM-dd"
-                        align="right"
-                        size="small"
-                        style="width: 250px"
-                        unlink-panels
-                        range-separator="~"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                        :picker-options="pickerOptions2">
-        </el-date-picker>
-      </div>
-      <div class="filter-item">
-        <div class="filter-label">订单发货时间</div>
-        <el-date-picker v-model="listQuery.date_range"
-                        type="daterange"
-                        format="yyyy-MM-dd"
-                        value-format="yyyy-MM-dd"
-                        align="right"
-                        size="small"
-                        style="width: 250px"
-                        unlink-panels
-                        range-separator="~"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                        :picker-options="pickerOptions2">
-        </el-date-picker>
-      </div>
-      <div class="filter-item">
-        <div class="filter-label">收件人姓名</div>
-        <el-input @keyup.enter.native="handleFilter" style="width: 100px;" size="small" placeholder=""
-                  v-model="listQuery.weixin_fans_address_receive_name">
-        </el-input>
-      </div>
-      <div class="filter-item">
-        <div class="filter-label">收件人电话</div>
-        <el-input @keyup.enter.native="handleFilter" style="width: 160px;" size="small" placeholder=""
-                  v-model="listQuery.weixin_fans_address_phone">
-        </el-input>
-      </div>
-      <div class="filter-item">
-        <div class="filter-label">订单号</div>
-        <el-input @keyup.enter.native="handleFilter" style="width: 220px;" size="small" placeholder=""
-                  v-model="listQuery.orders_unique_id">
-        </el-input>
-      </div>
-      <div class="filter-item">
-        <div class="filter-label">物流单号</div>
-        <el-input @keyup.enter.native="handleFilter" style="width: 220px;" size="small" placeholder=""
-                  v-model="listQuery.orders_logistics_number">
-        </el-input>
-      </div>
-      <div class="filter-item">
-        <div class="filter-label">备注信息</div>
-        <el-input @keyup.enter.native="handleFilter" style="width: 200px;" size="small" placeholder=""
-                  v-model="listQuery.remark">
-        </el-input>
-      </div>
-      <div class="filter-row">
-        <div class="filter-item">
-          <el-button class="filter-item" :disabled="sumDisabled" size="small" type="primary" v-waves icon="el-icon-tickets" @click="handleSumDeliveryOrders">生成运单号</el-button>
-        </div>
-        <div class="filter-item">
-          <el-button class="filter-item" :disabled="sumDisabled" size="small" type="primary" v-waves icon="el-icon-printer" @click="sumPrint">打印订单</el-button>
-        </div>
-        <div class="filter-item">
-          <el-button class="filter-item" size="small" plain v-waves icon="el-icon-download" @click="downExcel">导出订单</el-button>
-        </div>
-        <div class="filter-item">
-          <el-button class="filter-item" size="small" plain v-waves icon="el-icon-upload2" @click="handleOpenInner8">导入订单物流单号</el-button>
-        </div>
-        <div class="filter-float">
-          <div style="margin-right: 20px">
-            <span>今日订单：<span style="color:red;">{{today_orders}}</span></span>
-            <span>待发货：<span style="color:red;">{{need_delivery}}</span></span>
-          </div>
-          <el-button class="filter-item" size="small" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button>
-        </div>
-      </div>
+      <p  v-if="listQuery.orders_logistics_number !== ''" style="text-align:center;font-size:60px;width:100%">
+        物流单号： {{listQuery.orders_logistics_number}}
+      </p>
+      <p v-else style="text-align:center;font-size:60px;width:100%">请使用扫码枪扫描条形码</p>
     </div>
     <div :class="tableLoading">
-      <el-tabs v-model="tabSelection" type="card" @tab-click="handleClick">
-        <el-tab-pane label="全部订单" name="all"></el-tab-pane>
-        <el-tab-pane label="待发货订单" name="2"></el-tab-pane>
-        <el-tab-pane label="已发货订单" name="3"></el-tab-pane>
-        <el-tab-pane label="断货中订单" name="4"></el-tab-pane>
-        <el-tab-pane label="已签收订单" name="5"></el-tab-pane>
-        <el-tab-pane label="已拒收订单" name="6"></el-tab-pane>
-        <el-tab-pane name="7"><span slot="label">已完成 <i class="el-icon-success"></i></span></el-tab-pane>
-        <el-tab-pane name="8"><span slot="label">已退回 <i class="el-icon-error"></i></span></el-tab-pane>
-      </el-tabs>
-      <sticky :sticky-top="74">
-        <el-row>
-          <el-col :span="1">
-            <div class="grid-content bg-purple-light">
-              <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" :checked="checkAll" @change="handleCheckAllChange"></el-checkbox>
-            </div>
-          </el-col>
-          <el-col :span="8"><div class="grid-content bg-purple">商品</div></el-col>
-          <el-col :span="5"><div class="grid-content bg-purple-light">买家</div></el-col>
-          <el-col :span="3"><div class="grid-content bg-purple-light">仓储/物流</div></el-col>
-          <el-col :span="3"><div class="grid-content bg-purple">价格</div></el-col>
-          <el-col :span="2"><div class="grid-content bg-purple-light">状态</div></el-col>
-          <el-col :span="2"><div class="grid-content bg-purple">操作</div></el-col>
-        </el-row>
-      </sticky>
-      <br>
       <!--<el-checkbox-group v-model="checkedOrders" @change="handleCheckedOrdersChange">-->
       <div v-for="orders in list" :key="orders.id">
         <div style="border:1px solid #ebeef5;width:100%;line-height:20px;padding:15px 20px;background-color:#f7f8fa;margin-bottom:-1px;color:#323233;">
@@ -120,12 +36,6 @@
             <span>订单号： {{orders.orders_unique_id}}</span>
             <span style="margin-left:20px;">下单时间： {{orders.created_at}}</span>
             <span style="margin-left:20px;">发货时间： {{orders.delivered_at}}</span>
-          </div>
-          <div style="float:right;">
-            <el-button size="mini" icon="el-icon-search" @click="handleOpenInner3(orders)">日志查询</el-button>
-            <el-button v-if="orders.status === 2 || orders.status === 4" size="mini"type="success" @click="handleInnerUpdate3(orders, 0)" ><span>确认发货</span><br></el-button>
-            <el-button v-if="orders.status === 2" size="mini"type="warning" @click="handleDeliverOrders(orders, 1)" ><span>断货中</span><br></el-button>
-            <el-button v-if="orders.status === 3" size="mini" type="danger" @click="handleDestoryOrders(orders)" ><span>废弃</span><br></el-button>
           </div>
           <div style="clear:both;"></div>
         </div>
@@ -199,12 +109,6 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column min-width="90" align="center" label="操作">
-            <template slot-scope="scope">
-              <span class="link-type" @click="printOrders(scope.row)" >打印订单</span><br>
-              <span class="link-type" @click="handleOpenInner2(scope.row)" >添加备注</span>
-            </template>
-          </el-table-column>
         </el-table>
         <div v-if="orders.orders_remarks.length > 0" style="background-color:#fffaeb;border:1px solid #ebeef5;width:100%;line-height:10px;padding: 14px 10px 14px 20px;color:#f90;font-size:14px;margin-top:-1px;">
         <span v-for="remark in orders.orders_remarks">
@@ -215,13 +119,6 @@
         <br>
       </div>
       <!--</el-checkbox-group>-->
-    </div>
-    <div v-show="!listLoading" class="pagination-container">
-      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                     :current-page.sync="listQuery.page"
-                     :page-sizes="[10,20,30, 50,100]" :page-size="listQuery.page_size"
-                     layout="total, sizes, prev, pager, next, jumper" :total="total">
-      </el-pagination>
     </div>
     <el-dialog :title="innerTableTitle2" :visible.sync="innerTableVisible2" width="90%">
       <div class="filter-container" align="right">
@@ -448,11 +345,11 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="innerDialogFormVisible9 = false">取 消</el-button>
-        <el-button type="primary" :loading="logisticsDialogLoading" v-if="logisticsDialogLoading">生成运单号并打印订单</el-button>
+        <el-button type="primary" :loading="logisticsDialogLoading" v-if="logisticsDialogLoading">确认发货并打印订单</el-button>
         <el-dropdown v-if="!logisticsDialogLoading" trigger="click" placement="top-end"split-button type="primary" @click="sumDeliveryOrdersAndPrint(1)" @command="handleSumCommand">
-          生成运单号并打印订单
+          确认发货并打印订单
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="onlySumDelivery">生成运单号</el-dropdown-item>
+            <el-dropdown-item command="onlySumDelivery">确认发货</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -552,7 +449,7 @@
           sort: '-delivered_at',
           orders_unique_id: '',
           orders_logistics_number: '',
-          status: 2,
+          status: '',
           remark: ''
         },
         props: {
@@ -785,7 +682,9 @@
         sumRemainTask: 0,
         sumSuccessTask: 0,
         sumFailedTask: 0,
-        innerDialogFormVisible10: false
+        innerDialogFormVisible10: false,
+        newScan: true,
+        scanStatus: ''
       }
     },
     computed: {
@@ -851,10 +750,58 @@
       }
     },
     created() {
-      this.handleFilter()
-      this.queryLogisticsTypeList()
+      document.onkeydown = (e) => {
+        const key = window.event.keyCode
+        if ((key === 13) || (key >= 48 && key <= 57) || (key >= 65 && key <= 90)) {
+          if (this.newScan === true) {
+            this.listQuery.orders_logistics_number = ''
+          }
+          this.newScan = false
+          if (key === 13) {
+            this.scanCode()
+            this.newScan = true
+          } else {
+            this.listQuery.orders_logistics_number += String.fromCharCode(key)
+          }
+          console.log(this.listQuery.orders_logistics_number)
+          console.log(key)
+        }
+      }
     },
     methods: {
+      async scanCode() {
+        this.list = []
+        try {
+          const ordersList = await getOrdersList(this.listQuery)
+          this.list = ordersList.data.data
+          if (ordersList.data.data.length <= 0) {
+            this.scanStatus = 'warning'
+            this.$message({
+              type: 'error',
+              message: '没有相关订单'
+            })
+            return
+          }
+          const orders = ordersList.data.data[0]
+          if (orders.status !== 2) {
+            this.scanStatus = 'error'
+            this.$message({
+              type: 'error',
+              message: '订单状态错误'
+            })
+            return
+          }
+          await deliverOrders({ orders_id: orders.id, is_empty: 0 })
+          this.list[0].status = 3
+          this.scanStatus = 'success'
+        } catch (e) {
+          this.scanStatus = 'error'
+          this.$message({
+            type: 'error',
+            message: '订单状态错误'
+          })
+        }
+      },
       async createInnerData8() {
         this.buttonInnerCreate8Loading = true
         for (const v of this.innerList8) {
@@ -1034,6 +981,11 @@
         })
       },
       handleFilter() {
+        this.listQuery.page = 1
+        this.getList()
+        this.getOrdersCountInfo()
+      },
+      handleLogisitcsNumberFilter() {
         this.listQuery.page = 1
         this.getList()
         this.getOrdersCountInfo()
@@ -1294,7 +1246,7 @@
               tempdata.dest_extra_code = logisticsNumberInfo.data.dest_extra_code
               await updateOrdersLogistics(tempdata)
               // 操作订单发货
-              // await deliverOrders({orders_id: v.id, is_empty: 0})
+              await deliverOrders({orders_id: v.id, is_empty: 0})
               v.orders_logistics = {}
               v.orders_logistics.orders_logistics_type = {}
               v.orders_logistics.logistics_number = logisticsNumberInfo.data.logistics_number

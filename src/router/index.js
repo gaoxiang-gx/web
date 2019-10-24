@@ -57,6 +57,12 @@ export const asyncRouterMap = [
         meta: { title: '订单管理'}
       },
       {
+        path: 'ordersDelivery',
+        name: 'ordersDelivery',
+        component: _import('orders/ordersDelivery'),
+        meta: { title: '扫码发货管理' }
+      },
+      {
         path: 'secondaryShopOrders',
         name: 'secondaryShopOrders',
         component: _import('orders/secondaryShopOrders'),
