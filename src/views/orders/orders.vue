@@ -4,12 +4,12 @@
       <div class="filter-item">
         <div class="filter-label">订单下单时间</div>
         <el-date-picker v-model="listQuery.created_at"
-                        type="daterange"
-                        format="yyyy-MM-dd"
-                        value-format="yyyy-MM-dd"
+                        type="datetimerange"
+                        format="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         align="right"
                         size="small"
-                        style="width: 250px"
+                        style="width: 350px"
                         unlink-panels
                         range-separator="~"
                         start-placeholder="开始日期"
@@ -1436,7 +1436,9 @@
         // 收件人电话
         const remark = document.createElement('input')
         // 备注
+        let need_select_time = true
         if (this.listQuery.date_range !== null && this.listQuery.date_range !== undefined && this.listQuery.date_range !== '') {
+          need_select_time = false
           const date_range = document.createElement('input')
           const date_range2 = document.createElement('input')
           date_range.name = 'date_range[0]'
@@ -1457,7 +1459,31 @@
             })
             return
           }
-        } else {
+        }
+        if (this.listQuery.created_at !== null && this.listQuery.created_at !== undefined && this.listQuery.created_at !== '') {
+          need_select_time = false
+          const created_at = document.createElement('input')
+          const created_at2 = document.createElement('input')
+          created_at.name = 'created_at[0]'
+          created_at.value = this.listQuery.created_at[0]
+          created_at2.name = 'created_at[1]'
+          created_at2.value = this.listQuery.created_at[1]
+          form.appendChild(created_at)
+          form.appendChild(created_at2)
+
+          const sdate = new Date(created_at.value)
+          const now = new Date(created_at2.value)
+          const days = now.getTime() - sdate.getTime()
+          const day = parseInt(days / (1000 * 60 * 60 * 24))
+          if (day > 31) {
+            this.$message({
+              type: 'info',
+              message: '最多只能导出30天数据'
+            })
+            return
+          }
+        }
+        if (need_select_time) {
           this.$message({
             type: 'info',
             message: '请选择时间区间'
