@@ -293,4 +293,11 @@ export function updateOrdersLogisticsPrintTimes(param) {
     data: param
   })
 }
+export function updateOrdersLogisticsNumber(param) {
+  return request({
+    url: '/api/orders/updateOrdersLogisticsNumber',
+    method: 'post',
+    data: param
+  })
+}
 

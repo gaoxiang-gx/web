@@ -171,9 +171,16 @@
                 </el-tag>
               </span>
                 <br>
-                <span>
-                <span class="link-type">{{scope.row.orders_logistics.logistics_number}}</span>
-              </span>
+                <div v-if="scope.row.logisitics_editable !== undefined && scope.row.logisitics_editable !== null">
+                  <el-input class="edit-input" size="small" v-model="scope.row.orders_logistics.logistics_number"></el-input>
+                  <el-button class='cancel-btn' size="small" icon="el-icon-refresh" type="warning"
+                             @click="scope.row.logisitics_editable = null">取消
+                  </el-button>
+                  <el-button type="success" @click="updateLogisticsNumber(scope.row.id, scope.row.orders_logistics.logistics_number);scope.row.logisitics_editable = null" size="small" icon="el-icon-circle-check-outline">
+                    完成
+                  </el-button>
+                </div>
+                <span class="link-type" @click="handleEditLogisticsNumber(scope.row)" v-else>{{ scope.row.orders_logistics.logistics_number }}</span>
               </div>
             </template>
           </el-table-column>
@@ -490,7 +497,8 @@
     getOrdersDepponLogisticsNumber,
     destroyOrders,
     deliverOrders,
-    updateOrdersLogisticsPrintTimes
+    updateOrdersLogisticsPrintTimes,
+    updateOrdersLogisticsNumber
   } from '@/api/orders'
   import { getWarehouseList } from '@/api/product'
   import { print_orders } from '@/utils/print_orders'
@@ -855,6 +863,17 @@
       this.queryLogisticsTypeList()
     },
     methods: {
+      handleEditLogisticsNumber(row) {
+        this.$set(row, 'logisitics_editable', 1)
+      },
+      updateLogisticsNumber(orders_id, logistics_number) {
+        const tempData = {}
+        tempData.orders_id = orders_id
+        tempData.logistics_number = logistics_number
+        updateOrdersLogisticsNumber(tempData).then(() => {
+          this.actualPayEditable = false
+        })
+      },
       async createInnerData8() {
         this.buttonInnerCreate8Loading = true
         for (const v of this.innerList8) {
