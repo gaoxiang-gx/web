@@ -58,6 +58,22 @@
         </el-input>
       </div>
       <div class="filter-item">
+        <div class="filter-label">物流类型</div>
+        <el-select v-model="listQuery.logistics_type_id"
+                   clearable
+                   style="width: 220px;"
+                   size="small"
+                   placeholder="选择物流类型"
+                   @change="handleFilter">
+          <el-option
+            v-for="item in logisticsTypeOptions"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </div>
+      <div class="filter-item">
         <div class="filter-label">备注信息</div>
         <el-input @keyup.enter.native="handleFilter" style="width: 200px;" size="small" placeholder=""
                   v-model="listQuery.remark">
@@ -561,7 +577,8 @@
           orders_unique_id: '',
           orders_logistics_number: '',
           status: 2,
-          remark: ''
+          remark: '',
+          logistics_type_id: undefined
         },
         props: {
           value: 'area_number',
