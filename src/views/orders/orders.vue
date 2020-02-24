@@ -208,7 +208,7 @@
                 <span v-if="item.orders_pay_type.type_code === 'cash_on_delivery' && item.paid_money > 0">
                   <el-tag style="height:20px;line-height:20px;" :type="'danger'">代收{{item.paid_money}}</el-tag>
                 </span>
-                <span v-else>
+                <span v-else-if="item.paid_money > 0">
                   <el-tag style="height:20px;line-height:20px;" :type="'success'">已收{{item.paid_money}}</el-tag>
                 </span>
               </span>
