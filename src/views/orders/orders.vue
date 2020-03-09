@@ -79,6 +79,21 @@
                   v-model="listQuery.remark">
         </el-input>
       </div>
+     <div class="filter-item">
+       <el-select
+                 v-model="listQuery.warehouse_id"
+                 filterable
+                 @change="handleFilter"
+                 clearable
+                 placeholder="仓库">
+        <el-option  v-for="item in warehouseOptions"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
+        </el-option>
+      </el-select>
+      </div>
+
       <div class="filter-row">
         <div class="filter-item">
           <el-button class="filter-item" :disabled="sumDisabled" size="small" type="primary" v-waves icon="el-icon-tickets" @click="handleSumDeliveryOrders">生成运单号</el-button>
@@ -501,7 +516,7 @@
 </template>
 
 <script>
-  import { getWarehouseLogisticsExtraList } from '@/api/product'
+  import { getWarehouseLogisticsExtraList ,getWarehouseList} from '@/api/product'
   import {
     getOrdersCountInfo,
     getOrdersList,
@@ -519,7 +534,6 @@
     updateOrdersLogisticsPrintTimes,
     updateOrdersLogisticsNumber
   } from '@/api/orders'
-  import { getWarehouseList } from '@/api/product'
   import { print_orders } from '@/utils/print_orders'
   import { sum_print_orders } from '@/utils/sum_print_orders'
   import waves from '@/directive/waves' // 水波纹指令
@@ -557,6 +571,7 @@
         }
       }
       return {
+        warehouseOptions: [],
         tableLoading: '',
         scrollTop: 0,
         ifExpandAll: false,
@@ -581,7 +596,8 @@
           orders_logistics_number: '',
           status: 2,
           remark: '',
-          logistics_type_id: undefined
+          logistics_type_id: undefined,
+          warehouse_id: undefined,
         },
         props: {
           value: 'area_number',
@@ -882,8 +898,14 @@
     created() {
       this.handleFilter()
       this.queryLogisticsTypeList()
+      this.getWarehouseList()
     },
     methods: {
+      getWarehouseList() {
+        getWarehouseList().then(response => {
+          this.warehouseOptions = response.data.data
+        })
+      },
       handleEditLogisticsNumber(row) {
         this.$set(row, 'logisitics_editable', 1)
       },
