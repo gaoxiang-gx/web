@@ -79,10 +79,10 @@
                   v-model="listQuery.remark">
         </el-input>
       </div>
-     <div class="filter-item">
-       <el-select
+       <el-select class="filter-item"
                  v-model="listQuery.warehouse_id"
                  filterable
+                 size="small"
                  @change="handleFilter"
                  clearable
                  placeholder="仓库">
@@ -92,7 +92,6 @@
                     :value="item.id">
         </el-option>
       </el-select>
-      </div>
 
       <div class="filter-row">
         <div class="filter-item">
