@@ -1493,6 +1493,8 @@
         const orders_status = document.createElement('input')
         // 订单状态
         const orders_unique_id = document.createElement('input')
+        //仓库
+        const warehouse_id = document.createElement('input')
         // 订单号
         const orders_logistics_number = document.createElement('input')
         // 物流单号
@@ -1510,6 +1512,14 @@
         const remark = document.createElement('input')
         // 备注
         let need_select_time = true
+        // let warehouseids = true
+        // if (this.listQuery.warehouse_id !== null && this.listQuery.warehouse_id !== undefined && this.listQuery.warehouse_id !== ''){
+        //    this.$message({
+        //       type: 'info',
+        //       message: '请选择仓库'
+        //     })
+        //     return
+        // }
         if (this.listQuery.date_range !== null && this.listQuery.date_range !== undefined && this.listQuery.date_range !== '') {
           need_select_time = false
           const date_range = document.createElement('input')
@@ -1564,6 +1574,8 @@
         }
         orders_status.name = 'status'
         orders_status.value = this.listQuery.status
+        warehouse_id.name = 'warehouse_id'
+        warehouse_id.value = this.listQuery.warehouse_id
         orders_unique_id.name = 'orders_unique_id'
         orders_unique_id.value = this.listQuery.orders_unique_id
         orders_logistics_number.name = 'orders_logistics_number'
@@ -1584,6 +1596,7 @@
         remark.value = this.listQuery.remark
         form.appendChild(orders_status)
         form.appendChild(orders_unique_id)
+        form.appendChild(warehouse_id)
         form.appendChild(orders_logistics_number)
         form.appendChild(group_name)
         form.appendChild(nickname)
