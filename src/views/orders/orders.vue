@@ -1487,7 +1487,7 @@
       downExcel() {
         // console.log(this.listQuery.date_range)
         const form = document.createElement('form')
-        form.action = process.env.BASE_API + '/api/orders/downloadNeedDeliveredOrders' + '?token=' + this.$store.state.user.token + '&warehouse_id=' + this.listQuery.warehouse_id
+        form.action = process.env.BASE_API + '/api/orders/downloadNeedDeliveredOrders' + '?token=' + this.$store.state.user.token
         form.method = 'post'
         form.style.display = 'none'
         const orders_status = document.createElement('input')
@@ -1605,7 +1605,6 @@
         form.appendChild(receive_name)
         form.appendChild(receive_phone)
         form.appendChild(remark)
-
         const button = document.createElement('input')
         button.type = 'submit'
         form.appendChild(button)
