@@ -101,6 +101,14 @@
           <el-button class="filter-item" :disabled="sumDisabled" size="small" type="primary" v-waves icon="el-icon-printer" @click="sumPrint">打印订单</el-button>
         </div>
         <div class="filter-item">
+          <!-- <download-excel
+          class="export-excel-wrapper"
+          :data="this.dataList"
+          :fields="json_fields"
+          name="提现列表.xls"
+        >
+           <el-button type="primary" class="filter-item" v-waves>导出EXCEL</el-button>
+        </download-excel> -->
           <el-button class="filter-item" size="small" plain v-waves icon="el-icon-download" @click="downExcel">导出订单</el-button>
         </div>
         <div class="filter-item">
@@ -570,6 +578,7 @@
         }
       }
       return {
+        json_fields: {}, //导出数据
         warehouseOptions: [],
         tableLoading: '',
         scrollTop: 0,
@@ -1081,19 +1090,7 @@
           this.queryLogisticsTypeLoading = false
         })
       },
-      getList() {
-        this.tableLoading = 'filtered'
-        getOrdersList(this.listQuery).then(response => {
-          this.list = response.data.data
-          this.total = response.data.total
-          for (const v of this.list) {
-            const index = this.list.indexOf(v)
-            v.is_checked = false
-            this.list.splice(index, 1, v)
-          }
-          this.tableLoading = ''
-        })
-      },
+
       handleFilter() {
         this.listQuery.page = 1
         this.getList()
@@ -1472,10 +1469,25 @@
           this.logisticsDialogLoading = false
         }
       },
+    getList() {
+        this.tableLoading = 'filtered'
+        getOrdersList(this.listQuery).then(response => {
+          this.list = response.data.data
+          console.log(this.list,999999)
+          this.total = response.data.total
+          for (const v of this.list) {
+            const index = this.list.indexOf(v)
+            v.is_checked = false
+            this.list.splice(index, 1, v)
+          }
+          this.tableLoading = ''
+        })
+      },
+
       downExcel() {
         // console.log(this.listQuery.date_range)
         const form = document.createElement('form')
-        form.action = process.env.BASE_API + '/api/orders/downloadNeedDeliveredOrders' + '?token=' + this.$store.state.user.token
+        form.action = process.env.BASE_API + '/api/orders/downloadNeedDeliveredOrders' + '?token=' + this.$store.state.user.token + '&warehouse_id=' + this.listQuery.warehouse_id
         form.method = 'post'
         form.style.display = 'none'
         const orders_status = document.createElement('input')
@@ -1508,7 +1520,6 @@
           date_range2.value = this.listQuery.date_range[1]
           form.appendChild(date_range)
           form.appendChild(date_range2)
-
           const sdate = new Date(date_range.value)
           const now = new Date(date_range2.value)
           const days = now.getTime() - sdate.getTime()
@@ -1557,14 +1568,12 @@
         orders_unique_id.value = this.listQuery.orders_unique_id
         orders_logistics_number.name = 'orders_logistics_number'
         orders_logistics_number.value = this.listQuery.orders_logistics_number
-
         group_name.name = 'support_user_account_group_id'
         group_name.value = this.listQuery.support_user_account_group_id
         nickname.name = 'support_member_nickname'
         nickname.value = this.listQuery.support_member_nickname
         product_weixin_id.name = 'product_weixin_id'
         product_weixin_id.value = this.listQuery.product_weixin_id
-
         product_name.name = 'product_name'
         product_name.value = this.listQuery.product_name
         receive_name.name = 'weixin_fans_address_receive_name'
@@ -1573,7 +1582,6 @@
         receive_phone.value = this.listQuery.weixin_fans_address_phone
         remark.name = 'remark'
         remark.value = this.listQuery.remark
-
         form.appendChild(orders_status)
         form.appendChild(orders_unique_id)
         form.appendChild(orders_logistics_number)

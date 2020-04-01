@@ -11,7 +11,9 @@ import '@/styles/index.scss' // global css
 import App from './App'
 import router from './router'
 import store from './store'
+import JsonExcel from 'vue-json-excel'
 
+Vue.component('downloadExcel', JsonExcel)
 import i18n from './lang' // Internationalization
 import '@/icons' // icon
 import '@/permission' // permission control
