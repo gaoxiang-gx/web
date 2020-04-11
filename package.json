@@ -30,6 +30,7 @@
     "vue-count-to": "1.0.13",
     "vue-fullcalendar": "^1.0.9",
     "vue-image-crop-upload": "^2.2.3",
+    "vue-json-excel": "^0.2.98",
     "vue-multiselect": "^2.0.8",
     "vue-photo-preview": "^1.1.0",
     "vue-router": "3.0.1",

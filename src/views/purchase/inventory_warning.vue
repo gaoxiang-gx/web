@@ -18,6 +18,23 @@
                     :value="item.id">
         </el-option>
       </el-select>
+      <el-select  class="filter-item"
+                  style="width:180px"
+                  @change='handleFilter'
+                  @focus="getWarehouseProductGoodsStorageList(' ')"
+                  v-model="listQuery.product_goods_id"
+                  filterable
+                  clearable
+                  remote
+                  placeholder="商品"
+                  :remote-method="getWarehouseProductGoodsStorageList"
+                  :loading="productGoodsLoading">
+        <el-option  v-for="item in productGoodsOptions"
+                    :key="item.id"
+                    :label="item.product_goods.goods_name"
+                    :value="item.id">
+        </el-option>
+      </el-select>
       <div class="filter-float">
         <el-button class="filter-item" size="small" @click="handleFilter" type="primary"
                    icon="el-icon-search">搜索
@@ -89,8 +106,8 @@
 
 <script>
   import waves from '@/directive/waves'
-  import {getProductGoodsStorageList} from '@/api/warehouse'
-  import { getWarehouseList} from '@/api/product'
+  import { getProductGoodsStorageList, getWarehouseProductGoodsStorageList } from '@/api/warehouse'
+  import { getWarehouseList } from '@/api/product'
   export default {
     components: {},
     name: 'inventoryWarning',
@@ -107,6 +124,7 @@
         productOptions: [],
         productLoading: false,
         listQuery: {
+          product_goods_id: undefined,
           warehouse_id: undefined,
           page: 1,
           page_size: 20,
@@ -146,7 +164,9 @@
               picker.$emit('pick', [start, end])
             }
           }]
-        }
+        },
+        productGoodsOptions: [],
+        productGoodsLoading: false
       }
     },
     methods: {
@@ -174,7 +194,16 @@
       handleCurrentChange(val) {
         this.listQuery.page = val
         this.getList()
-      }
+      },
+      getWarehouseProductGoodsStorageList(query) {
+        if (query !== '') {
+          this.productGoodsLoading = true
+          getWarehouseProductGoodsStorageList({ warehouse_id: this.listQuery.warehouse_id, goods_name: query }).then(response => {
+            this.productGoodsOptions = response.data.data
+            this.productGoodsLoading = false
+          })
+        }
+      },
     },
     created() {
       this.getList()
