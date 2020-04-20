@@ -251,6 +251,28 @@ export const asyncRouterMap = [
       // }
     ]
   },
+{
+        path: '/agents',
+        component: Layout,
+        name: 'productGoodsManagement',
+        redirect: 'noredirect',
+        meta: { title: '代理系统', icon: 'productGoodsManagement' },
+        children: [
+         {
+            path: 'agentList',
+            name: 'productGoodsManagement',
+            component: _import('agents/agentList'),
+            meta: { title: '商品列表', icon: 'productGoodsManagement' }
+         },
+        //  {
+        //   path: 'agentsroos',
+        //   name: 'productGoodsManagement',
+        //   component: _import('agents/agentsroos'),
+        //   meta: { title: '商品列表', icon: 'productGoodsManagement' }
+        //  },
+       ]
+
+  },
   {
     path: '/user_center',
     component: Layout,
@@ -283,7 +305,7 @@ export const asyncRouterMap = [
         meta: { title: '积分查询', icon: 'integralQuery' }
       }
     ]
-  }
+  },
 ]
 
 export default new Router({

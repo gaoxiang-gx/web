@@ -255,7 +255,7 @@
           </el-table-column>
         </el-table>
         <div v-if="orders.orders_remarks.length > 0" style="background-color:#fffaeb;border:1px solid #ebeef5;width:100%;line-height:10px;padding: 14px 10px 14px 20px;color:#f90;font-size:14px;margin-top:-1px;">
-        <span v-for="remark in orders.orders_remarks">
+        <span v-for="remark in orders.orders_remarks" >
           <span v-if="remark.status === 1">{{remark.type_name}}：</span>
           <span v-if="remark.status === 1">{{remark.remark}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </span>
@@ -1484,7 +1484,7 @@
         })
       },
 
-      downExcel() {
+      downExcel() { //前端实现表单将参数给后端，后端负责导出
         // console.log(this.listQuery.date_range)
         const form = document.createElement('form')
         form.action = process.env.BASE_API + '/api/orders/downloadNeedDeliveredOrders' + '?token=' + this.$store.state.user.token
@@ -1512,14 +1512,6 @@
         const remark = document.createElement('input')
         // 备注
         let need_select_time = true
-        // let warehouseids = true
-        // if (this.listQuery.warehouse_id !== null && this.listQuery.warehouse_id !== undefined && this.listQuery.warehouse_id !== ''){
-        //    this.$message({
-        //       type: 'info',
-        //       message: '请选择仓库'
-        //     })
-        //     return
-        // }
         if (this.listQuery.date_range !== null && this.listQuery.date_range !== undefined && this.listQuery.date_range !== '') {
           need_select_time = false
           const date_range = document.createElement('input')
