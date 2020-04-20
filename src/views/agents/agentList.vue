@@ -124,7 +124,7 @@ export default {
       listQuery: {
         //分页
         page: 1,
-        page_size: 20
+        page_size: 10
       },
       batchs: undefined, //每个的批次字段
       batchRoos: 0, //绑定的批次字段
@@ -155,7 +155,7 @@ export default {
       this.listLoading = true;
       getAgentGoodsList(this.listQuery).then(response => {
         this.list = response.data.data.data;
-        this.total = response.data.total;
+        this.total = response.data.data.total;
         this.listLoading = false;
       });
     },
@@ -169,7 +169,9 @@ export default {
     createdatas() {
       if (this.temp.number <= 0) {
         this.$message("请输入正确的数量");
-      } else {
+      }else if (this.temp.number > 1000) {
+        this.$message("生成数量不可以超过1000");
+      }else {
         this.listLoading = true;
         this.dialogVisibles = false;
         createAgentGoodsItem(this.temp).then(response => {
@@ -195,9 +197,9 @@ export default {
     createdataList() {
       if (this.batchRoos > this.batchs) {
         this.$message("不能大于当前批次");
-      } else if (this.batchRoos <= 0) {
+      }else if (this.batchRoos <= 0) {
         this.$message("请输入正确的批次");
-      } else {
+      }else {
         this.temps.batch = parseInt(this.batchRoos);
         zipPackage(this.temps).then(res => {
           this.file_path = res.data;
@@ -222,7 +224,6 @@ export default {
           document.body.removeChild(form);
         });
         this.getList();
-
         this.dialogVisiblesl = false;
       }
     },
