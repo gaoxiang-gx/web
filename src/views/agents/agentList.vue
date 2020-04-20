@@ -141,8 +141,8 @@ export default {
         number: 0,
         shop_store_id: 1,
         goods_id: undefined,
-        url: `http://warehouseapp.home258.com/#/pages/inware/inware` //测试
-        // url:`http://warehouse.api.baizhitang.com.cn/#/pages/inware/inware`   //正式
+        // url: `http://warehouseapp.home258.com/#/pages/inware/inware` //测试
+        url:`http://shop.badboluo.com/#/pages/inware/inware`   //正式
       }
     };
   },
@@ -177,6 +177,7 @@ export default {
             type: "success",
             duration: 2000
           });
+          this.getList();
           this.dialogVisibles = false;
         });
       }
@@ -189,28 +190,38 @@ export default {
       this.batchs = row.item_batch;
     },
     // 打包二维码确定
-   async createdataList() {
+    createdataList() {
       if (this.batchRoos > this.batchs) {
         this.$message("不能大于当前批次");
       } else if (this.batchRoos <= 0) {
         this.$message("请输入正确的批次");
+      } else {
+        this.temps.batch = parseInt(this.batchRoos);
+        zipPackage(this.temps).then(res => {
+          this.file_path = res.data;
+          const form = document.createElement("form");
+          form.action =
+            process.env.BASE_API +
+            "/api/agent/zipDownload" +
+            "?token=" +
+            this.$store.state.user.token;
+          form.method = "post";
+          form.style.display = "none";
+          //路径
+          const file_path = document.createElement("input");
+          file_path.name = "file_path";
+          file_path.value = this.file_path;
+          form.appendChild(file_path);
+          const button = document.createElement("input");
+          button.type = "submit";
+          form.appendChild(button);
+          document.body.appendChild(form);
+          form.submit();
+          document.body.removeChild(form);
+        });
+        this.getList();
+        this.dialogVisiblesl = false;
       }
-      this.temps.batch = parseInt(this.batchRoos);
-      const res = await zipPackage(this.temps)
-      this.file_path = res.data;
-      const data = await zipDownload({ file_path: this.file_path}).catch(error=>{
-        console.log(111)
-      })
-      // console.log(data,3333)
-      // zipDownload({ file_path: this.file_path }).then(res => {
-      //       this.$notify({
-      //         title: "成功",
-      //         message: "下载成功",
-      //         type: "success",
-      //         duration: 2000
-      //       });
-      //     })
-      this.dialogVisiblesl = false;
     },
 
     //搜索方法
