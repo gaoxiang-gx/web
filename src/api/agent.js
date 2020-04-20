@@ -7,7 +7,7 @@ export function getAgentGoodsList (param) {
     data: param
   })
 }
-
+//生成二维码
 export function createAgentGoodsItem (param) {
   return request({
     url: 'api/agent/createAgentGoodsItem',
@@ -15,6 +15,7 @@ export function createAgentGoodsItem (param) {
     data: param
   })
 }
+//获取路径
 export function zipPackage (param) {
   return request({
     url: 'api/agent/zipPackage',
@@ -22,9 +23,10 @@ export function zipPackage (param) {
     data: param
   })
 }
+//打包二维码
 export function zipDownload  (param) {
   return request({
-    url: 'api/agent/zipDownload ',
+    url: 'api/agent/zipDownload',
     method: 'post',
     data: param
   })

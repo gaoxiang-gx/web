@@ -141,8 +141,8 @@ export default {
         number: 0,
         shop_store_id: 1,
         goods_id: undefined,
-        // url: `http://warehouseapp.home258.com/#/pages/inware/inware` //测试
-        url:`http://shop.badboluo.com/#/pages/inware/inware`   //正式
+        url: `http://warehouseapp.home258.com/#/pages/inware/inware` //测试
+        // url:`http://shop.badboluo.com/#/pages/inware/inware`   //正式
       }
     };
   },
@@ -170,6 +170,8 @@ export default {
       if (this.temp.number <= 0) {
         this.$message("请输入正确的数量");
       } else {
+        this.listLoading = true;
+        this.dialogVisibles = false;
         createAgentGoodsItem(this.temp).then(response => {
           this.$notify({
             title: "成功",
@@ -178,7 +180,7 @@ export default {
             duration: 2000
           });
           this.getList();
-          this.dialogVisibles = false;
+          this.listLoading = false;
         });
       }
     },
@@ -220,6 +222,7 @@ export default {
           document.body.removeChild(form);
         });
         this.getList();
+
         this.dialogVisiblesl = false;
       }
     },
