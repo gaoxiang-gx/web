@@ -8,7 +8,7 @@ export function getAgentGoodsList(param) {
   })
 }
 //生成二维码
-export function createAgentGoodsIte(param) {
+export function createAgentGoodsItem(param) {
   return request({
     url: 'api/agent/createAgentGoodsItem',
     method: 'post',
