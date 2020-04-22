@@ -1,22 +1,10 @@
 <template>
   <div class="app-container calendar-list-container">
     <!-- 搜索 -->
-    <!-- <div class="filter-container">
-      <el-input
-        @keyup.enter.native="handleFilter"
-        style="width: 200px;"
-        class="filter-item"
-        placeholder
-        v-model="listQuery.group_name"
-      ></el-input>
-      <el-button
-        class="filter-item"
-        type="primary"
-        v-waves
-        icon="el-icon-search"
-        @click="handleFilter"
-      >搜索</el-button>
-    </div>-->
+    <div class="filter-container">
+      <el-button class="filter-item" type="primary" v-waves @click="produce">生成箱码</el-button>
+      <el-button class="filter-item" type="primary" v-waves @click="download">打包下载</el-button>
+    </div>
     <!-- 商品列表 -->
     <el-table
       :stripe="true"
@@ -33,30 +21,19 @@
           <span>{{scope.row.id}}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="100px" align="center" label="商品名称">
+      <el-table-column min-width="100px" align="center" label="单品数量">
         <template slot-scope="scope">
-          <span class="link-type">{{scope.row.goods_name}}</span>
+          <span class="link-type">{{scope.row.item_number}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="180px" align="center" label="商品图片">
+      <el-table-column width="180px" align="center" label="批次">
         <template slot-scope="scope">
-          <img :src="scope.row.goods_image" style="width:100px;height:100px" />
+          <span class="link-type">{{scope.row.batch}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="商品规格">
+      <el-table-column align="center" label="状态">
         <template slot-scope="scope">
-          <span>{{scope.row.goods_specs}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="100px" align="center" label="当前单品批次">
-        <template slot-scope="scope">
-          <span class="link-type">{{scope.row.item_batch}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="操作" width="320" class-name="small-padding">
-        <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">生成二维码</el-button>
-          <el-button type="success" size="mini" @click="unPack(scope.row)">打包二维码</el-button>
+          <el-tag>{{scope.row.status | statusFilter}}</el-tag>
         </template>
       </el-table-column>
     </el-table>
@@ -73,8 +50,8 @@
         :total="total"
       ></el-pagination>
     </div>
-    <!-- 生成二维码弹窗 -->
-    <el-dialog title="生成二维码" :visible.sync="dialogVisibles" width="30%">
+    <!-- 生成箱码弹窗 -->
+    <el-dialog title="生成箱码" :visible.sync="dialogVisibles" width="30%">
       <el-form :model="temp" label-position="left" style="width: 90%; margin-left:15%;">
         <el-form-item label="数量 :">
           <el-input-number style="width: 300px" v-model="temp.number" :min="0" :max="1000"></el-input-number>
@@ -85,11 +62,11 @@
         <el-button type="primary" @click="createdatas">确 定</el-button>
       </div>
     </el-dialog>
-    <!-- 打包二维码弹窗 -->
-    <el-dialog title="打包二维码" :visible.sync="dialogVisiblesl" width="30%">
+    <!-- 打包箱码弹窗 -->
+    <el-dialog title="打包箱码" :visible.sync="dialogVisiblesl" width="30%">
       <el-form :model="temps" label-position="left" style="width: 90%; margin-left:15%;">
         <el-form-item label="批次 :">
-          <el-input-number style="width: 300px" v-model="batchRoos"></el-input-number>
+          <el-input-number style="width: 300px" v-model="temps.batch"></el-input-number>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -101,12 +78,7 @@
 </template>
 
 <script>
-import {
-  getAgentGoodsList,
-  createAgentGoodsItem,
-  zipPackage,
-  zipDownload
-} from "@/api/agent";
+import { getAgentGoodsBoxList, createBox, zipPackage } from "@/api/agent";
 import waves from "@/directive/waves"; // 水波纹指令
 
 export default {
@@ -124,57 +96,64 @@ export default {
       listQuery: {
         //分页
         page: 1,
-        page_size: 10
+        page_size: 10,
+        shop_store_id: 1
       },
-      batchs: undefined, //每个的批次字段
-      batchRoos: 0, //绑定的批次字段
-      temps: {
-        //打包二位数提交对象
-        batch: 0,
-        shop_store_id: 1,
-        goods_id: undefined
-      },
-      //获取路径
-      file_path: undefined,
       temp: {
         //生成二维码提交对象
+        batch: 1,
         number: 0,
         shop_store_id: 1,
-        goods_id: undefined,
         url: `http://warehouseapp.home258.com/#/pages/inware/inware` //测试
-        // url:`http://shop.badboluo.com/#/pages/inware/inware`   //正式
-      }
+      },
+      temps: {
+        //打包箱码提交对象
+        batch: 0,
+        shop_store_id: 1,
+        zipClass: "zipBox"
+      },
+      batchs:undefined,
+      file_path: ""
     };
   },
   created() {
     this.getList();
   },
+  filters: {
+    statusFilter(status) {
+      const statusMap = {
+        "0": "未入库",
+        "1": "已入库",
+        "2": "已出库"
+      };
+      return statusMap[status];
+    }
+  },
   methods: {
     // 获取商品列表
     getList() {
       this.listLoading = true;
-      getAgentGoodsList(this.listQuery).then(response => {
+      getAgentGoodsBoxList(this.listQuery).then(response => {
         this.list = response.data.data.data;
         this.total = response.data.data.total;
         this.listLoading = false;
       });
     },
-    //打开生成二维码弹窗
-    handleUpdate(row) {
+    //生成箱码
+    produce() {
       this.dialogVisibles = true;
-      this.temp.number = 1;
-      this.temp.goods_id = row.id;
+      this.temp.number = 0;
     },
-    // 生成二维码
+    // 生成箱码码
     createdatas() {
       if (this.temp.number <= 0) {
         this.$message("请输入正确的数量");
-      }else if (this.temp.number > 1000) {
+      } else if (this.temp.number > 1000) {
         this.$message("生成数量不可以超过1000");
-      }else {
+      } else {
         this.listLoading = true;
         this.dialogVisibles = false;
-        createAgentGoodsItem(this.temp).then(response => {
+        createBox(this.temp).then(response => {
           this.$notify({
             title: "成功",
             message: "生成成功",
@@ -186,25 +165,30 @@ export default {
         });
       }
     },
-    // 打开打包二维码弹窗
-    unPack(row) {
+    //打包下载
+    download() {
       this.dialogVisiblesl = true;
-      this.temps.goods_id = row.id;
-      this.batchRoos = 0;
-      this.batchs = row.item_batch;
+      this.temps.batch = 0
+      this.list.map(v => {
+        this.batchs = v.batch
+      });
     },
-    // 打包二维码确定
+    // 打包箱码码确定
     createdataList() {
-      if (this.batchRoos > this.batchs) {
-        this.$message("不能大于当前批次");
-      }else if (this.batchRoos <= 0) {
+      if (this.temps.batch <= 0) {
         this.$message("请输入正确的批次");
-      }else {
-        this.temps.batch = parseInt(this.batchRoos);
+      }if(this.temps.batch > this.batchs){
+        this.$message("不能大于当前批次");
+      } else {
         zipPackage(this.temps).then(res => {
           this.file_path = res.data;
+          console.log(this.file_path, 1111);
           const form = document.createElement("form");
-          form.action = process.env.BASE_API + "/api/agent/zipDownload" + "?token=" + this.$store.state.user.token;
+          form.action =
+            process.env.BASE_API +
+            "/api/agent/zipDownload" +
+            "?token=" +
+            this.$store.state.user.token;
           form.method = "post";
           form.style.display = "none";
           //路径

@@ -264,12 +264,12 @@ export const asyncRouterMap = [
             component: _import('agents/agentList'),
             meta: { title: '商品列表', icon: 'productGoodsManagement' }
          },
-        //  {
-        //   path: 'agentsroos',
-        //   name: 'productGoodsManagement',
-        //   component: _import('agents/agentsroos'),
-        //   meta: { title: '商品列表', icon: 'productGoodsManagement' }
-        //  },
+         {
+          path: 'caseCode',
+          name: 'productGoodsManagement',
+          component: _import('agents/caseCode'),
+          meta: { title: '箱码列表', icon: 'productGoodsManagement' }
+         },
        ]
 
   },
