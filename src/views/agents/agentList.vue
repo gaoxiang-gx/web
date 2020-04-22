@@ -141,8 +141,8 @@ export default {
         number: 0,
         shop_store_id: 1,
         goods_id: undefined,
-        url: `http://warehouseapp.home258.com/#/pages/inware/inware` //测试
-        // url:`http://shop.badboluo.com/#/pages/inware/inware`   //正式
+        // url: `http://warehouseapp.home258.com/#/pages/inware/inware` //测试
+        url:`http://shop.badboluo.com/#/pages/inware/inware`   //正式
       }
     };
   },

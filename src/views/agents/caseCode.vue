@@ -104,8 +104,8 @@ export default {
         batch: 1,
         number: 0,
         shop_store_id: 1,
-        url: `http://warehouseapp.home258.com/#/pages/inware/inware` //测试
-        // url: `http://shop.badboluo.com/#/pages/inware/inware` //正式
+        // url: `http://warehouseapp.home258.com/#/pages/inware/inware` //测试
+        url: `http://shop.badboluo.com/#/pages/inware/inware` //正式
       },
       temps: {
         //打包箱码提交对象

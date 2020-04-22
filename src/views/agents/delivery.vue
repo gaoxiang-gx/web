@@ -1,7 +1,7 @@
 <template>
   <div class="app-container calendar-list-container">
     <!-- 搜索 | 添加2 -->
-   <div class="filter-container">
+    <div class="filter-container">
       <el-select
         @change="handleFilter"
         style="width: 200px"
@@ -60,7 +60,7 @@
         <template slot-scope="scope">
           <div :id="`qrcode${scope.row.id}`" style="margin-left:10px"></div>
         </template>
-      </el-table-column> -->
+      </el-table-column>-->
       <el-table-column align="center" label="商品价格">
         <template slot-scope="scope">
           <span>{{scope.row.agent_goods.actual_price}}</span>
@@ -86,14 +86,14 @@
           <span>{{scope.row.phone}}</span>
         </template>
       </el-table-column>
-        <el-table-column align="center" label="状态"  width="100">
+      <el-table-column align="center" label="状态" width="100">
         <template slot-scope="scope">
           <el-tag>{{scope.row.status | groupFuncTranslator}}</el-tag>
         </template>
       </el-table-column>
     </el-table>
     <!-- 分页 -->
-     <div v-show="!listLoading" class="pagination-container">
+    <div v-show="!listLoading" class="pagination-container">
       <el-pagination
         background
         @size-change="handleSizeChange"
@@ -172,7 +172,10 @@
 </template>
 <script>
 import QRCode from "qrcodejs2";
-import { getAgentGoodsApprovalRecordList,updateAgentGoodsExportCount} from "@/api/agent";
+import {
+  getAgentGoodsApprovalRecordList,
+  updateAgentGoodsExportCount
+} from "@/api/agent";
 import { getLodop } from "../../common/LodopFuncs";
 import waves from "@/directive/waves"; // 水波纹指令
 
@@ -188,9 +191,9 @@ export default {
       listLoading: false,
       commentOptions: [
         //状态
-        { key: 3, label: "未导出" },
+        { key: 1, label: "未导出" },
         { key: 4, label: "已导出" },
-        { key: 5, label: "已出库" },
+        { key: 5, label: "已出库" }
       ],
       commentOption: [
         //状态
@@ -202,7 +205,7 @@ export default {
       total: 0, //列表total
       recordList: {
         //货单
-        shop_store_id:1,
+        shop_store_id: 1,
         status: "",
         page: 1,
         page_size: 10
@@ -227,16 +230,16 @@ export default {
         number: undefined
       },
       rows: [],
-      status:'',
+      status: ""
     };
   },
 
   filters: {
     groupFuncTranslator(func) {
       const statusMap = {
-        3: "未导出",
+        1: "未导出",
         4: "已导出",
-        5: "已出库",
+        5: "已出库"
       };
       return statusMap[func];
     }
@@ -255,17 +258,6 @@ export default {
         });
         return;
       }
-      //判断已出库订单
-      this.multipleSelection.map(v=>{
-         this.status = v.status
-      })
-      if(this.status === 5){
-        this.$message({
-          showClose: true,
-          message: "已出库订单不可打印"
-        });
-        return;
-      }
       //判断是否安装LOODP控件
       const LODOP = getLodop();
       if (LODOP == null || typeof LODOP.VERSION === "undefined") {
@@ -275,6 +267,18 @@ export default {
         });
         return;
       }
+      //判断已出库订单
+      this.multipleSelection.map(v => {
+        this.status = v.status;
+      });
+      if (this.status === 5) {
+        this.$message({
+          showClose: true,
+          message: "已出库订单不可打印"
+        });
+        return;
+      }
+
       //如果勾选的数据为1的话就可以打印预览，否则直接打印
       this.CreateOneFormPage();
       if (this.multipleSelection.length === 1) {
@@ -282,7 +286,7 @@ export default {
         this.multipleSelection.map(res => {
           updateAgentGoodsExportCount({
             id: res.id,
-            shop_store_id:1
+            shop_store_id: 1
           }).then(res => {});
         });
       } else {
@@ -290,7 +294,7 @@ export default {
         this.multipleSelection.map(res => {
           updateAgentGoodsExportCount({
             id: res.id,
-            shop_store_id:1
+            shop_store_id: 1
           }).then(res => {});
         });
       }
@@ -333,7 +337,7 @@ export default {
       this.listLoading = true;
       getAgentGoodsApprovalRecordList(this.recordList).then(res => {
         this.dataList = res.data.data;
-        console.log(this.dataList,1111)
+        console.log(this.dataList, 1111);
         this.total = res.data.total;
         this.listLoading = false;
       });
@@ -384,16 +388,6 @@ export default {
       this.recordList.page = 1;
       this.deliverys();
     },
-    //总部提货搜索
-    handleFilterl() {
-      if (this.recordList.is_warehouse == 1) {
-        this.recordList.distribution_level_id = 6;
-      } else {
-        this.recordList.distribution_level_id = "";
-      }
-      this.recordList.page = 1;
-      this.deliverys();
-    }
   }
 };
 </script>
