@@ -104,7 +104,8 @@ export default {
         batch: 1,
         number: 0,
         shop_store_id: 1,
-        url: `http://warehouseapp.home258.com/#/pages/inware/inware` //测试
+        // url: `http://warehouseapp.home258.com/#/pages/inware/inware` //测试
+        url: `http://shop.badboluo.com/#/pages/inware/inware` //正式
       },
       temps: {
         //打包箱码提交对象
@@ -112,7 +113,7 @@ export default {
         shop_store_id: 1,
         zipClass: "zipBox"
       },
-      batchs:undefined,
+      batchs: undefined,
       file_path: ""
     };
   },
@@ -168,16 +169,17 @@ export default {
     //打包下载
     download() {
       this.dialogVisiblesl = true;
-      this.temps.batch = 0
+      this.temps.batch = 0;
       this.list.map(v => {
-        this.batchs = v.batch
+        this.batchs = v.batch;
       });
     },
     // 打包箱码码确定
     createdataList() {
       if (this.temps.batch <= 0) {
         this.$message("请输入正确的批次");
-      }if(this.temps.batch > this.batchs){
+      }
+      if (this.temps.batch > this.batchs) {
         this.$message("不能大于当前批次");
       } else {
         zipPackage(this.temps).then(res => {
