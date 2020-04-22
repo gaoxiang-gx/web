@@ -47,4 +47,21 @@ export function createBox(param) {
     data: param
   })
 }
+//出库单列表
+export function getAgentGoodsApprovalRecordList(param) {
+  return request({
+    url: 'api/agent/getAgentGoodsApprovalRecordList',
+    method: 'post',
+    data: param
+  })
+}
+//打印次数
+export function updateAgentGoodsExportCount(param) {
+  return request({
+    url: 'api/agent/updateAgentGoodsExportCount',
+    method: 'post',
+    data: param
+  })
+}
+
 

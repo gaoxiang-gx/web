@@ -270,6 +270,12 @@ export const asyncRouterMap = [
           component: _import('agents/caseCode'),
           meta: { title: '箱码列表', icon: 'productGoodsManagement' }
          },
+         {
+          path: 'delivery',
+          name: 'productGoodsManagement',
+          component: _import('agents/delivery'),
+          meta: { title: '出库单', icon: 'productGoodsManagement' }
+         },
         //  {
         //   path: 'pageKeep',
         //   name: 'productGoodsManagement',

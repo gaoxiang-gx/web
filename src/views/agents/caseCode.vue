@@ -170,18 +170,12 @@ export default {
     download() {
       this.dialogVisiblesl = true;
       this.temps.batch = 0;
-      this.list.map(v => {
-        this.batchs = v.batch;
-      });
     },
     // 打包箱码码确定
     createdataList() {
       if (this.temps.batch <= 0) {
         this.$message("请输入正确的批次");
-      }
-      if (this.temps.batch > this.batchs) {
-        this.$message("不能大于当前批次");
-      } else {
+      }else {
         zipPackage(this.temps).then(res => {
           this.file_path = res.data;
           console.log(this.file_path, 1111);
