@@ -1,64 +1,80 @@
 <template>
-  <div class="app-container calendar-list-container">
-    <el-input-number style="width: 300px" v-model="number" :min="0" :max="1000"></el-input-number>
-    <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="createdatas">确 定</el-button>
-      <el-button type="primary" @click="savePic">下 载</el-button>
+  <div>
+    <div class="filter-container">
+      <el-upload
+        :action="baseUrl"
+        :headers="uploadHeaders"
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        :on-success="handlePictureSuccess"
+        :on-progress="handleOnProgress"
+        name="excel"
+        :show-file-list="true"
+        :limit="1"
+        :on-exceed="handleExceed"
+        :file-list="fileList"
+      >
+        <el-button size="small" type="primary">上传物流单号</el-button>
+      </el-upload>
     </div>
-    <div id="qrcode"></div>
+     <el-table
+        v-if="innerList8 !== null"
+        :data="innerList8"
+        border fit highlight-current-row
+        style="width: 100%">
+        <el-table-column min-width="100px" align="center" label="id">
+          <template slot-scope="scope">
+            <span class="link-type">{{scope.row.id}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column min-width="200px" align="center" label="状态">
+          <template slot-scope="scope">
+               <span class="link-type">{{scope.row.status}}</span>
+          </template>
+        </el-table-column>
+      </el-table>
   </div>
 </template>
 <script>
-import waves from "@/directive/waves"; // 水波纹指令
-import QRCode from "qrcodejs2";
-
 export default {
   name: "pageKeep",
-  directives: {
-    waves
-  },
   data() {
     return {
-      number: 0
+      baseUrl: process.env.BASE_API + "/api/orders/uploadOrdersLogisticsExcel",
+      uploadHeaders: {
+        authorization: this.$store.state.user.token
+      },
+      fileList: [],
+      innerList8:null
+
     };
   },
-
+  watch: {},
+  created() {},
   methods: {
-    createdatas() {
-      for (var i = 0; i < this.number; i++)
-        new QRCode("qrcode", {
-          width: 130, // 设置宽度
-          height: 130, // 设置高度
-          text: "1"
-        });
+    handlePreview(file) {
+      console.log(1);
     },
-    savePic() {
-      //  找到canvas标签
-      let myCanvas = document
-        .getElementById("qrcode")
-        .getElementsByTagName("canvas");
-      //创建一个a标签节点
-      let a = document.createElement("a");
-      //设置a标签的href属性，将canvas变成图片
-      a.href = myCanvas[0].toDataURL("image/png");
-      //设置下载文件的名字
-      a.download = "箱码";
-      //点击
-      a.click();
-      //弹出提示
-      this.$messsage({
-        messsage: "正在下载中",
-        type: "success"
-      });
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
     },
-    qrCode(url) {
-      for (var i = 0; i < this.number; i++)
-      new QRCode("qrcode", {
-          width: 130, // 设置宽度
-          height: 130, // 设置高度
-          text: "1"
-        });
+    handlePictureSuccess(response, file, fileList) {
+      this.fileList = [];
+      this.fileList.push(file);
+      if (response.code === 200) {
+        this.innerList8 = response.data;
+        console.log(this.innerList8,22222)
+      } else {
+        this.$message.error(response.errstr);
+        this.innerList8 = null;
+      }
+    },
+    handleOnProgress(event, file, fileList) {},
+    handleExceed(files, fileList) {
+      this.$message.warning(`当前限制选择1个文件`);
     }
   }
 };
 </script>
+<style lang="">
+</style>

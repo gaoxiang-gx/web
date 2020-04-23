@@ -73,7 +73,12 @@
       </el-table-column>
       <el-table-column align="center" label="提货量">
         <template slot-scope="scope">
-          <span>{{scope.row.agent_goods.stock}}</span>
+          <span>{{scope.row.number}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="提货时间">
+        <template slot-scope="scope">
+          <span>{{scope.row.created_at}}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="提货人">
@@ -342,38 +347,6 @@ export default {
         this.listLoading = false;
       });
     },
-    //查看提货单同意
-    yes(row) {
-      this.orders.number = row.number;
-      this.orders.customer_id = row.customer_id;
-      this.orders.approval_id = row.id;
-      this.orders.goods_id = row.agent_goods.id;
-      updateAgentGoodsAgreeApproval(this.orders).then(res => {
-        this.$notify({
-          title: "成功",
-          message: "已审批",
-          type: "success",
-          duration: 2000
-        });
-        this.deliverys();
-      });
-    },
-    //查看提货单拒绝
-    no(row) {
-      this.ordersl.number = row.number;
-      this.ordersl.customer_id = row.customer_id;
-      this.ordersl.approval_id = row.id;
-      this.ordersl.goods_id = row.agent_goods.id;
-      updateAgentGoodsAgreeApproval(this.ordersl).then(res => {
-        this.$notify({
-          title: "成功",
-          message: "已拒绝",
-          type: "success",
-          duration: 2000
-        });
-        this.deliverys();
-      });
-    },
     //分页
     handleSizeChange(val) {
       this.recordList.page_size = val;
@@ -387,7 +360,7 @@ export default {
     handleFilter() {
       this.recordList.page = 1;
       this.deliverys();
-    },
+    }
   }
 };
 </script>

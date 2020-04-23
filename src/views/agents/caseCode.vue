@@ -145,7 +145,7 @@ export default {
       this.dialogVisibles = true;
       this.temp.number = 0;
     },
-    // 生成箱码码
+    // 生成箱码
     createdatas() {
       if (this.temp.number <= 0) {
         this.$message("请输入正确的数量");
