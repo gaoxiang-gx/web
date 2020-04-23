@@ -196,7 +196,7 @@ export default {
       listLoading: false,
       commentOptions: [
         //状态
-        { key: 1, label: "未导出" },
+        { key: 6, label: "未导出" },
         { key: 4, label: "已导出" },
         { key: 5, label: "已出库" }
       ],
@@ -242,7 +242,7 @@ export default {
   filters: {
     groupFuncTranslator(func) {
       const statusMap = {
-        1: "未导出",
+        6: "未导出",
         4: "已导出",
         5: "已出库"
       };
@@ -342,7 +342,6 @@ export default {
       this.listLoading = true;
       getAgentGoodsApprovalRecordList(this.recordList).then(res => {
         this.dataList = res.data.data;
-        console.log(this.dataList, 1111);
         this.total = res.data.total;
         this.listLoading = false;
       });
