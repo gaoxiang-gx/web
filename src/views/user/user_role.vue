@@ -345,6 +345,7 @@
         const temp = {}
         temp.user_account_role_id = row.id
         getAccountRolePermission(temp).then(res => {
+          console.log(res,11111)
           const temparr1 = []
           for (const v of res.data.user_permission) {
             temparr1.push(v.id)

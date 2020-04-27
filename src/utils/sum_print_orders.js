@@ -932,7 +932,7 @@ export function sum_print_orders(row) {
       LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
       LODOP.SET_PRINT_STYLEA(0, 'FontSize', 10)
     }
-    
+
     LODOP.ADD_PRINT_TEXT('10mm', '4mm', '98mm', '15mm', destcode)
     LODOP.SET_PRINT_STYLEA(0, 'FontName', '黑体')
     LODOP.SET_PRINT_STYLEA(0, 'FontSize', 36)

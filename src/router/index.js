@@ -251,6 +251,40 @@ export const asyncRouterMap = [
       // }
     ]
   },
+{
+        path: '/agents',
+        component: Layout,
+        name: 'productGoodsManagement',
+        redirect: 'noredirect',
+        meta: { title: '代理系统', icon: 'productGoodsManagement' },
+        children: [
+         {
+            path: 'agentList',
+            name: 'productGoodsManagement',
+            component: _import('agents/agentList'),
+            meta: { title: '商品列表', icon: 'productGoodsManagement' }
+         },
+         {
+          path: 'caseCode',
+          name: 'productGoodsManagement',
+          component: _import('agents/caseCode'),
+          meta: { title: '箱码列表', icon: 'productGoodsManagement' }
+         },
+         {
+          path: 'delivery',
+          name: 'productGoodsManagement',
+          component: _import('agents/delivery'),
+          meta: { title: '出库单', icon: 'productGoodsManagement' }
+         },
+        //  {
+        //   path: 'pageKeep',
+        //   name: 'productGoodsManagement',
+        //   component: _import('agents/pageKeep'),
+        //   meta: { title: '测试', icon: 'productGoodsManagement' }
+        //  },
+       ]
+
+  },
   {
     path: '/user_center',
     component: Layout,
@@ -283,7 +317,7 @@ export const asyncRouterMap = [
         meta: { title: '积分查询', icon: 'integralQuery' }
       }
     ]
-  }
+  },
 ]
 
 export default new Router({
