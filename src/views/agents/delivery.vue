@@ -135,7 +135,7 @@
             <td colspan="7" rowspan="1" height="120px" style="font-size: 14px;text-align: right">
               <p>打印人 : {{$store.state.user.name}}</p>
               <p>打印时间 : {{item.created_at}}</p>
-              <p>第 {{item.export_count}} 次打印</p>
+              <p>第 {{item.export_count + 1}} 次打印</p>
             </td>
           </tr>
           <tr>
