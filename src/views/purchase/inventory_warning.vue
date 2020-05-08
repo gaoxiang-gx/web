@@ -30,9 +30,9 @@
                   :remote-method="getWarehouseProductGoodsStorageList"
                   :loading="productGoodsLoading">
         <el-option  v-for="item in productGoodsOptions"
-                    :key="item.id"
+                    :key="item.product_goods_id"
                     :label="item.product_goods.goods_name"
-                    :value="item.id">
+                    :value="item.product_goods_id">
         </el-option>
       </el-select>
       <div class="filter-float">
