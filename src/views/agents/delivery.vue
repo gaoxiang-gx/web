@@ -161,7 +161,7 @@
               width="33%"
               height="300px"
               style="font-size: 18px;vertical-align:top;text-align:center;padding-top:20px"
-            >{{item.agent_goods.stock}}</td>
+            >{{item.number}}</td>
           </tr>
           <tr>
             <td width="11%" height="150px" colspan="9">
@@ -284,7 +284,7 @@ export default {
         return;
       }
 
-      //如果勾选的数据为1的话就可以打印预览，否则直接打印
+      //如果勾选的数据长度为1的话就可以打印预览，否则直接打印
       this.CreateOneFormPage();
       if (this.multipleSelection.length === 1) {
         LODOP.PREVIEW();

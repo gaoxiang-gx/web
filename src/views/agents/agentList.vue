@@ -208,7 +208,7 @@ export default {
           form.method = "post";
           form.style.display = "none";
           //路径
-          const file_path = document.createElement("input");
+          const file_path = document.createElement("input")
           file_path.name = "file_path";
           file_path.value = this.file_path;
           form.appendChild(file_path);

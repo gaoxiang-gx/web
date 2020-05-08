@@ -35,6 +35,7 @@
     "vue-json-excel": "^0.2.98",
     "vue-multiselect": "^2.0.8",
     "vue-photo-preview": "^1.1.0",
+    "vue-qr": "^2.2.1",
     "vue-router": "3.0.1",
     "vue-wangeditor": "^1.3.9",
     "vuex": "3.0.1",
