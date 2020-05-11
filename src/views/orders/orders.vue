@@ -1297,13 +1297,13 @@
       async sumDeliveryOrdersAndPrint(ifPrint) {
         if (ifPrint) {
           const LODOP = getLodop()
-          if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
-            this.$message({
-              type: 'info',
-              message: '请先安装lodop控件'
-            })
-            return
-          }
+          // if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
+          //   this.$message({
+          //     type: 'info',
+          //     message: '请先安装lodop控件'
+          //   })
+          //   return
+          // }
         }
         this.resetSumTask()
         for (const v of this.list) {
@@ -1392,13 +1392,13 @@
       async createInnerData3(empty, ifPrint) {
         if (ifPrint) {
           const LODOP = getLodop()
-          if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
-            this.$message({
-              type: 'info',
-              message: '请先安装lodop控件'
-            })
-            return
-          }
+          // if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
+          //   this.$message({
+          //     type: 'info',
+          //     message: '请先安装lodop控件'
+          //   })
+          //   return
+          // }
         }
         try {
           this.logisticsDialogLoading = true
