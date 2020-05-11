@@ -880,8 +880,11 @@ export function sum_print_orders(row) {
     LODOP.PRINT()
   }  else if (logistics_code === '1012') { //中通
     if (money > 0){
+      LODOP.SET_PRINT_PAGESIZE(1, '76mm', '130mm', '')
+      LODOP.SET_SHOW_MODE('BKIMG_WIDTH', '76mm')
+      LODOP.SET_SHOW_MODE('BKIMG_HEIGHT', '130mm')
       LODOP.PRINT_INITA(-4,0,800,600,"");
-      LODOP.SET_PRINT_PAGESIZE(0,76,130,"");
+      // LODOP.SET_PRINT_PAGESIZE(0,76,130,"");
       LODOP.ADD_PRINT_LINE(48,227,49,525,0,1);
       LODOP.ADD_PRINT_LINE(49,227,504,228,0,1);
       LODOP.ADD_PRINT_LINE(48,525,503,526,0,1);
@@ -944,8 +947,11 @@ export function sum_print_orders(row) {
       LODOP.ADD_PRINT_LINE(504,227,503,525,0,1);
       LODOP.PRINT()
     }else{
+      LODOP.SET_PRINT_PAGESIZE(1, '76mm', '130mm', '')
+      LODOP.SET_SHOW_MODE('BKIMG_WIDTH', '76mm')
+      LODOP.SET_SHOW_MODE('BKIMG_HEIGHT', '130mm')
       LODOP.PRINT_INITA(-4,0,800,600,"");
-      LODOP.SET_PRINT_PAGESIZE(0,76,130,"");
+      // LODOP.SET_PRINT_PAGESIZE(0,76,130,"");
       LODOP.ADD_PRINT_LINE(48,227,49,525,0,1);
       LODOP.ADD_PRINT_LINE(49,227,504,228,0,1);
       LODOP.ADD_PRINT_LINE(48,525,503,526,0,1);
