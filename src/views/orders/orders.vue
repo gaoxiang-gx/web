@@ -1080,6 +1080,7 @@
         })
       },
       printOrders(row) {
+        console.log(row,11111)
         updateOrdersLogisticsPrintTimes({ orders_id: row.id })
         print_orders(row)
       },
