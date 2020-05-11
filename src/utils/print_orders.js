@@ -905,7 +905,7 @@ export function print_orders(row) {
       LODOP.ADD_PRINT_TEXT(267,238,28,30,"收");
       LODOP.SET_PRINT_STYLEA(0,"FontSize",14);
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-      LODOP.ADD_PRINT_TEXT(232,273,131,25,"中通  " + sjname);
+      LODOP.ADD_PRINT_TEXT(232,273,131,25, sjname);
       LODOP.SET_PRINT_STYLEA(0,"FontName","微软雅黑");
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
       LODOP.ADD_PRINT_TEXT(247,273,100,20, sjtel);
@@ -915,7 +915,7 @@ export function print_orders(row) {
       LODOP.ADD_PRINT_TEXT(334,239,27,25,"寄");
       LODOP.SET_PRINT_STYLEA(0,"FontSize",14);
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-      LODOP.ADD_PRINT_TEXT(327,275,175,20,"中通快递" + jjname + jjtel);
+      LODOP.ADD_PRINT_TEXT(327,275,175,20, jjname + jjtel);
       LODOP.SET_PRINT_STYLEA(0,"FontSize",7);
       LODOP.ADD_PRINT_TEXT(341,275,175,20,jjaddress);
       LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
@@ -940,7 +940,7 @@ export function print_orders(row) {
       LODOP.ADD_PRINT_TEXT(436,365,95,20,"已验视 已实名");
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
       LODOP.ADD_PRINT_LINE(449,228,450,526,0,1);
-      LODOP.ADD_PRINT_TEXT(452,228,100,20,goods_detail);
+      LODOP.ADD_PRINT_TEXT(452,228,300,50,goods_detail);
       LODOP.ADD_PRINT_LINE(504,227,503,525,0,1);
       LODOP.PREVIEW()
     }else{
@@ -968,7 +968,7 @@ export function print_orders(row) {
       LODOP.ADD_PRINT_TEXT(267,238,28,30,"收");
       LODOP.SET_PRINT_STYLEA(0,"FontSize",14);
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-      LODOP.ADD_PRINT_TEXT(232,273,131,25,"中通  " + sjname);
+      LODOP.ADD_PRINT_TEXT(232,273,131,25, sjname);
       LODOP.SET_PRINT_STYLEA(0,"FontName","微软雅黑");
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
       LODOP.ADD_PRINT_TEXT(247,273,100,20, sjtel);
@@ -978,7 +978,7 @@ export function print_orders(row) {
       LODOP.ADD_PRINT_TEXT(334,239,27,25,"寄");
       LODOP.SET_PRINT_STYLEA(0,"FontSize",14);
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-      LODOP.ADD_PRINT_TEXT(327,275,175,20,"中通快递" + jjname + jjtel);
+      LODOP.ADD_PRINT_TEXT(327,275,175,20, jjname + jjtel);
       LODOP.SET_PRINT_STYLEA(0,"FontSize",7);
       LODOP.ADD_PRINT_TEXT(341,275,175,20,jjaddress);
       LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
@@ -1003,7 +1003,7 @@ export function print_orders(row) {
       LODOP.ADD_PRINT_TEXT(436,365,95,20,"已验视 已实名");
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
       LODOP.ADD_PRINT_LINE(449,228,450,526,0,1);
-      LODOP.ADD_PRINT_TEXT(452,228,100,20,goods_detail);
+      LODOP.ADD_PRINT_TEXT(452,228,300,50,goods_detail);
       LODOP.ADD_PRINT_LINE(504,227,503,525,0,1);
       LODOP.PREVIEW()
     }
