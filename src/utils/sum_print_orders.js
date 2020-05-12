@@ -880,13 +880,13 @@ export function sum_print_orders(row) {
     LODOP.PRINT()
   }  else if (logistics_code === '1012') { //中通
     if (money > 0){
-      LODOP.SET_PRINT_PAGESIZE(1, '76mm', '130mm', '')
+      LODOP.SET_PRINT_PAGESIZE(1, '76mm', '128mm', '')
       LODOP.SET_SHOW_MODE('BKIMG_WIDTH', '76mm')
-      LODOP.SET_SHOW_MODE('BKIMG_HEIGHT', '130mm')
-      LODOP.PRINT_INITA(0,0,289,492,"");
-      // LODOP.SET_PRINT_PAGESIZE(0,76,130,"");
+      LODOP.SET_SHOW_MODE('BKIMG_HEIGHT', '128mm')
+      // LODOP.PRINT_INITA(0,0,289,492,"");
+      LODOP.PRINT_INITA(0,0,289,484,"");
       LODOP.ADD_PRINT_LINE(0,0,1,288,0,1);
-      LODOP.ADD_PRINT_TEXT(4,178,115,25,"代收：￥" + money);
+      LODOP.ADD_PRINT_TEXT(4,178,115,25,"代收：￥"  + money);
       LODOP.SET_PRINT_STYLEA(0,"FontSize",11);
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
       LODOP.ADD_PRINT_TEXT(19,27,100,20,now_date_zto);
@@ -894,9 +894,9 @@ export function sum_print_orders(row) {
       LODOP.SET_PRINT_STYLEA(0,"FontSize",18);
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
       LODOP.ADD_PRINT_LINE(67,0,68,288,0,1);
-      LODOP.ADD_PRINT_LINE(0,0,492,1,0,1);
-      LODOP.ADD_PRINT_LINE(0,288,492,289,0,1);
-      LODOP.ADD_PRINT_LINE(492,0,491,289,0,1);
+      LODOP.ADD_PRINT_LINE(0,0,484,1,0,1);
+      LODOP.ADD_PRINT_LINE(0,288,484,289,0,1);
+      LODOP.ADD_PRINT_LINE(485,0,484,289,0,1);
       LODOP.ADD_PRINT_BARCODE(71,25,258,60,"2_5interleaved",mailno);
       LODOP.ADD_PRINT_LINE(135,0,136,289,0,1);
       LODOP.ADD_PRINT_LINE(169,1,170,211,0,1);
@@ -904,7 +904,7 @@ export function sum_print_orders(row) {
       LODOP.SET_PRINT_STYLEA(0,"FontSize",14);
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
       LODOP.ADD_PRINT_LINE(136,211,408,212,0,1);
-      LODOP.ADD_PRINT_BARCODE(130,219,60,220,"2_5interleaved",mailno);
+      LODOP.ADD_PRINT_BARCODE(125,219,60,220,"2_5interleaved",mailno);
       LODOP.SET_PRINT_STYLEA(0,"Angle",90);
       LODOP.ADD_PRINT_LINE(364,212,365,288,0,1);
       LODOP.ADD_PRINT_LINE(246,0,247,211,0,1);
@@ -922,7 +922,7 @@ export function sum_print_orders(row) {
       LODOP.ADD_PRINT_TEXT(187,35,176,20,sjtel);
       LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-      LODOP.ADD_PRINT_TEXT(204,35,176,42,sjaddress);
+      LODOP.ADD_PRINT_TEXT(204,35,176,42,jjaddress);
       LODOP.ADD_PRINT_TEXT(249,38,173,22,jjname + jjtel);
       LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
       LODOP.ADD_PRINT_TEXT(265,38,173,30,jjaddress);
@@ -947,16 +947,15 @@ export function sum_print_orders(row) {
       LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
       LODOP.ADD_PRINT_LINE(408,0,409,289,0,1);
-      LODOP.ADD_PRINT_TEXT(411,3,284,78,goods_detail);
+      LODOP.ADD_PRINT_TEXT(410,1,284,68,goods_detail);
       LODOP.PRINT()
     }else{
-      LODOP.SET_PRINT_PAGESIZE(1, '76mm', '130mm', '')
+      LODOP.SET_PRINT_PAGESIZE(1, '76mm', '128mm', '')
       LODOP.SET_SHOW_MODE('BKIMG_WIDTH', '76mm')
-      LODOP.SET_SHOW_MODE('BKIMG_HEIGHT', '130mm')
-      LODOP.PRINT_INITA(0,0,289,492,"");
-      // LODOP.SET_PRINT_PAGESIZE(0,76,130,"");
+      LODOP.SET_SHOW_MODE('BKIMG_HEIGHT', '128mm')
+      // LODOP.PRINT_INITA(0,0,289,492,"");
+      LODOP.PRINT_INITA(0,0,289,484,"");
       LODOP.ADD_PRINT_LINE(0,0,1,288,0,1);
-      LODOP.ADD_PRINT_TEXT(4,178,115,25,"代收：￥" + money);
       LODOP.SET_PRINT_STYLEA(0,"FontSize",11);
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
       LODOP.ADD_PRINT_TEXT(19,27,100,20,now_date_zto);
@@ -964,9 +963,9 @@ export function sum_print_orders(row) {
       LODOP.SET_PRINT_STYLEA(0,"FontSize",18);
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
       LODOP.ADD_PRINT_LINE(67,0,68,288,0,1);
-      LODOP.ADD_PRINT_LINE(0,0,492,1,0,1);
-      LODOP.ADD_PRINT_LINE(0,288,492,289,0,1);
-      LODOP.ADD_PRINT_LINE(492,0,491,289,0,1);
+      LODOP.ADD_PRINT_LINE(0,0,484,1,0,1);
+      LODOP.ADD_PRINT_LINE(0,288,484,289,0,1);
+      LODOP.ADD_PRINT_LINE(485,0,484,289,0,1);
       LODOP.ADD_PRINT_BARCODE(71,25,258,60,"2_5interleaved",mailno);
       LODOP.ADD_PRINT_LINE(135,0,136,289,0,1);
       LODOP.ADD_PRINT_LINE(169,1,170,211,0,1);
@@ -974,7 +973,7 @@ export function sum_print_orders(row) {
       LODOP.SET_PRINT_STYLEA(0,"FontSize",14);
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
       LODOP.ADD_PRINT_LINE(136,211,408,212,0,1);
-      LODOP.ADD_PRINT_BARCODE(130,219,60,220,"2_5interleaved",mailno);
+      LODOP.ADD_PRINT_BARCODE(125,219,60,220,"2_5interleaved",mailno);
       LODOP.SET_PRINT_STYLEA(0,"Angle",90);
       LODOP.ADD_PRINT_LINE(364,212,365,288,0,1);
       LODOP.ADD_PRINT_LINE(246,0,247,211,0,1);
@@ -992,7 +991,7 @@ export function sum_print_orders(row) {
       LODOP.ADD_PRINT_TEXT(187,35,176,20,sjtel);
       LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-      LODOP.ADD_PRINT_TEXT(204,35,176,42,sjaddress);
+      LODOP.ADD_PRINT_TEXT(204,35,176,42,jjaddress);
       LODOP.ADD_PRINT_TEXT(249,38,173,22,jjname + jjtel);
       LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
       LODOP.ADD_PRINT_TEXT(265,38,173,30,jjaddress);
@@ -1017,7 +1016,7 @@ export function sum_print_orders(row) {
       LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
       LODOP.ADD_PRINT_LINE(408,0,409,289,0,1);
-      LODOP.ADD_PRINT_TEXT(411,3,284,78,goods_detail);
+      LODOP.ADD_PRINT_TEXT(410,1,284,68,goods_detail);
       LODOP.PRINT()
     }
   //   LODOP.SET_PRINT_PAGESIZE(1, '100mm', '180mm', '')
