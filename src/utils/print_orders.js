@@ -880,11 +880,11 @@ export function print_orders(row) {
     LODOP.PREVIEW()
   } else if (logistics_code === '1012') {//中通
     if (money > 0){
-      LODOP.SET_PRINT_PAGESIZE(1, '76mm', '130mm', '')
-      LODOP.PRINT_INITA(-4,0,800,600,"");
+      LODOP.SET_PRINT_PAGESIZE(1, '211mm', '158mm', '')
       // LODOP.SET_PRINT_PAGESIZE(0,76,130,"");
-      LODOP.SET_SHOW_MODE('BKIMG_WIDTH', '76mm')
-      LODOP.SET_SHOW_MODE('BKIMG_HEIGHT', '130mm')
+      LODOP.SET_SHOW_MODE('BKIMG_WIDTH','76mm')
+      LODOP.SET_SHOW_MODE('BKIMG_HEIGHT','130mm')
+      LODOP.PRINT_INITA(-4,0,800,600,"");
       LODOP.ADD_PRINT_LINE(48,227,49,525,0,1);
       LODOP.ADD_PRINT_LINE(49,227,504,228,0,1);
       LODOP.ADD_PRINT_LINE(48,525,503,526,0,1);
@@ -947,10 +947,10 @@ export function print_orders(row) {
       LODOP.ADD_PRINT_LINE(504,227,503,525,0,1);
       LODOP.PREVIEW()
     }else{
-      LODOP.SET_PRINT_PAGESIZE(1, '76mm', '130mm', '')
+      LODOP.SET_PRINT_PAGESIZE(1, '211mm', '158mm', '')
       LODOP.SET_SHOW_MODE('BKIMG_WIDTH', '76mm')
       LODOP.SET_SHOW_MODE('BKIMG_HEIGHT', '130mm')
-      LODOP.PRINT_INITA(-4,0,800,600,"");
+      // LODOP.PRINT_INITA(-4,0,'76mm','130mm',"");
       // LODOP.SET_PRINT_PAGESIZE(0,76,130,"");
       LODOP.ADD_PRINT_LINE(48,227,49,525,0,1);
       LODOP.ADD_PRINT_LINE(49,227,504,228,0,1);
@@ -962,7 +962,7 @@ export function print_orders(row) {
       LODOP.SET_PRINT_STYLEA(0,"FontSize",19);
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
       LODOP.ADD_PRINT_LINE(119,227,120,525,0,1);
-      LODOP.ADD_PRINT_BARCODE(126,258,238,60,"Code39", mailno);
+      LODOP.ADD_PRINT_BARCODE(126,258,238,60,"2_5interleaved", mailno);
       // LODOP.SET_PRINT_STYLEA(0,"GroundColor","#0F0100");
       LODOP.ADD_PRINT_LINE(189,227,190,525,0,1);
       LODOP.ADD_PRINT_LINE(230,228,231,453,0,1);
@@ -989,9 +989,9 @@ export function print_orders(row) {
       LODOP.ADD_PRINT_TEXT(341,275,175,20,jjaddress);
       LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
       LODOP.ADD_PRINT_LINE(189,453,450,454,0,1);
-      LODOP.ADD_PRINT_BARCODE(192,460,60,238,"Code39",mailno);
+      LODOP.ADD_PRINT_BARCODE(192,460,60,238,"2_5interleaved",mailno);
       LODOP.SET_PRINT_STYLEA(0,"Angle",90);
-      LODOP.ADD_PRINT_LINE(438,454,437,526,0,1);
+      LODOP.ADD_PRINT_LINE(438,454,437,524,0,1);
       LODOP.ADD_PRINT_BARCODE(365,225,89,96,"QRCode",mailnos);
       LODOP.SET_PRINT_STYLEA(0,"FontSize",15);
       LODOP.ADD_PRINT_TEXT(366,305,105,19,"本次服务使用中通官网(");
@@ -1008,7 +1008,7 @@ export function print_orders(row) {
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
       LODOP.ADD_PRINT_TEXT(436,365,95,20,"已验视 已实名");
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-      LODOP.ADD_PRINT_LINE(449,228,450,526,0,1);
+      LODOP.ADD_PRINT_LINE(449,228,450,524,0,1);
       LODOP.ADD_PRINT_TEXT(452,228,300,50,goods_detail);
       LODOP.ADD_PRINT_LINE(504,227,503,525,0,1);
       LODOP.PREVIEW()
