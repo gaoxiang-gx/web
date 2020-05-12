@@ -92,7 +92,7 @@ export function sum_print_orders(row) {
   const jjtel = row.orders_sender_info.sender_phone//  寄件人电话
   const jjaddress = row.warehouse.delivery_address// 寄件人地址
   const sjname = row.orders_receiver_info.receive_name//  收件人姓名
-    const shoujian = row.orders_receiver_info.province_name   //收货地址市名
+  const shoujian = row.orders_receiver_info.province_name   //收货地址市名
   const sjtel = jphone.substr(0, 3) + '****' + jphone.substr(7)// 收件人电话
   const sjaddress = row.orders_receiver_info.province_name + row.orders_receiver_info.city_name + row.orders_receiver_info.district_name + row.orders_receiver_info.address//  收件人地址
   const mailno = row.orders_logistics.logistics_number//  运单号码
@@ -900,7 +900,7 @@ export function sum_print_orders(row) {
       LODOP.ADD_PRINT_BARCODE(71,25,258,60,"2_5interleaved",mailno);
       LODOP.ADD_PRINT_LINE(135,0,136,289,0,1);
       LODOP.ADD_PRINT_LINE(169,1,170,211,0,1);
-      LODOP.ADD_PRINT_TEXT(142,14,111,25,"上海");
+      LODOP.ADD_PRINT_TEXT(142,14,111,25,shoujian);
       LODOP.SET_PRINT_STYLEA(0,"FontSize",14);
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
       LODOP.ADD_PRINT_LINE(136,211,408,212,0,1);
@@ -969,7 +969,7 @@ export function sum_print_orders(row) {
       LODOP.ADD_PRINT_BARCODE(71,25,258,60,"2_5interleaved",mailno);
       LODOP.ADD_PRINT_LINE(135,0,136,289,0,1);
       LODOP.ADD_PRINT_LINE(169,1,170,211,0,1);
-      LODOP.ADD_PRINT_TEXT(142,14,111,25,"上海");
+      LODOP.ADD_PRINT_TEXT(142,14,111,25,shoujian);
       LODOP.SET_PRINT_STYLEA(0,"FontSize",14);
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
       LODOP.ADD_PRINT_LINE(136,211,408,212,0,1);
