@@ -948,7 +948,7 @@ export function sum_print_orders(row) {
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
       LODOP.ADD_PRINT_LINE(408,0,409,289,0,1);
       LODOP.ADD_PRINT_TEXT(410,1,284,68,goods_detail);
-      LODOP.SET_PRINTER_INDEX('Gprinter  GP-1324D')
+      LODOP.SET_PRINTER_INDEXA('Gprinter  GP-1324D')
       LODOP.PRINT()
     }else{
       LODOP.SET_PRINT_PAGESIZE(1, '76mm', '128mm', '')
@@ -1018,7 +1018,7 @@ export function sum_print_orders(row) {
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
       LODOP.ADD_PRINT_LINE(408,0,409,289,0,1);
       LODOP.ADD_PRINT_TEXT(410,1,284,68,goods_detail);
-      LODOP.SET_PRINTER_INDEXA('Fax')
+      LODOP.SET_PRINTER_INDEXA('Gprinter  GP-1324D')
       LODOP.PRINT()
     }
   //   LODOP.SET_PRINT_PAGESIZE(1, '100mm', '180mm', '')
