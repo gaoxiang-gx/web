@@ -101,19 +101,23 @@
           <el-button class="filter-item" :disabled="sumDisabled" size="small" type="primary" v-waves icon="el-icon-printer" @click="sumPrint">打印订单</el-button>
         </div>
         <div class="filter-item">
-          <!-- <download-excel
-          class="export-excel-wrapper"
-          :data="this.dataList"
-          :fields="json_fields"
-          name="提现列表.xls"
-        >
-           <el-button type="primary" class="filter-item" v-waves>导出EXCEL</el-button>
-        </download-excel> -->
+
           <el-button class="filter-item" size="small" plain v-waves icon="el-icon-download" @click="downExcel">导出订单</el-button>
+        </div>
+          <div class="filter-item">
+        <download-excel
+          class="export-excel-wrapper"
+          :data="this.datas"
+          :fields="json_fields"
+          name="中通模板.xls"
+        >
+          <el-button size="small" plain v-waves icon="el-icon-download" class="filter-item" @click="multipleSelections">中通导出模板</el-button>
+        </download-excel>
         </div>
         <div class="filter-item">
           <el-button class="filter-item" size="small" plain v-waves icon="el-icon-upload2" @click="handleOpenInner8">导入订单物流单号</el-button>
         </div>
+
         <div class="filter-float">
           <div style="margin-right: 20px">
             <span>今日订单：<span style="color:red;">{{today_orders}}</span></span>
@@ -541,6 +545,8 @@
     updateOrdersLogisticsPrintTimes,
     updateOrdersLogisticsNumber
   } from '@/api/orders'
+  import FileSaver from "file-saver";
+  import XLSX from "xlsx";
   import { print_orders } from '@/utils/print_orders'
   import { sum_print_orders } from '@/utils/sum_print_orders'
   import waves from '@/directive/waves' // 水波纹指令
@@ -578,6 +584,8 @@
         }
       }
       return {
+        datas:[],
+        multipleSelection: [],
         json_fields: {}, //导出数据
         warehouseOptions: [],
         tableLoading: '',
@@ -909,6 +917,67 @@
       this.getWarehouseList()
     },
     methods: {
+    handleCheckedOrdersChange(value, orders) {
+      this.multipleSelection.push(orders)
+         console.log(this.multipleSelection,22222)
+        let checkedCount = 0
+        for (const v of this.list) {
+          if (v.id === orders.id) {
+            const index = this.list.indexOf(v)
+            v.is_checked = value
+            this.list.splice(index, 1, v)
+          }
+          if (v.is_checked === true) {
+            checkedCount++
+          }
+        }
+        this.sumDisabled = checkedCount <= 0
+        this.checkAll = checkedCount === this.list.length
+        this.isIndeterminate = checkedCount > 0 && checkedCount < this.list.length
+      },
+
+    multipleSelections(){
+      if(this.multipleSelection.length == 0){
+         this.$message('请选择数据')
+         return
+      }
+       this.multipleSelection.map(v=>{
+           const dataList = {}
+           dataList.orders_unique_id = v.orders_unique_id
+           dataList.paid_money = v.orders_payment.orders_payment_items[0].paid_money;
+           dataList.receive_name  = v.orders_receiver_info.receive_name
+           dataList.phone = v.orders_receiver_info.phone
+           dataList.macks = v.orders_receiver_info.phone
+           dataList.orders_receiver_infos = v.orders_receiver_info.province_name + v.orders_receiver_info.city_name + v.orders_receiver_info.district_name + v.orders_receiver_info.address
+           dataList.paidremoos = v.orders_receiver_info.receive_name
+           dataList.goods_name = v.orders_items[0].product_goods.goods_name
+           dataList.number = v.orders_items[0].number
+           v.orders_remarks.map(res=>{
+              if(res.status == 1){
+                  dataList.remark += res.remark +','
+                  return
+              }
+              if(res.status == 2){
+                dataList.remarks += res.remark +','
+                return
+              }
+           })
+           this.datas.push(dataList)
+       })
+          this.json_fields.订单号 = "orders_unique_id";
+          this.json_fields.代收金额 = 'paid_money';
+          this.json_fields.收件人姓名 = "receive_name";
+          this.json_fields.收件人手机 = "phone";
+          this.json_fields.收件人电话 = "macks";
+          this.json_fields.收件人地址 = 'orders_receiver_infos';
+          this.json_fields.收件人单位 = "paidremoos";
+          this.json_fields.品名 = "goods_name";
+          this.json_fields.数量 = "number";
+          this.json_fields.买家备注 = "remarks";
+          this.json_fields.卖家备注 = "remark";
+          this.multipleSelection = []
+    },
+
       getWarehouseList() {
         getWarehouseList().then(response => {
           this.warehouseOptions = response.data.data
@@ -998,22 +1067,6 @@
         }
         this.checkAll = is_checked
         this.isIndeterminate = false
-      },
-      handleCheckedOrdersChange(value, orders) {
-        let checkedCount = 0
-        for (const v of this.list) {
-          if (v.id === orders.id) {
-            const index = this.list.indexOf(v)
-            v.is_checked = value
-            this.list.splice(index, 1, v)
-          }
-          if (v.is_checked === true) {
-            checkedCount++
-          }
-        }
-        this.sumDisabled = checkedCount <= 0
-        this.checkAll = checkedCount === this.list.length
-        this.isIndeterminate = checkedCount > 0 && checkedCount < this.list.length
       },
       handleCommand(command) {
         if (command === 'onlyDelivery') {
