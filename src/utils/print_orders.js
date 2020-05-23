@@ -922,11 +922,11 @@ export function print_orders(row) {
       LODOP.ADD_PRINT_TEXT(187,35,176,20,sjtel);
       LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-      LODOP.ADD_PRINT_TEXT(204,35,176,42,jjaddress);
-      LODOP.ADD_PRINT_TEXT(249,38,173,22,jjname + jjtel);
-      LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
-      LODOP.ADD_PRINT_TEXT(265,38,173,30,jjaddress);
-      LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+      LODOP.ADD_PRINT_TEXT(204,35,176,42,sjaddress);
+      LODOP.ADD_PRINT_TEXT(249,38,173,30,jjname + jjtel);
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",7);
+      LODOP.ADD_PRINT_TEXT(272,38,173,35,jjaddress);
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",7);
       LODOP.ADD_PRINT_BARCODE(301,3,92,92,"QRCode",mailnos);
       LODOP.ADD_PRINT_TEXT(305,89,99,20,"本次服务使用中通官网");
       LODOP.SET_PRINT_STYLEA(0,"FontSize",7);
@@ -957,6 +957,7 @@ export function print_orders(row) {
       // LODOP.PRINT_INITA(0,0,289,492,"");
       LODOP.PRINT_INITA(0,0,289,484,"");
       LODOP.ADD_PRINT_LINE(0,0,1,288,0,1);
+      LODOP.ADD_PRINT_TEXT(4,178,115,25,"代收：￥"  + money);
       LODOP.SET_PRINT_STYLEA(0,"FontSize",11);
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
       LODOP.ADD_PRINT_TEXT(19,27,100,20,now_date_zto);
@@ -992,11 +993,11 @@ export function print_orders(row) {
       LODOP.ADD_PRINT_TEXT(187,35,176,20,sjtel);
       LODOP.SET_PRINT_STYLEA(0,"FontSize",10);
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
-      LODOP.ADD_PRINT_TEXT(204,35,176,42,jjaddress);
-      LODOP.ADD_PRINT_TEXT(249,38,173,22,jjname + jjtel);
-      LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
-      LODOP.ADD_PRINT_TEXT(265,38,173,30,jjaddress);
-      LODOP.SET_PRINT_STYLEA(0,"FontSize",8);
+      LODOP.ADD_PRINT_TEXT(204,35,176,42,sjaddress);
+      LODOP.ADD_PRINT_TEXT(249,38,173,30,jjname + jjtel);
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",7);
+      LODOP.ADD_PRINT_TEXT(272,38,173,35,jjaddress);
+      LODOP.SET_PRINT_STYLEA(0,"FontSize",7);
       LODOP.ADD_PRINT_BARCODE(301,3,92,92,"QRCode",mailnos);
       LODOP.ADD_PRINT_TEXT(305,89,99,20,"本次服务使用中通官网");
       LODOP.SET_PRINT_STYLEA(0,"FontSize",7);
@@ -1018,7 +1019,6 @@ export function print_orders(row) {
       LODOP.SET_PRINT_STYLEA(0,"Bold",1);
       LODOP.ADD_PRINT_LINE(408,0,409,289,0,1);
       LODOP.ADD_PRINT_TEXT(410,1,284,68,goods_detail);
-      // LODOP.SET_PRINTER_INDEX(6)
       LODOP.PREVIEW()
     }
 
