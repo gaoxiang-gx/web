@@ -1291,14 +1291,18 @@ export default {
           v.orders_receiver_info.district_name +
           v.orders_receiver_info.address;
         dataList.paidremoos = v.orders_receiver_info.receive_name;
-        dataList.goods_name = v.orders_items[0].product_goods.goods_name;
-        dataList.number = v.orders_items[0].number;
+        dataList.goods_name = v.orders_items.map(res=> {
+              return res.product_goods.goods_name;
+          }).join(',');
+        dataList.number = v.orders_items.map(res=> {
+              return res.number;
+          }).join(',');
         dataList.remark = v.orders_remarks.map(res=> {
-             if(res.status ==1){
+             if(res.status == 1){
                  return res.remark;
              }
         }).join(',');
-          dataList.remarks = v.orders_remarks.map(res=> {
+        dataList.remarks = v.orders_remarks.map(res=> {
              if(res.status == 2){
                  return res.remark;
              }
@@ -1323,7 +1327,6 @@ export default {
       this.list.map(res=>{
         res.is_checked = false
       })
-
     },
 
     getWarehouseList() {
