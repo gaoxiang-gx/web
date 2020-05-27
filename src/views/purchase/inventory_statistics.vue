@@ -64,9 +64,9 @@
                   :remote-method="getWarehouseProductGoodsStorageList"
                   :loading="productGoodsLoading">
         <el-option  v-for="item in productGoodsOptions"
-                    :key="item.id"
+                    :key="item.product_goods_id"
                     :label="item.product_goods.goods_name"
-                    :value="item.id">
+                    :value="item.product_goods_id">
         </el-option>
       </el-select>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">搜索</el-button>
@@ -142,7 +142,7 @@
       return {
         tableKey: 0,
         scrollTop: 0,
-        list: null,
+        list: [],
         total: null,
         listLoading: false,
         typeOptions: [
@@ -216,6 +216,7 @@
         this.listLoading = true
         getProductStorageDetailList(this.listQuery).then(res => {
           this.list = res.data.data
+          console.log(this.list,11111)
           this.listLoading = false
           this.total = res.data.total
         })
@@ -230,6 +231,7 @@
           this.productGoodsLoading = true
           getWarehouseProductGoodsStorageList({ warehouse_id: this.listQuery.warehouse_id, goods_name: query }).then(response => {
             this.productGoodsOptions = response.data.data
+            console.log(this.productGoodsOptions,9999)
             this.productGoodsLoading = false
           })
         }

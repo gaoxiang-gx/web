@@ -1272,12 +1272,14 @@ export default {
       this.isIndeterminate =
         checkedCount > 0 && checkedCount < this.list.length;
     },
-
+    //中通导出订单
     multipleSelections() {
+      //判断是否选中数据
       if (this.multipleSelection.length == 0) {
         this.$message("请选择数据");
         return;
       }
+      //将拿到的数据循环,因为插件不支持拿到数组里面的内容，需要重新声明对象和数组将值赋值过去
       this.multipleSelection.map(v => {
         const dataList = {};
         dataList.orders_unique_id = v.orders_unique_id;
@@ -1293,10 +1295,10 @@ export default {
         dataList.paidremoos = v.orders_receiver_info.receive_name;
         dataList.goods_name = v.orders_items.map(res=> {
               return res.product_goods.goods_name;
-          }).join(',');
+        }).join(',');
         dataList.number = v.orders_items.map(res=> {
               return res.number;
-          }).join(',');
+        }).join(',');
         dataList.remark = v.orders_remarks.map(res=> {
              if(res.status == 1){
                  return res.remark;
@@ -1306,9 +1308,10 @@ export default {
              if(res.status == 2){
                  return res.remark;
              }
-          }).join(',');
+        }).join(',');
         this.datas.push(dataList);
       });
+      //导出的头部和内容
       this.json_fields.订单号 = "orders_unique_id";
       this.json_fields.代收金额 = "paid_money";
       this.json_fields.收件人姓名 = "receive_name";
@@ -1320,7 +1323,7 @@ export default {
       this.json_fields.数量 = "number";
       this.json_fields.买家备注 = "remarks";
       this.json_fields.卖家备注 = "remark";
-      this.isIndeterminate = false
+      //清空导出数组和单选框和全部
       this.datas = []
       this.multipleSelection = [];
       this.checkAll = false

@@ -1,6 +1,6 @@
-import axios from 'axios'
-import { Message, MessageBox } from 'element-ui'
-import store from '../store'
+import axios from 'axios' //axios请求
+import { Message, MessageBox } from 'element-ui' //弹出消息框
+import store from '../store'  //vuex
 import { getAccountToken } from '@/utils/auth'
 
 // 创建axios实例
