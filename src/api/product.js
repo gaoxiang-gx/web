@@ -98,7 +98,7 @@ export function previewProductTemplate(param) {
 
 export function getProductStorageDetailList(param) {
   return request({
-    url: '/api/warehouse/getProductStorageDetailList ',
+    url: '/api/warehouse/getProductStorageDetailList',
     method: 'post',
     data: param
   })

@@ -71,7 +71,6 @@
       </el-select>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary" icon="el-icon-search">搜索</el-button>
     </div>
-
     <el-table :key='tableKey'
               :data="list"
               v-loading="listLoading"
@@ -115,7 +114,6 @@
         </template>
       </el-table-column>
     </el-table>
-
     <div v-show="!listLoading" class="pagination-container">
       <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
                      :page-sizes="[10,20,30,50]" :page-size="listQuery.page_size" layout="total, sizes, prev, pager, next, jumper" :total="total">
@@ -131,7 +129,6 @@
   import { getProductStorageDetailList } from '@/api/product'
   import { getWarehouseProductGoodsStorageList } from '@/api/warehouse'
   import { parseTime } from '@/utils/index'
-
   export default {
     components: { },
     name: 'inventoryStatistics',
