@@ -1,5 +1,11 @@
 import request from '@/utils/request'
-
+export function getProductList(param) {
+  return request({
+    url: '/api/product/getProductList',
+    method: 'post',
+    data: param
+  })
+}
 export function getOrdersList(param) {
   return request({
     url: '/api/orders/getOrdersList',

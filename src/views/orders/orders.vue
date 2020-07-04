@@ -119,7 +119,23 @@
           :value="item.id"
         ></el-option>
       </el-select>
-
+    <el-select  class="filter-item"
+                 size="small"
+                  @change='handleFilter'
+                  @focus="getWarehouseProductGoodsStorageList(' ')"
+                  v-model="listQuery.product_goods_id"
+                  filterable
+                  clearable
+                  remote
+                  placeholder="产品"
+                  :remote-method="getWarehouseProductGoodsStorageList"
+                  :loading="productGoodsLoading">
+        <el-option  v-for="item in productGoodsOptions"
+                    :key="item.product_goods_id"
+                    :label="item.product_goods.goods_name"
+                    :value="item.product_goods_id">
+        </el-option>
+      </el-select>
       <div class="filter-row">
         <div class="filter-item">
           <el-button
@@ -862,10 +878,12 @@ import {
   destroyOrders,
   deliverOrders,
   updateOrdersLogisticsPrintTimes,
-  updateOrdersLogisticsNumber
+  updateOrdersLogisticsNumber,
+  getProductList
 } from "@/api/orders";
 import FileSaver from "file-saver";
 import XLSX from "xlsx";
+  import {getWarehouseProductGoodsStorageList } from '@/api/warehouse'
 import { print_orders } from "@/utils/print_orders";
 import { sum_print_orders } from "@/utils/sum_print_orders";
 import waves from "@/directive/waves"; // 水波纹指令
@@ -919,6 +937,7 @@ export default {
       total1: null,
       listLoading: false,
       chooseId: undefined,
+      productGoodsOptions: [],
       listQuery: {
         date_range: "",
         created_at: "",
@@ -932,7 +951,8 @@ export default {
         status: 2,
         remark: "",
         logistics_type_id: undefined,
-        warehouse_id: undefined
+        warehouse_id: undefined,
+        product_goods_id:undefined,
       },
       props: {
         value: "area_number",
@@ -1077,6 +1097,7 @@ export default {
           { required: true, message: "输入备注信息内容", trigger: "change" }
         ]
       },
+      productListOptions:[],
       innerListLoading1: false,
       innerListLoading3: false,
       innerTableVisible3: false,
@@ -1251,6 +1272,16 @@ export default {
     this.getWarehouseList();
   },
   methods: {
+
+      getWarehouseProductGoodsStorageList(query) {
+        if (query !== '') {
+          this.productGoodsLoading = true
+          getWarehouseProductGoodsStorageList({ warehouse_id: this.listQuery.warehouse_id, goods_name: query }).then(response => {
+            this.productGoodsOptions = response.data.data
+            this.productGoodsLoading = false
+          })
+        }
+      },
     handleCheckedOrdersChange(value, orders) {
       if(value == true){
           this.multipleSelection.push(orders);
