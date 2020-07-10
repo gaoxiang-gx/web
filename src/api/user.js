@@ -23,7 +23,13 @@ export function getNoticeList(param) {
     data: param
   })
 }
-
+export function getSupportGroupList(param) {
+  return request({
+    url: '/api/user/getSupportGroupList',
+    method: 'post',
+    data: param
+  })
+}
 export function createUserAccount(param) {
   return request({
     url: '/api/user/createUserAccount',

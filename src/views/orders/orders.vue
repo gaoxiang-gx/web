@@ -103,6 +103,19 @@
           v-model="listQuery.remark"
         ></el-input>
       </div>
+      <div class="filter-item">
+          <div class="filter-label">客服部门</div>
+          <el-cascader
+            clearable
+            size="small"
+            style="width: 200px"
+            :options="userGroupTree"
+            change-on-select
+            :props="defaultPropsGroup"
+            v-model="userGroupOptions"
+            @change="handleFilterGrounp">
+          </el-cascader>
+        </div>
       <el-select
         class="filter-item"
         v-model="listQuery.warehouse_id"
@@ -255,9 +268,10 @@
           <el-col :span="8">
             <div class="grid-content bg-purple">商品</div>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="2">
             <div class="grid-content bg-purple-light">买家</div>
           </el-col>
+          <el-col :span="2"><div class="grid-content bg-purple">销售</div></el-col>
           <el-col :span="3">
             <div class="grid-content bg-purple-light">仓储/物流</div>
           </el-col>
@@ -367,6 +381,18 @@
               <p
                 style="padding:0;margin:0;text-align: left;"
               >{{ scope.row.orders_receiver_info.province_name + ' ' + scope.row.orders_receiver_info.city_name + ' ' + (scope.row.orders_receiver_info.district_name !== undefined ? scope.row.orders_receiver_info.district_name : '') + ' ' + scope.row.orders_receiver_info.address }}</p>
+            </template>
+          </el-table-column>
+           <el-table-column min-width="200" align="center" label="销售">
+            <template slot-scope="scope">
+              <p
+                style="padding:0;margin:0;text-align: left;"
+                slot="reference"
+                class="link-type"
+              >{{scope.row.support_member.nickname}}</p>
+              <p
+                style="padding:0;margin:0;text-align: left;"
+              >{{ scope.row.support_member.user_account_group.group_name }}</p>
             </template>
           </el-table-column>
           <el-table-column min-width="125" align="center" label="发货仓">
@@ -864,6 +890,9 @@ import {
   getWarehouseList
 } from "@/api/product";
 import {
+ getSupportGroupList
+} from "@/api/user";
+import {
   getOrdersCountInfo,
   getOrdersList,
   deleteOrdersRemark,
@@ -921,6 +950,14 @@ export default {
       }
     };
     return {
+       userGroupTree: [],
+       userGroupOptions:[],
+       defaultPropsGroup: {
+          children: 'child',
+          label: 'group_name',
+          value: 'id'
+        },
+
       datas: [],
       multipleSelection: [],
       json_fields: {}, //导出数据
@@ -953,6 +990,7 @@ export default {
         logistics_type_id: undefined,
         warehouse_id: undefined,
         product_goods_id:undefined,
+        support_user_account_group_id:''
       },
       props: {
         value: "area_number",
@@ -1270,9 +1308,30 @@ export default {
     this.handleFilter();
     this.queryLogisticsTypeList();
     this.getWarehouseList();
+    this.getUserGroupTree()
   },
   methods: {
-
+      getUserGroupTree() {
+        getSupportGroupList().then(response => {
+          this.userGroupTree = this.formatUserGroupTree(response.data)
+        })
+      },
+      formatUserGroupTree(tree) {
+        const Group = tree.map(item => {
+          if (item.child.length > 0) {
+            item.child = this.formatUserGroupTree(item.child)
+            return item
+          } else {
+            delete item.child
+            return item
+          }
+        })
+        return Group
+      },
+      handleFilterGrounp(val) {
+        this.listQuery.support_user_account_group_id = val[val.length - 1]
+        this.handleFilter()
+      },
       getWarehouseProductGoodsStorageList(query) {
         if (query !== '') {
           this.productGoodsLoading = true
