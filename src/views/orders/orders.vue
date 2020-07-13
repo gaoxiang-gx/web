@@ -103,7 +103,7 @@
           v-model="listQuery.remark"
         ></el-input>
       </div>
-      <div class="filter-item">
+      <!-- <div class="filter-item">
           <div class="filter-label">客服部门</div>
           <el-cascader
             clearable
@@ -115,7 +115,7 @@
             v-model="userGroupOptions"
             @change="handleFilterGrounp">
           </el-cascader>
-        </div>
+        </div> -->
       <el-select
         class="filter-item"
         v-model="listQuery.warehouse_id"
@@ -265,17 +265,17 @@
               ></el-checkbox>
             </div>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
             <div class="grid-content bg-purple">商品</div>
           </el-col>
-          <el-col :span="2">
+          <el-col :span="4">
             <div class="grid-content bg-purple-light">买家</div>
           </el-col>
-          <el-col :span="2"><div class="grid-content bg-purple">销售</div></el-col>
+          <el-col :span="4"><div class="grid-content bg-purple">销售</div></el-col>
           <el-col :span="3">
             <div class="grid-content bg-purple-light">仓储/物流</div>
           </el-col>
-          <el-col :span="3">
+          <el-col :span="2">
             <div class="grid-content bg-purple">价格</div>
           </el-col>
           <el-col :span="2">
@@ -1329,6 +1329,7 @@ export default {
         return Group
       },
       handleFilterGrounp(val) {
+        console.log(val,1)
         this.listQuery.support_user_account_group_id = val[val.length - 1]
         this.handleFilter()
       },
