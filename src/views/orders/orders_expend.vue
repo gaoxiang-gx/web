@@ -103,19 +103,6 @@
           v-model="listQuery.remark"
         ></el-input>
       </div>
-      <div class="filter-item">
-          <div class="filter-label">客服部门</div>
-          <el-cascader
-            clearable
-            size="small"
-            style="width: 200px"
-            :options="userGroupTree"
-            change-on-select
-            :props="defaultPropsGroup"
-            v-model="userGroupOptions"
-            @change="handleFilterGrounp">
-          </el-cascader>
-        </div>
       <el-select
         class="filter-item"
         v-model="listQuery.warehouse_id"
@@ -265,17 +252,16 @@
               ></el-checkbox>
             </div>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="7">
             <div class="grid-content bg-purple">商品</div>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="5">
             <div class="grid-content bg-purple-light">买家</div>
           </el-col>
-          <el-col :span="4"><div class="grid-content bg-purple">销售</div></el-col>
-          <el-col :span="3">
+          <el-col :span="4">
             <div class="grid-content bg-purple-light">仓储/物流</div>
           </el-col>
-          <el-col :span="2">
+          <el-col :span="3">
             <div class="grid-content bg-purple">价格</div>
           </el-col>
           <el-col :span="2">
@@ -381,18 +367,6 @@
               <p
                 style="padding:0;margin:0;text-align: left;"
               >{{ scope.row.orders_receiver_info.province_name + ' ' + scope.row.orders_receiver_info.city_name + ' ' + (scope.row.orders_receiver_info.district_name !== undefined ? scope.row.orders_receiver_info.district_name : '') + ' ' + scope.row.orders_receiver_info.address }}</p>
-            </template>
-          </el-table-column>
-           <el-table-column min-width="200" align="center" label="销售">
-            <template slot-scope="scope">
-              <p
-                style="padding:0;margin:0;text-align: left;"
-                slot="reference"
-                class="link-type"
-              >{{scope.row.support_member.nickname}}</p>
-              <p
-                style="padding:0;margin:0;text-align: left;"
-              >{{ scope.row.support_member.user_account_group.group_name }}</p>
             </template>
           </el-table-column>
           <el-table-column min-width="125" align="center" label="发货仓">
@@ -923,7 +897,7 @@ import { mapGetters } from "vuex";
 import { parseTime } from "@/utils/index";
 
 export default {
-  name: "ordersManage",
+  name: "ordersExpend",
   components: {
     Multiselect
   },
@@ -950,13 +924,6 @@ export default {
       }
     };
     return {
-       userGroupTree: [],
-       userGroupOptions:[],
-       defaultPropsGroup: {
-          children: 'child',
-          label: 'group_name',
-          value: 'id'
-        },
 
       datas: [],
       multipleSelection: [],
@@ -990,7 +957,8 @@ export default {
         logistics_type_id: undefined,
         warehouse_id: undefined,
         product_goods_id:undefined,
-        support_user_account_group_id:''
+        support_user_account_group_id:'',
+        join_relations:"shop"
       },
       props: {
         value: "area_number",
@@ -1308,31 +1276,8 @@ export default {
     this.handleFilter();
     this.queryLogisticsTypeList();
     this.getWarehouseList();
-    this.getUserGroupTree()
   },
   methods: {
-      getUserGroupTree() {
-        getSupportGroupList().then(response => {
-          this.userGroupTree = this.formatUserGroupTree(response.data)
-        })
-      },
-      formatUserGroupTree(tree) {
-        const Group = tree.map(item => {
-          if (item.child.length > 0) {
-            item.child = this.formatUserGroupTree(item.child)
-            return item
-          } else {
-            delete item.child
-            return item
-          }
-        })
-        return Group
-      },
-      handleFilterGrounp(val) {
-        console.log(val,1)
-        this.listQuery.support_user_account_group_id = val[val.length - 1]
-        this.handleFilter()
-      },
       getWarehouseProductGoodsStorageList(query) {
         if (query !== '') {
           this.productGoodsLoading = true
