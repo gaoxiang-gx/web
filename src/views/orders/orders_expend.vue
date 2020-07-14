@@ -198,7 +198,7 @@
         </div>
 
         <div class="filter-float">
-          <div style="margin-right: 20px">
+          <!-- <div style="margin-right: 20px">
             <span>
               今日订单：
               <span style="color:red;">{{today_orders}}</span>
@@ -207,7 +207,7 @@
               待发货：
               <span style="color:red;">{{need_delivery}}</span>
             </span>
-          </div>
+          </div> -->
           <el-button
             class="filter-item"
             size="small"
