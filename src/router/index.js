@@ -43,133 +43,7 @@ export const constantRouterMap = [
   // }
 ]
 export const asyncRouterMap = [
-  {
-    path: '/orders',
-    component: Layout,
-    name: 'ordersManagement',
-    redirect: 'noredirect',
-    meta: { title: '订单管理', icon: 'ordersManagement'},
-    children: [
-      {
-        path: 'orders',
-        name: 'ordersManage',
-        component: _import('orders/orders'),
-        meta: { title: '订单管理'}
-      },
-      {
-        path: 'ordersExpend',
-        name: 'ordersExpend',
-        component: _import('orders/orders_expend'),
-        meta: { title: '商城订单' }
-      },
-      {
-        path: 'ordersDelivery',
-        name: 'ordersDelivery',
-        component: _import('orders/ordersDelivery'),
-        meta: { title: '扫码发货管理' }
-      },
-      {
-        path: 'secondaryShopOrders',
-        name: 'secondaryShopOrders',
-        component: _import('orders/secondaryShopOrders'),
-        meta: { title: '二类电商订单'}
-      }
-    ]
-  },
-  {
-    path: '/purchase',
-    component: Layout,
-    name: 'purchaseSellManagement',
-    redirect: 'noredirect',
-    meta: { title: '进销存管理', icon: 'purchaseSellManagement'},
-    children: [
-      // {
-      //   path: 'product_management',
-      //   name: 'productManagement',
-      //   component: _import('purchase/product_management'),
-      //   meta: { title: '商品管理', icon: 'productManagement'}
-      // },
-      // {
-      //   path: 'product_cost',
-      //   name: 'productCost',
-      //   component: _import('purchase/product_cost'),
-      //   meta: { title: '商品成本', icon: 'productCost'}
-      // },
-      {
-        path: 'inventory_warning',
-        name: 'inventoryWarning',
-        component: _import('purchase/inventory_warning'),
-        meta: { title: '商品库存'}
-      },
-      {
-        path: 'inventory_statistics',
-        name: 'inventoryStatistics',
-        component: _import('purchase/inventory_statistics'),
-        meta: { title: '商品出入库明细'}
-      },
-      // {
-      //   path: 'inventory_expend',
-      //   name: 'inventoryExpend',
-      //   component: _import('purchase/inventory_expend'),
-      //   meta: { title: '商品日消耗查询', icon: 'data'}
-      // },
-      {
-        path: 'inventory_management',
-        name: 'inventoryManagement',
-        component: _import('purchase/inventory_management'),
-        meta: { title: '盘库管理'}
-      },
-      {
-        path: 'manual_Management',
-        name: 'manual_Management',
-        component: _import('purchase/manual_Management'),
-        meta: { title: '人工出入库'}
-      },
-      {
-        path: '/purchase_management',
-        name: 'purchaseManagement',
-        redirect: 'noredirect',
-        component: _import('purchase/purchase_management/index'),
-        meta: { title: '订货管理', icon: 'dot' },
-        children: [
-          {
-            path: 'purchase_management',
-            name: 'purchaseItemManagement',
-            component: _import('purchase/purchase_management/purchase_management'),
-            meta: { title: '订货条目管理' }
-          },
-          {
-            path: 'purchase_in_storage',
-            name: 'purchaseInStorage',
-            component: _import('purchase/purchase_management/purchase_in_storage'),
-            meta: { title: '订货入库管理' }
-          }
-        ]
-      }
-    ]
-  },
-  {
-    path: '/afterManage',
-    component: Layout,
-    name: 'afterManage',
-    redirect: 'noredirect',
-    meta: { title: '售后管理', icon: 'ordersManagement'},
-    children: [
-      {
-        path: 'afterManageList',
-        name: 'afterManageList',
-        component: _import('afterManage/afterManageList'),
-        meta: { title: '售后列表'}
-      },
-      {
-        path: 'afterDetails',
-        name: 'afterDetails',
-        hidden: true,
-        component: _import('afterManage/afterDetails'),
-        meta: { title: '售后详情'}
-      }
-    ]
-  },
+
   {
     path: '/user',
     component: Layout,
@@ -183,18 +57,18 @@ export const asyncRouterMap = [
         component: _import('user/user_group'),
         meta: { title: '小组管理' }
       },
-      {
-        path: 'user',
-        name: 'userManage',
-        component: _import('user/user'),
-        meta: { title: '用户管理' }
-      },
-      {
-        path: 'role',
-        name: 'rolesManagement',
-        component: _import('user/user_role'),
-        meta: { title: '权限管理' }
-      }
+      // {
+      //   path: 'user',
+      //   name: 'userManage',
+      //   component: _import('user/user'),
+      //   meta: { title: '用户管理' }
+      // },
+      // {
+      //   path: 'role',
+      //   name: 'rolesManagement',
+      //   component: _import('user/user_role'),
+      //   meta: { title: '权限管理' }
+      // }
     ]
   },
   {
@@ -256,40 +130,6 @@ export const asyncRouterMap = [
       //   meta: { title: '敏感地址管理', icon: 'addressManagement' }
       // }
     ]
-  },
-{
-        path: '/agents',
-        component: Layout,
-        name: 'productGoodsManagement',
-        redirect: 'noredirect',
-        meta: { title: '代理系统', icon: 'productGoodsManagement' },
-        children: [
-         {
-            path: 'agentList',
-            name: 'productGoodsManagement',
-            component: _import('agents/agentList'),
-            meta: { title: '商品列表', icon: 'productGoodsManagement' }
-         },
-         {
-          path: 'caseCode',
-          name: 'productGoodsManagement',
-          component: _import('agents/caseCode'),
-          meta: { title: '箱码列表', icon: 'productGoodsManagement' }
-         },
-         {
-          path: 'delivery',
-          name: 'productGoodsManagement',
-          component: _import('agents/delivery'),
-          meta: { title: '出库单', icon: 'productGoodsManagement' }
-         },
-        //  {
-        //   path: 'pageKeep',
-        //   name: 'productGoodsManagement',
-        //   component: _import('agents/pageKeep'),
-        //   meta: { title: '测试', icon: 'productGoodsManagement' }
-        //  },
-       ]
-
   },
   {
     path: '/user_center',
